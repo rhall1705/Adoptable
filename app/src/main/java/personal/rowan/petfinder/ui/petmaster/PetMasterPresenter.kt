@@ -25,24 +25,30 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
     private var mApiSubscription: Subscription? = null
 
     private lateinit var mLocation: String
+    private lateinit var mAnimal: String
     private var mPetList: MutableList<Pet>? = null
     private var mOffset: String = "0"
     private var mError: Throwable? = null
 
-    fun refreshData(location: String) {
+    fun loadData(location: String, animal: String) {
         mLocation = location
-        refreshData()
+        mAnimal = animal
+        loadData(false)
     }
 
-    // first load
-    // lastoffset = 0, offset = 25
-    // notifyChanged(0, 25)
-    //
-
     fun refreshData() {
+        loadData(true)
+    }
+
+    private fun loadData(clear: Boolean) {
         if(isApiSubscriptionActive()) return
 
-        mApiSubscription = mPetfinderService.getNearbyPets(mLocation, mOffset)
+        if(clear) {
+            mPetList!!.clear()
+            mOffset = "0"
+        }
+
+        mApiSubscription = mPetfinderService.getNearbyPets(mLocation, mAnimal, mOffset)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object: Subscriber<PetResult>() {
@@ -77,7 +83,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
                 .subscribe { scrollEvent ->
                     if (mView.shouldPaginate() && !isApiSubscriptionActive()) {
                         mView.showPagination()
-                        refreshData()
+                        loadData(false)
                     }
                 })
     }

@@ -36,17 +36,40 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     val pagination: ProgressBar by bindView(R.id.pet_master_pagination)
 
     lateinit var mPresenter: PetMasterPresenter
+    lateinit var mLocation: String
+    lateinit var mAnimal: String
     val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList<Pet>())
     val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
 
     companion object {
-        fun getInstance(): PetMasterFragment {
-            return PetMasterFragment()
+
+        private val ARG_PET_MASTER_LOCATION = "PetMasterFragment.Arg.Location"
+        private val ARG_PET_MASTER_ANIMAL = "PetMasterFragment.Arg.Animal"
+
+        val ANIMAL_OPTION_DOG = "dog"
+        val ANIMAL_OPTION_CAT = "cat"
+        val ANIMAL_OPTION_BIRD = "bird"
+        val ANIMAL_OPTION_REPTILE = "reptile"
+        val ANIMAL_OPTION_SMALL_FURRY = "smallfurry"
+        val ANIMAL_OPTION_HORSE = "horse"
+        val ANIMAL_OPTION_PIG = "pig"
+        val ANIMAL_OPTION_BARNYARD = "barnyard"
+
+        fun getInstance(location: String, animal: String): PetMasterFragment {
+            val fragment: PetMasterFragment = PetMasterFragment()
+            val args: Bundle = Bundle()
+            args.putString(ARG_PET_MASTER_LOCATION, location)
+            args.putString(ARG_PET_MASTER_ANIMAL, animal)
+            fragment.arguments = args
+            return fragment
         }
     }
 
     override fun beforePresenterPrepared() {
         PetMasterComponent.injector.call(this)
+        val args: Bundle = arguments
+        mLocation = args.getString(ARG_PET_MASTER_LOCATION)
+        mAnimal = args.getString(ARG_PET_MASTER_ANIMAL)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -58,12 +81,12 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         petList.layoutManager = mLayoutManager
         petList.adapter = mAdapter
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
-        swipeRefresh.setOnRefreshListener { mPresenter.refreshData("30308") }
+        swipeRefresh.setOnRefreshListener { mPresenter.refreshData() }
     }
 
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
-        mPresenter.refreshData("30308")
+        mPresenter.loadData(mLocation, mAnimal)
         mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))
     }
 

@@ -21,10 +21,12 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
     val detailView: TextView by bindView(R.id.pet_master_detail)
 
     fun bind(pet: Pet) {
-        val photoList: List<Photo> = pet.media!!.photos!!.photo!!
-        Picasso.with(photoView.context)
-                .load(photoList[2].`$t`)
-                .into(photoView)
+        val photoList: List<Photo>? = pet.media?.photos?.photo
+        if(photoList != null && photoList.size > 2) {
+            Picasso.with(photoView.context)
+                    .load(photoList[2].`$t`)
+                    .into(photoView)
+        }
         nameView.setText(pet.name!!.`$t`)
         headerView.setText(headerView.context.getString(
                 R.string.pet_master_header,

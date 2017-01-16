@@ -13,7 +13,7 @@ import rx.Observable
 interface PetfinderService {
 
     @GET("pet.find")
-    fun getNearbyPets(@Query("location") location: String, @Query("offset") offset: String?): Observable<PetResult>
+    fun getNearbyPets(@Query("location") location: String, @Query("animal") animal: String, @Query("offset") offset: String?): Observable<PetResult>
 
     companion object {
         val BASE_URL = "http://api.petfinder.com/"
