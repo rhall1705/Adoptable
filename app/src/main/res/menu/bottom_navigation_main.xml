@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_nearby_animals"
+        android:enabled="true"
+        android:icon="@drawable/ic_pets"
+        android:title="@string/main_bottom_nav_animals"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_nearby_shelters"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:title="@string/main_bottom_nav_shelters"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_search"
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:title="@string/main_bottom_nav_search"
+        app:showAsAction="ifRoom"/>
+
+</menu>

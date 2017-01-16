@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Adoptable</string>
 
+    <string name="main_bottom_nav_animals">Animals</string>
+    <string name="main_bottom_nav_shelters">Shelters</string>
+    <string name="main_bottom_nav_search">Search</string>
+
     <string name="pet_master_container_title">Nearby Animals</string>
     <string name="pet_master_header">%1$s - %2$s</string>
     <string name="pet_master_detail">%1$s - %2$s - %3$s - %4$s, %5$s</string>
