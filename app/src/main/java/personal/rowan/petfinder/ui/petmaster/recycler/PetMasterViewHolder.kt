@@ -9,6 +9,7 @@ import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.model.pet.Photo
+import personal.rowan.petfinder.util.PetUtils
 
 /**
  * Created by Rowan Hall
@@ -34,9 +35,9 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
                 pet.breeds!!.breed.get(0).`$t`))
         detailView.setText(detailView.context.getString(
                 R.string.pet_master_detail,
-                pet.size!!.`$t`,
+                PetUtils.formatSize(pet.size!!.`$t`!!),
                 pet.age!!.`$t`,
-                pet.sex!!.`$t`,
+                PetUtils.formatSex(pet.sex!!.`$t`!!),
                 pet.contact!!.city!!.`$t`,
                 pet.contact!!.state!!.`$t`
         ))
