@@ -27,6 +27,12 @@
                 android:scaleType="centerCrop"
                 android:background="@color/lightGray"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:background="@drawable/gradient_black_bottom_up"
+                android:layout_gravity="bottom"/>
+
             <TextView
                 android:id="@+id/pet_master_name"
                 android:layout_width="match_parent"
