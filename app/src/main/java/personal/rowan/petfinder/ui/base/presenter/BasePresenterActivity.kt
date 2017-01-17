@@ -55,7 +55,7 @@ abstract class BasePresenterActivity<P : BasePresenter<V>, V: Any> : BaseActivit
      * Hook for subclasses for before the [BasePresenter] is instantiated.
      * Primarily used to construct or inject dependencies for the Presenter.
      */
-    protected fun beforePresenterPrepared() {
+    open protected fun beforePresenterPrepared() {
 
     }
 
@@ -63,14 +63,14 @@ abstract class BasePresenterActivity<P : BasePresenter<V>, V: Any> : BaseActivit
      * Hook for subclasses that deliver the [BasePresenter] before its View is attached.
      * Can be use to initialize the Presenter or simple hold a reference to it.
      */
-    protected fun onPresenterPrepared(presenter: P) {
+    open protected fun onPresenterPrepared(presenter: P) {
 
     }
 
     /**
      * Hook for subclasses before the screen gets destroyed.
      */
-    protected fun onPresenterDestroyed() {
+    open protected fun onPresenterDestroyed() {
 
     }
 

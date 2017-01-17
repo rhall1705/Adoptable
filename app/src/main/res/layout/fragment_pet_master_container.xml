@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorTabBackground"
+            android:visibility="gone"
             app:tabIndicatorColor="@color/colorTabIndicator"
             app:tabMode="scrollable"/>
 
@@ -33,5 +34,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <LinearLayout
+        android:id="@+id/pet_master_container_location_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/pet_master_container_location_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/pet_master_container_location_message"
+            android:textSize="14sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:layout_margin="32dp"/>
+
+        <Button
+            android:id="@+id/pet_master_container_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/pet_master_container_location_button"
+            android:textColor="@color/textColorButtonRaised"/>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
