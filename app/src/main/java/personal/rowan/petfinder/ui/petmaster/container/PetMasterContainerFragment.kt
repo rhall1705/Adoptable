@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.TextView
 import butterknife.bindView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
@@ -28,8 +27,7 @@ class PetMasterContainerFragment : BaseFragment() {
     val toolbar: Toolbar by bindView(R.id.pet_master_container_toolbar)
     val tabLayout: TabLayout by bindView(R.id.pet_master_container_tabs)
     val viewPager: ViewPager by bindView(R.id.pet_master_container_pager)
-    val locationContainer: LinearLayout by bindView(R.id.pet_master_container_location_container)
-    val locationMessage: TextView by bindView(R.id.pet_master_container_location_message)
+    val locationRationale: LinearLayout by bindView(R.id.pet_master_container_location_container)
     val locationButton: Button by bindView(R.id.pet_master_container_location_button)
 
     companion object {
@@ -72,7 +70,7 @@ class PetMasterContainerFragment : BaseFragment() {
         val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
         val addresses: List<Address> = geocoder.getFromLocation(location.latitude, location.longitude, 1)
         viewPager.setAdapter(PetMasterContainerAdapter(fragmentManager, context, addresses.get(0).postalCode))
-        locationContainer.visibility = View.GONE
+        locationRationale.visibility = View.GONE
         tabLayout.visibility = View.VISIBLE
         tabLayout.setupWithViewPager(viewPager)
     }
