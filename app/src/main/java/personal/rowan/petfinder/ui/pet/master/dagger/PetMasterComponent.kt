@@ -1,10 +1,10 @@
-package personal.rowan.petfinder.ui.petmaster.dagger
+package personal.rowan.petfinder.ui.pet.master.dagger
 
 import dagger.Component
 import personal.rowan.petfinder.application.App
 import personal.rowan.petfinder.application.dagger.component.ApplicationComponent
 import personal.rowan.petfinder.application.dagger.module.PetfinderApiModule
-import personal.rowan.petfinder.ui.petmaster.PetMasterFragment
+import personal.rowan.petfinder.ui.pet.master.PetMasterFragment
 import rx.functions.Action1
 
 /**

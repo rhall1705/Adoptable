@@ -1,11 +1,11 @@
-package personal.rowan.petfinder.ui.petmaster.container
+package personal.rowan.petfinder.ui.pet.master.container
 
 import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.ui.petmaster.PetMasterFragment
+import personal.rowan.petfinder.ui.pet.master.PetMasterFragment
 
 /**
  * Created by Rowan Hall
@@ -13,7 +13,7 @@ import personal.rowan.petfinder.ui.petmaster.PetMasterFragment
 class PetMasterContainerAdapter(fm: FragmentManager, val mContext: Context, val mLocation: String) : FragmentStatePagerAdapter(fm) {
 
     companion object {
-        private val NUM_PAGES = 8
+        val NUM_PAGES = 8
 
         private val POSITION_DOG = 0
         private val POSITION_CAT = 1

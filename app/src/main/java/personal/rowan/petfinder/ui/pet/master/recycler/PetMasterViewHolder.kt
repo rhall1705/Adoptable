@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.petmaster.recycler
+package personal.rowan.petfinder.ui.pet.master.recycler
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

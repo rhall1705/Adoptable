@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.petmaster.container
+package personal.rowan.petfinder.ui.pet.master.container
 
 import android.Manifest
 import android.content.Context
@@ -69,7 +69,8 @@ class PetMasterContainerFragment : BaseFragment() {
         val location: Location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
         val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
         val addresses: List<Address> = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-        viewPager.setAdapter(PetMasterContainerAdapter(fragmentManager, context, addresses.get(0).postalCode))
+        viewPager.setAdapter(PetMasterContainerAdapter(childFragmentManager, context, addresses.get(0).postalCode))
+        viewPager.offscreenPageLimit = PetMasterContainerAdapter.NUM_PAGES
         locationRationale.visibility = View.GONE
         tabLayout.visibility = View.VISIBLE
         tabLayout.setupWithViewPager(viewPager)

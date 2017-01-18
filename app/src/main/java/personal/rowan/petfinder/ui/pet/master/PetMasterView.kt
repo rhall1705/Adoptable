@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.petmaster
+package personal.rowan.petfinder.ui.pet.master
 
 import personal.rowan.petfinder.model.pet.Pet
 

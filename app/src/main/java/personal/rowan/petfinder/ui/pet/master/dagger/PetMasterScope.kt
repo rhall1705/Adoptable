@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.petmaster.dagger
+package personal.rowan.petfinder.ui.pet.master.dagger
 
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
