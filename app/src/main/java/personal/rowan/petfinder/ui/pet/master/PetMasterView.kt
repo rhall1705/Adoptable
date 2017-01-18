@@ -9,6 +9,8 @@ interface PetMasterView {
 
     fun displayPets(pets: List<Pet>)
 
+    fun onPetClicked(pet: Pet)
+
     fun shouldPaginate(): Boolean
 
     fun showError(error: String)

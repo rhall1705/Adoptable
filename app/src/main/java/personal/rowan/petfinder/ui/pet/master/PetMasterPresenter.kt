@@ -88,6 +88,10 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
                 })
     }
 
+    fun onPetClicked(pet: Pet) {
+        mView.onPetClicked(pet)
+    }
+
     private fun isApiSubscriptionActive(): Boolean {
         return mApiSubscription != null && !mApiSubscription!!.isUnsubscribed
     }

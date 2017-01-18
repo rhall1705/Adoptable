@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,9 +18,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
+        android:elevation="4dp"
         app:itemBackground="?attr/selectableItemBackgroundBorderless"
         app:itemIconTint="@drawable/bottom_navigation_selector"
         app:itemTextColor="@drawable/bottom_navigation_selector"
-        app:menu="@menu/bottom_navigation_main"/>
+        app:menu="@menu/bottom_navigation_main"
+        tools:ignore="UnusedAttribute" />
 
 </RelativeLayout>

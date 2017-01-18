@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PetFinder.iml" filepath="$PROJECT_DIR$/PetFinder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Adoptable.iml" filepath="$PROJECT_DIR$/Adoptable.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

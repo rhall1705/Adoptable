@@ -5,11 +5,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.pet.Pet
+import rx.Observable
+import rx.subjects.PublishSubject
 
 /**
  * Created by Rowan Hall
  */
 class PetMasterAdapter(private var mData: List<Pet>?) : RecyclerView.Adapter<PetMasterViewHolder>() {
+
+    private var mPetClickSubject: PublishSubject<Pet>
+
+    init {
+        mPetClickSubject = PublishSubject.create()
+    }
 
     fun paginateData(data: List<Pet>) {
         if(mData == null || mData!!.isEmpty()) {
@@ -23,7 +31,7 @@ class PetMasterAdapter(private var mData: List<Pet>?) : RecyclerView.Adapter<Pet
     }
 
     override fun onBindViewHolder(holder: PetMasterViewHolder?, position: Int) {
-        holder!!.bind(mData!!.get(position))
+        holder!!.bind(mData!!.get(position), mPetClickSubject)
     }
 
     override fun getItemCount(): Int {
@@ -32,6 +40,10 @@ class PetMasterAdapter(private var mData: List<Pet>?) : RecyclerView.Adapter<Pet
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): PetMasterViewHolder {
         return PetMasterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.listitem_pet_master, parent, false))
+    }
+
+    fun itemClickObservable(): Observable<Pet> {
+        return mPetClickSubject
     }
 
 }

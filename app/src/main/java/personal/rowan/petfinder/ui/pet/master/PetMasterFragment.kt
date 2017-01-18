@@ -18,6 +18,7 @@ import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
 import personal.rowan.petfinder.ui.pet.master.dagger.PetMasterComponent
 import personal.rowan.petfinder.ui.pet.master.dagger.PetMasterScope
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterAdapter
+import rx.Subscription
 import java.util.*
 import javax.inject.Inject
 
@@ -40,6 +41,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     lateinit var mAnimal: String
     val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList<Pet>())
     val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
+    var mItemClickSubscription: Subscription? = null
 
     companion object {
 
@@ -88,6 +90,13 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         mPresenter = presenter
         mPresenter.loadData(mLocation, mAnimal)
         mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))
+        mItemClickSubscription = mAdapter.itemClickObservable().subscribe { pet -> mPresenter.onPetClicked(pet) }
+    }
+
+    override fun onPresenterDestroyed() {
+        if(mItemClickSubscription!= null && !mItemClickSubscription!!.isUnsubscribed) {
+            mItemClickSubscription!!.unsubscribe()
+        }
     }
 
     override val presenterFactory: PresenterFactory<PetMasterPresenter>
@@ -95,6 +104,11 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
 
     override fun displayPets(pets: List<Pet>) {
         mAdapter.paginateData(pets)
+    }
+
+    override fun onPetClicked(pet: Pet) {
+        // todo: implement navigation
+        showToastMessage("Navigate to detail for " + pet.name!!.`$t`!!)
     }
 
     override fun shouldPaginate(): Boolean {
