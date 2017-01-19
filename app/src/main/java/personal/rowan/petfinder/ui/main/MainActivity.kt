@@ -49,7 +49,7 @@ class MainActivity : BaseActivity() {
         override fun getItem(position: Int): Fragment {
             when(position) {
                 POSITION_NEARBY_ANIMALS -> return PetMasterContainerFragment.getInstance()
-                POSITION_NEARBY_SHELTERS -> return ShelterMasterFragment()
+                POSITION_NEARBY_SHELTERS -> return ShelterMasterFragment.getInstance("30308")
                 POSITION_SEARCH -> return SearchFragment()
                 else -> throw RuntimeException("Invalid viewpager position")
             }

@@ -32,16 +32,16 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     @Inject
     lateinit var mPresenterFactory: PetMasterPresenterFactory
 
-    val swipeRefresh: SwipeRefreshLayout by bindView(R.id.pet_master_swipe_refresh)
-    val petList: RecyclerView by bindView(R.id.pet_master_recycler)
-    val pagination: ProgressBar by bindView(R.id.pet_master_pagination)
+    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.pet_master_swipe_refresh)
+    private val petList: RecyclerView by bindView(R.id.pet_master_recycler)
+    private val pagination: ProgressBar by bindView(R.id.pet_master_pagination)
 
-    lateinit var mPresenter: PetMasterPresenter
-    lateinit var mLocation: String
-    lateinit var mAnimal: String
-    val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList<Pet>())
-    val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-    var mItemClickSubscription: Subscription? = null
+    private lateinit var mPresenter: PetMasterPresenter
+    private lateinit var mLocation: String
+    private lateinit var mAnimal: String
+    private val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList<Pet>())
+    private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
+    private var mItemClickSubscription: Subscription? = null
 
     companion object {
 
