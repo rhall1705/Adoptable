@@ -22,17 +22,17 @@ import java.util.*
 /**
  * Created by Rowan Hall
  */
-class PetMasterContainerFragment : BaseFragment() {
+class PetMasterNearbyContainerFragment : BaseFragment() {
 
-    val toolbar: Toolbar by bindView(R.id.pet_master_container_toolbar)
-    val tabLayout: TabLayout by bindView(R.id.pet_master_container_tabs)
-    val viewPager: ViewPager by bindView(R.id.pet_master_container_pager)
-    val locationRationale: LinearLayout by bindView(R.id.pet_master_container_location_container)
-    val locationButton: Button by bindView(R.id.pet_master_container_location_button)
+    private val toolbar: Toolbar by bindView(R.id.pet_master_container_toolbar)
+    private val tabLayout: TabLayout by bindView(R.id.pet_master_container_tabs)
+    private val viewPager: ViewPager by bindView(R.id.pet_master_container_pager)
+    private val locationRationale: LinearLayout by bindView(R.id.pet_master_container_location_container)
+    private val locationButton: Button by bindView(R.id.pet_master_container_location_button)
 
     companion object {
-        fun getInstance(): PetMasterContainerFragment {
-            return PetMasterContainerFragment()
+        fun getInstance(): PetMasterNearbyContainerFragment {
+            return PetMasterNearbyContainerFragment()
         }
     }
 

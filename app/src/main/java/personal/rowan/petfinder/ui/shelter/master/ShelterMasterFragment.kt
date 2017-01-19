@@ -1,5 +1,9 @@
 package personal.rowan.petfinder.ui.shelter.master
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.*
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -9,6 +13,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import butterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
@@ -18,6 +24,7 @@ import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
 import personal.rowan.petfinder.ui.shelter.master.dagger.ShelterMasterComponent
 import personal.rowan.petfinder.ui.shelter.master.recycler.ShelterMasterAdapter
+import personal.rowan.petfinder.util.PermissionUtils
 import rx.Subscription
 import java.util.*
 import javax.inject.Inject
@@ -30,35 +37,28 @@ class ShelterMasterFragment : BasePresenterFragment<ShelterMasterPresenter, Shel
     @Inject
     lateinit var mPresenterFactory: ShelterMasterPresenterFactory
 
+    companion object {
+
+        fun getInstance(): ShelterMasterFragment {
+            return ShelterMasterFragment()
+        }
+    }
+
     private val toolbar: Toolbar by bindView(R.id.shelter_master_toolbar)
     private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.shelter_master_swipe_refresh)
-    private val petList: RecyclerView by bindView(R.id.shelter_master_recycler)
+    private val shelterList: RecyclerView by bindView(R.id.shelter_master_recycler)
     private val pagination: ProgressBar by bindView(R.id.shelter_master_pagination)
+    private val locationRationale: LinearLayout by bindView(R.id.shelter_master_container_location_container)
+    private val locationButton: Button by bindView(R.id.shelter_master_container_location_button)
 
     private lateinit var mPresenter: ShelterMasterPresenter
-    private lateinit var mLocation: String
     private val mAdapter: ShelterMasterAdapter = ShelterMasterAdapter(ArrayList<Shelter>())
     private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
     private var mPetButtonSubscription: Subscription? = null
     private var mDirectionsButtonSubscription: Subscription? = null
 
-    companion object {
-
-        private val ARG_PET_MASTER_LOCATION = "PetMasterFragment.Arg.Location"
-
-        fun getInstance(location: String): ShelterMasterFragment {
-            val fragment: ShelterMasterFragment = ShelterMasterFragment()
-            val args: Bundle = Bundle()
-            args.putString(ARG_PET_MASTER_LOCATION, location)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     override fun beforePresenterPrepared() {
         ShelterMasterComponent.injector.call(this)
-        val args: Bundle = arguments
-        mLocation = args.getString(ARG_PET_MASTER_LOCATION)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -68,18 +68,59 @@ class ShelterMasterFragment : BasePresenterFragment<ShelterMasterPresenter, Shel
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setToolbar(toolbar, getString(R.string.shelter_master_title))
-        petList.layoutManager = mLayoutManager
-        petList.adapter = mAdapter
+        shelterList.layoutManager = mLayoutManager
+        shelterList.adapter = mAdapter
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
         swipeRefresh.setOnRefreshListener { mPresenter.refreshData() }
+        locationButton.setOnClickListener { handleLocationPermission() }
     }
 
     override fun onPresenterPrepared(presenter: ShelterMasterPresenter) {
         mPresenter = presenter
-        mPresenter.loadData(mLocation)
-        mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))
+
+        if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            handleLocationPermission()
+            return
+        }
+
+        setupRecycler()
+    }
+
+    private fun setupRecycler() {
+        swipeRefresh.visibility = View.VISIBLE
+        locationRationale.visibility = View.GONE
+
+        val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val location: Location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
+        val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
+        val addresses: List<Address> = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+
+        mPresenter.loadData(addresses.get(0).postalCode)
+        mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(shelterList))
         mPetButtonSubscription = mAdapter.petsButtonObservable().subscribe { shelter -> mPresenter.onPetsClicked(shelter) }
         mDirectionsButtonSubscription = mAdapter.directionsButtonObservable().subscribe { shelter -> mPresenter.onDirectionsClicked(shelter) }
+    }
+
+    private fun handleLocationPermission() {
+        swipeRefresh.visibility = View.GONE
+        locationRationale.visibility = View.VISIBLE
+        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PermissionUtils.PERMISSION_CODE_LOCATION)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if(PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) && shelterList.adapter == null) {
+            setupRecycler()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode) {
+            PermissionUtils.PERMISSION_CODE_LOCATION ->
+                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setupRecycler()
+                }
+        }
     }
 
     override fun onPresenterDestroyed() {

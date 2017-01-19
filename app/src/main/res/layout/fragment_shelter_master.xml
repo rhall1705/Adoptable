@@ -32,6 +32,34 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <LinearLayout
+        android:id="@+id/shelter_master_container_location_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/shelter_master_container_location_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/shelter_master_container_location_message"
+            android:textSize="14sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:layout_margin="32dp"/>
+
+        <Button
+            android:id="@+id/shelter_master_container_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/shelter_master_container_location_button"
+            android:textColor="@color/textColorButtonRaised"/>
+
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/shelter_master_pagination"
         android:layout_width="match_parent"
