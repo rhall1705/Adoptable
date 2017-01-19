@@ -64,8 +64,14 @@ class ShelterMasterPresenter(private var mPetfinderService: PetfinderService) : 
                             mShelterList = ArrayList()
                         }
 
-                        mShelterList!!.addAll(result!!.petfinder!!.shelters!!.shelter!!)
-                        mOffset = result.petfinder!!.lastOffset!!.`$t`!!
+                        val shelters: List<Shelter>? = result!!.petfinder?.shelters?.shelter
+                        if(shelters != null) {
+                            mShelterList!!.addAll(shelters)
+                        }
+                        val offset = result.petfinder!!.lastOffset?.`$t`
+                        if(offset != null) {
+                            mOffset = offset
+                        }
                         publish()
                     }
                 }

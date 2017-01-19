@@ -19,6 +19,18 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <TextView
+        android:id="@+id/pet_master_empty_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/pet_master_empty"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:layout_margin="32dp"
+        android:visibility="gone"/>
+
     <ProgressBar
         android:id="@+id/pet_master_pagination"
         android:layout_width="match_parent"

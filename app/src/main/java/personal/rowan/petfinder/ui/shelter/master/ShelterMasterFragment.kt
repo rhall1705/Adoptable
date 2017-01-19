@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.TextView
 import butterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import personal.rowan.petfinder.R
@@ -49,6 +50,7 @@ class ShelterMasterFragment : BasePresenterFragment<ShelterMasterPresenter, Shel
     private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.shelter_master_swipe_refresh)
     private val shelterList: RecyclerView by bindView(R.id.shelter_master_recycler)
     private val pagination: ProgressBar by bindView(R.id.shelter_master_pagination)
+    private val emptyView: TextView by bindView(R.id.shelter_master_empty_message)
     private val locationRationale: LinearLayout by bindView(R.id.shelter_master_container_location_container)
     private val locationButton: Button by bindView(R.id.shelter_master_container_location_button)
 
@@ -137,7 +139,12 @@ class ShelterMasterFragment : BasePresenterFragment<ShelterMasterPresenter, Shel
         get() = mPresenterFactory
 
     override fun displayShelters(shelters: List<Shelter>) {
-        mAdapter.paginateData(shelters)
+        if(shelters.isEmpty()) {
+            emptyView.visibility = View.VISIBLE
+        } else {
+            emptyView.visibility = View.GONE
+            mAdapter.paginateData(shelters)
+        }
     }
 
     override fun onPetsButtonClicked(shelter: Shelter) {

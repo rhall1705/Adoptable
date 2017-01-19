@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.TextView
 import butterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import personal.rowan.petfinder.R
@@ -35,6 +36,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.pet_master_swipe_refresh)
     private val petList: RecyclerView by bindView(R.id.pet_master_recycler)
     private val pagination: ProgressBar by bindView(R.id.pet_master_pagination)
+    private val emptyView: TextView by bindView(R.id.pet_master_empty_message)
 
     private lateinit var mPresenter: PetMasterPresenter
     private var mType: Int? = null
@@ -141,7 +143,12 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         get() = mPresenterFactory
 
     override fun displayPets(pets: List<Pet>) {
-        mAdapter.paginateData(pets)
+        if(pets.isEmpty()) {
+            emptyView.visibility = View.VISIBLE
+        } else {
+            emptyView.visibility = View.GONE
+            mAdapter.paginateData(pets)
+        }
     }
 
     override fun onPetClicked(pet: Pet) {
