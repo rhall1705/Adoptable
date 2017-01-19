@@ -37,16 +37,25 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     private val pagination: ProgressBar by bindView(R.id.pet_master_pagination)
 
     private lateinit var mPresenter: PetMasterPresenter
-    private lateinit var mLocation: String
-    private lateinit var mAnimal: String
+    private var mType: Int? = null
+    private var mLocation: String? = null
+    private var mAnimal: String? = null
+    private var mShelterId: String? = null
+    private var mStatus: Char? = null
     private val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList<Pet>())
     private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
     private var mItemClickSubscription: Subscription? = null
 
     companion object {
 
+        private val ARG_PET_MASTER_TYPE = "PetMasterFragment.Arg.Type"
+        val TYPE_FIND = 0
+        val TYPE_SHELTER = 1
+
         private val ARG_PET_MASTER_LOCATION = "PetMasterFragment.Arg.Location"
         private val ARG_PET_MASTER_ANIMAL = "PetMasterFragment.Arg.Animal"
+        private val ARG_PET_MASTER_SHELTER_ID = "PetMasterFragment.Arg.ShelterId"
+        private val ARG_PET_MASTER_STATUS = "PetMasterFragment.Arg.Status"
 
         val ANIMAL_OPTION_DOG = "dog"
         val ANIMAL_OPTION_CAT = "cat"
@@ -57,11 +66,27 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val ANIMAL_OPTION_PIG = "pig"
         val ANIMAL_OPTION_BARNYARD = "barnyard"
 
+        val STATUS_OPTION_ADOPTABLE = 'A'
+        val STATUS_OPTION_HOLD = 'H'
+        val STATUS_OPTION_PENDING = 'P'
+        val STATUS_OPTION_ADOPTED = 'X'
+
         fun getInstance(location: String, animal: String): PetMasterFragment {
             val fragment: PetMasterFragment = PetMasterFragment()
             val args: Bundle = Bundle()
+            args.putInt(ARG_PET_MASTER_TYPE, TYPE_FIND)
             args.putString(ARG_PET_MASTER_LOCATION, location)
             args.putString(ARG_PET_MASTER_ANIMAL, animal)
+            fragment.arguments = args
+            return fragment
+        }
+
+        fun getInstance(shelterId: String, status: Char): PetMasterFragment {
+            val fragment: PetMasterFragment = PetMasterFragment()
+            val args: Bundle = Bundle()
+            args.putInt(ARG_PET_MASTER_TYPE, TYPE_SHELTER)
+            args.putString(ARG_PET_MASTER_SHELTER_ID, shelterId)
+            args.putChar(ARG_PET_MASTER_STATUS, status)
             fragment.arguments = args
             return fragment
         }
@@ -70,8 +95,18 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     override fun beforePresenterPrepared() {
         PetMasterComponent.injector.call(this)
         val args: Bundle = arguments
-        mLocation = args.getString(ARG_PET_MASTER_LOCATION)
-        mAnimal = args.getString(ARG_PET_MASTER_ANIMAL)
+
+        mType = args.getInt(ARG_PET_MASTER_TYPE)
+        when(mType) {
+            TYPE_FIND -> {
+                mLocation = args.getString(ARG_PET_MASTER_LOCATION)
+                mAnimal = args.getString(ARG_PET_MASTER_ANIMAL)
+            }
+            TYPE_SHELTER -> {
+                mShelterId = args.getString(ARG_PET_MASTER_SHELTER_ID)
+                mStatus = args.getChar(ARG_PET_MASTER_STATUS)
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -88,7 +123,10 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
 
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
-        mPresenter.loadData(mLocation, mAnimal)
+        when(mType) {
+            TYPE_FIND -> mPresenter.loadData(mLocation!!, mAnimal!!)
+            TYPE_SHELTER -> mPresenter.loadData(mShelterId!!, mStatus!!)
+        }
         mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))
         mItemClickSubscription = mAdapter.itemClickObservable().subscribe { pet -> mPresenter.onPetClicked(pet) }
     }

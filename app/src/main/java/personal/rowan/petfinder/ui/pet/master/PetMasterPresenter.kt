@@ -24,15 +24,29 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
     private val mCompositeSubscription: CompositeSubscription = CompositeSubscription()
     private var mApiSubscription: Subscription? = null
 
-    private lateinit var mLocation: String
-    private lateinit var mAnimal: String
+    private var mType: Int? = null
+
+    private var mLocation: String? = null
+    private var mAnimal: String? = null
+
+    private var mShelterId: String? = null
+    private var mStatus: Char? = null
+
     private var mPetList: MutableList<Pet>? = null
     private var mOffset: String = "0"
     private var mError: Throwable? = null
 
     fun loadData(location: String, animal: String) {
+        mType = PetMasterFragment.TYPE_FIND
         mLocation = location
         mAnimal = animal
+        loadData(false)
+    }
+
+    fun loadData(shelterId: String, status: Char) {
+        mType = PetMasterFragment.TYPE_SHELTER
+        mShelterId = shelterId
+        mStatus = status
         loadData(false)
     }
 
@@ -48,7 +62,13 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
             mOffset = "0"
         }
 
-        mApiSubscription = mPetfinderService.getNearbyPets(mLocation, mAnimal, mOffset)
+        val petObservable: Observable<PetResult>
+        when (mType) {
+            PetMasterFragment.TYPE_FIND -> petObservable = mPetfinderService.getNearbyPets(mLocation!!, mAnimal!!, mOffset)
+            PetMasterFragment.TYPE_SHELTER -> petObservable = mPetfinderService.getPetsForShelter(mShelterId!!, mStatus!!, mOffset)
+            else -> throw RuntimeException("invalid pet master type")
+        }
+        mApiSubscription = petObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object: Subscriber<PetResult>() {
@@ -67,7 +87,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
                                 mPetList = ArrayList()
                             }
 
-                            mPetList!!.addAll(result!!.petfinder!!.pets!!.pet!!)
+                            mPetList!!.addAll(result!!.petfinder!!.pets!!.pet)
                             mOffset = result.petfinder!!.lastOffset!!.`$t`!!
                             publish()
                         }

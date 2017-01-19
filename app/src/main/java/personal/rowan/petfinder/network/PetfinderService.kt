@@ -19,6 +19,9 @@ interface PetfinderService {
     @GET("shelter.find")
     fun getNearbyShelters(@Query("location") location: String, @Query("offset") offset: String?): Observable<ShelterResult>
 
+    @GET("shelter.getPets")
+    fun getPetsForShelter(@Query("id") shelterId: String, @Query("status") status: Char, @Query("offset") offset: String?): Observable<PetResult>
+
     companion object {
         val BASE_URL = "http://api.petfinder.com/"
         val API_KEY: String = BuildConfig.PET_FINDER_API_KEY

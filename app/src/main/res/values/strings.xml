@@ -5,7 +5,8 @@
     <string name="main_bottom_nav_shelters">Shelters</string>
     <string name="main_bottom_nav_search">Search</string>
 
-    <string name="pet_master_container_title">Nearby Animals</string>
+    <string name="pet_master_nearby_container_title">Nearby Animals</string>
+    <string name="pet_master_shelter_container_title">Shelter Animals</string>
     <string name="pet_master_container_location_message">Adoptable requires your location in order to find nearby pets. If you don\'t want to reveal your location, please check out the search tab.</string>
     <string name="pet_master_container_location_button">Grant Permission</string>
     <string name="pet_master_image_content_description">The image for an animal</string>
@@ -19,6 +20,10 @@
     <string name="pet_master_tab_horses">Horses</string>
     <string name="pet_master_tab_pigs">Pigs</string>
     <string name="pet_master_tab_barnyard">Barnyard</string>
+    <string name="pet_master_tab_adoptable">Adoptable</string>
+    <string name="pet_master_tab_hold">Hold</string>
+    <string name="pet_master_tab_pending">Pending</string>
+    <string name="pet_master_tab_adopted">Adopted</string>
 
     <string name="shelter_master_title">Nearby Shelters</string>
     <string name="shelter_master_container_location_message">Adoptable requires your location in order to find nearby shelters. If you don\'t want to reveal your location, please check out the search tab.</string>

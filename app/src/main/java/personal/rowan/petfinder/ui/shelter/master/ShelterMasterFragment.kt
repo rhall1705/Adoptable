@@ -22,6 +22,7 @@ import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.shelter.Shelter
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
+import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterContainerActivity
 import personal.rowan.petfinder.ui.shelter.master.dagger.ShelterMasterComponent
 import personal.rowan.petfinder.ui.shelter.master.recycler.ShelterMasterAdapter
 import personal.rowan.petfinder.util.PermissionUtils
@@ -140,8 +141,7 @@ class ShelterMasterFragment : BasePresenterFragment<ShelterMasterPresenter, Shel
     }
 
     override fun onPetsButtonClicked(shelter: Shelter) {
-        // todo: implement navigation
-        showToastMessage("Navigate to pets for " + shelter.name!!.`$t`)
+        startActivity(PetMasterShelterContainerActivity.getIntent(context, shelter.id!!.`$t`!!))
     }
 
     override fun onDirectionsButtonClicked(shelter: Shelter) {

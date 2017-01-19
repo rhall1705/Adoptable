@@ -10,7 +10,7 @@ import personal.rowan.petfinder.ui.pet.master.PetMasterFragment
 /**
  * Created by Rowan Hall
  */
-class PetMasterContainerAdapter(fm: FragmentManager, val mContext: Context, val mLocation: String) : FragmentStatePagerAdapter(fm) {
+class PetMasterNearbyContainerAdapter(fm: FragmentManager, val mContext: Context, val mLocation: String) : FragmentStatePagerAdapter(fm) {
 
     companion object {
         val NUM_PAGES = 8

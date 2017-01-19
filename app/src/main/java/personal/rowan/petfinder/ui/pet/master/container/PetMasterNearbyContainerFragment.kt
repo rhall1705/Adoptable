@@ -24,11 +24,11 @@ import java.util.*
  */
 class PetMasterNearbyContainerFragment : BaseFragment() {
 
-    private val toolbar: Toolbar by bindView(R.id.pet_master_container_toolbar)
-    private val tabLayout: TabLayout by bindView(R.id.pet_master_container_tabs)
-    private val viewPager: ViewPager by bindView(R.id.pet_master_container_pager)
-    private val locationRationale: LinearLayout by bindView(R.id.pet_master_container_location_container)
-    private val locationButton: Button by bindView(R.id.pet_master_container_location_button)
+    private val toolbar: Toolbar by bindView(R.id.pet_master_nearby_container_toolbar)
+    private val tabLayout: TabLayout by bindView(R.id.pet_master_nearby_container_tabs)
+    private val viewPager: ViewPager by bindView(R.id.pet_master_nearby_container_pager)
+    private val locationRationale: LinearLayout by bindView(R.id.pet_master_nearby_container_location_container)
+    private val locationButton: Button by bindView(R.id.pet_master_nearby_container_location_button)
 
     companion object {
         fun getInstance(): PetMasterNearbyContainerFragment {
@@ -37,12 +37,12 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_pet_master_container, container, false)
+        return inflater!!.inflate(R.layout.fragment_pet_master_nearby_container, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setToolbar(toolbar, getString(R.string.pet_master_container_title))
+        setToolbar(toolbar, getString(R.string.pet_master_nearby_container_title))
         locationButton.setOnClickListener { handleLocationPermission() }
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -69,8 +69,8 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
         val location: Location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
         val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
         val addresses: List<Address> = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-        viewPager.setAdapter(PetMasterContainerAdapter(childFragmentManager, context, addresses.get(0).postalCode))
-        viewPager.offscreenPageLimit = PetMasterContainerAdapter.NUM_PAGES
+        viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, addresses.get(0).postalCode))
+        viewPager.offscreenPageLimit = PetMasterNearbyContainerAdapter.NUM_PAGES
         locationRationale.visibility = View.GONE
         tabLayout.visibility = View.VISIBLE
         tabLayout.setupWithViewPager(viewPager)

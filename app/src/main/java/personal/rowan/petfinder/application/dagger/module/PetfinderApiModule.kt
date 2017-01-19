@@ -7,9 +7,11 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import personal.rowan.petfinder.model.pet.Breeds
 import personal.rowan.petfinder.model.pet.Options
+import personal.rowan.petfinder.model.pet.Pets
 import personal.rowan.petfinder.network.BreedsTypeAdapter
 import personal.rowan.petfinder.network.OptionsTypeAdapter
 import personal.rowan.petfinder.network.PetfinderService
+import personal.rowan.petfinder.network.PetsTypeAdapter
 import personal.rowan.petfinder.util.RetrofitServiceFactory
 
 /**
@@ -38,6 +40,7 @@ class PetfinderApiModule {
             .build()
 
     private val gson: Gson = GsonBuilder()
+            //.registerTypeAdapter(Pets::class.java, PetsTypeAdapter())
             .registerTypeAdapter(Breeds::class.java, BreedsTypeAdapter())
             .registerTypeAdapter(Options::class.java, OptionsTypeAdapter())
             .create()
