@@ -50,6 +50,8 @@ class ShelterMasterPresenter(private var mPetfinderService: PetfinderService) : 
                     override fun onError(e: Throwable?) {
                         mError = e
                         publish()
+                        mView.hideProgress()
+                        mView.hidePagination()
                     }
 
                     override fun onCompleted() {

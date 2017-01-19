@@ -75,6 +75,8 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
                         override fun onError(e: Throwable?) {
                             mError = e
                             publish()
+                            mView.hideProgress()
+                            mView.hidePagination()
                         }
 
                         override fun onCompleted() {
@@ -87,8 +89,14 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
                                 mPetList = ArrayList()
                             }
 
-                            mPetList!!.addAll(result!!.petfinder!!.pets!!.pet)
-                            mOffset = result.petfinder!!.lastOffset!!.`$t`!!
+                            val pets: List<Pet>? = result!!.petfinder?.pets?.pet
+                            if(pets != null) {
+                                mPetList!!.addAll(pets)
+                            }
+                            val offset = result.petfinder!!.lastOffset?.`$t`
+                            if(offset != null) {
+                                mOffset = offset
+                            }
                             publish()
                         }
                     }

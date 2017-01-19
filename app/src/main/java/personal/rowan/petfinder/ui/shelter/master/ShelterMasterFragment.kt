@@ -141,7 +141,7 @@ class ShelterMasterFragment : BasePresenterFragment<ShelterMasterPresenter, Shel
     }
 
     override fun onPetsButtonClicked(shelter: Shelter) {
-        startActivity(PetMasterShelterContainerActivity.getIntent(context, shelter.id!!.`$t`!!))
+        startActivity(PetMasterShelterContainerActivity.getIntent(context, shelter.id!!.`$t`!!, shelter.name!!.`$t`!!))
     }
 
     override fun onDirectionsButtonClicked(shelter: Shelter) {

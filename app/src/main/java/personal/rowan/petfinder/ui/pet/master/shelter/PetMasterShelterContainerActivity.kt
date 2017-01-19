@@ -22,10 +22,12 @@ class PetMasterShelterContainerActivity : BaseActivity() {
     companion object {
 
         private val ARG_SHELTER_ID = "PetMasterShelterContainerActivity.ShelterId"
+        private val ARG_SHELTER_NAME = "PetMasterShelterContainerActivity.ShelterName"
 
-        fun getIntent(context: Context, shelterId: String): Intent {
+        fun getIntent(context: Context, shelterId: String, shelterName: String): Intent {
             val intent: Intent = Intent(context, PetMasterShelterContainerActivity::class.java)
             intent.putExtra(ARG_SHELTER_ID, shelterId)
+            intent.putExtra(ARG_SHELTER_NAME, shelterName)
             return intent
         }
     }
@@ -33,7 +35,7 @@ class PetMasterShelterContainerActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pet_master_shelter_container)
-        setToolbar(toolbar, getString(R.string.pet_master_shelter_container_title), true)
+        setToolbar(toolbar, intent.getStringExtra(ARG_SHELTER_NAME), true)
         viewPager.setAdapter(PetMasterShelterContainerAdapter(supportFragmentManager, this, intent.getStringExtra(ARG_SHELTER_ID)))
         viewPager.offscreenPageLimit = PetMasterShelterContainerAdapter.NUM_PAGES
         tabLayout.setupWithViewPager(viewPager)

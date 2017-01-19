@@ -6,7 +6,6 @@
     <string name="main_bottom_nav_search">Search</string>
 
     <string name="pet_master_nearby_container_title">Nearby Animals</string>
-    <string name="pet_master_shelter_container_title">Shelter Animals</string>
     <string name="pet_master_container_location_message">Adoptable requires your location in order to find nearby pets. If you don\'t want to reveal your location, please check out the search tab.</string>
     <string name="pet_master_container_location_button">Grant Permission</string>
     <string name="pet_master_image_content_description">The image for an animal</string>
