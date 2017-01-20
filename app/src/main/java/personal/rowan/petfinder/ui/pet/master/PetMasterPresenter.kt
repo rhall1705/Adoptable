@@ -58,7 +58,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
         if(isApiSubscriptionActive()) return
 
         if(clear) {
-            mPetList!!.clear()
+            mPetList?.clear()
             mOffset = "0"
         }
 

@@ -39,7 +39,7 @@ class ShelterMasterPresenter(private var mPetfinderService: PetfinderService) : 
         if(isApiSubscriptionActive()) return
 
         if(clear) {
-            mShelterList!!.clear()
+            mShelterList?.clear()
             mOffset = "0"
         }
 
