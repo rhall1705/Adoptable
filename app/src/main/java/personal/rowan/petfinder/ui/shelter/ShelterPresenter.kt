@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.shelter.master
+package personal.rowan.petfinder.ui.shelter
 
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent
 import personal.rowan.petfinder.model.shelter.Shelter
@@ -16,7 +16,7 @@ import java.util.*
 /**
  * Created by Rowan Hall
  */
-class ShelterMasterPresenter(private var mPetfinderService: PetfinderService) : BasePresenter<ShelterMasterView>(ShelterMasterView::class.java) {
+class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePresenter<ShelterView>(ShelterView::class.java) {
 
     private val mCompositeSubscription: CompositeSubscription = CompositeSubscription()
     private var mApiSubscription: Subscription? = null

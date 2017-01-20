@@ -1,11 +1,11 @@
-package personal.rowan.petfinder.ui.shelter.master
+package personal.rowan.petfinder.ui.shelter
 
 import personal.rowan.petfinder.model.shelter.Shelter
 
 /**
  * Created by Rowan Hall
  */
-interface ShelterMasterView {
+interface ShelterView {
 
     fun displayShelters(shelters: List<Shelter>)
 

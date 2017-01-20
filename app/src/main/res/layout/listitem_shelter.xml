@@ -16,7 +16,7 @@
         android:paddingTop="24dp">
 
         <TextView
-            android:id="@+id/shelter_master_title"
+            android:id="@+id/shelter_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
@@ -26,7 +26,7 @@
             tools:text="Border Collie Rescue of North Georgia"/>
 
         <TextView
-            android:id="@+id/shelter_master_subtitle"
+            android:id="@+id/shelter_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
@@ -38,7 +38,7 @@
             tools:text="Acworth, GA 30144"/>
 
         <TextView
-            android:id="@+id/shelter_master_subtext"
+            android:id="@+id/shelter_subtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
@@ -57,19 +57,19 @@
             android:layout_marginBottom="8dp">
 
             <Button
-                android:id="@+id/shelter_master_directions_button"
+                android:id="@+id/shelter_directions_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColorPrimary"
-                android:text="@string/shelter_master_button_directions"
+                android:text="@string/shelter_button_directions"
                 style="?attr/borderlessButtonStyle"/>
 
             <Button
-                android:id="@+id/shelter_master_pets_button"
+                android:id="@+id/shelter_pets_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColorButtonFlat"
-                android:text="@string/shelter_master_button_pets"
+                android:text="@string/shelter_button_pets"
                 style="?attr/borderlessButtonStyle"/>
 
         </android.support.v7.widget.ButtonBarLayout>

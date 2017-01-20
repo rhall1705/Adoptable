@@ -12,7 +12,7 @@ import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseActivity
 import personal.rowan.petfinder.ui.pet.master.container.PetMasterNearbyContainerFragment
 import personal.rowan.petfinder.ui.search.SearchFragment
-import personal.rowan.petfinder.ui.shelter.master.ShelterMasterFragment
+import personal.rowan.petfinder.ui.shelter.ShelterFragment
 
 class MainActivity : BaseActivity() {
 
@@ -49,7 +49,7 @@ class MainActivity : BaseActivity() {
         override fun getItem(position: Int): Fragment {
             when(position) {
                 POSITION_NEARBY_ANIMALS -> return PetMasterNearbyContainerFragment.getInstance()
-                POSITION_NEARBY_SHELTERS -> return ShelterMasterFragment.getInstance()
+                POSITION_NEARBY_SHELTERS -> return ShelterFragment.getInstance()
                 POSITION_SEARCH -> return SearchFragment()
                 else -> throw RuntimeException("Invalid viewpager position")
             }

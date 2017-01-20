@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.shelter.master.recycler
+package personal.rowan.petfinder.ui.shelter.recycler
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import rx.subjects.PublishSubject
 /**
  * Created by Rowan Hall
  */
-class ShelterMasterAdapter(private var mData: List<Shelter>?) : RecyclerView.Adapter<ShelterMasterViewHolder>() {
+class ShelterAdapter(private var mData: List<Shelter>?) : RecyclerView.Adapter<ShelterViewHolder>() {
 
     private var mPetsButtonSubject: PublishSubject<Shelter>
     private var mDirectionsButtonSubject: PublishSubject<Shelter>
@@ -32,7 +32,7 @@ class ShelterMasterAdapter(private var mData: List<Shelter>?) : RecyclerView.Ada
         }
     }
 
-    override fun onBindViewHolder(holder: ShelterMasterViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ShelterViewHolder?, position: Int) {
         holder!!.bind(mData!!.get(position), mPetsButtonSubject, mDirectionsButtonSubject)
     }
 
@@ -40,8 +40,8 @@ class ShelterMasterAdapter(private var mData: List<Shelter>?) : RecyclerView.Ada
         return mData!!.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ShelterMasterViewHolder {
-        return ShelterMasterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.listitem_shelter_master, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ShelterViewHolder {
+        return ShelterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.listitem_shelter, parent, false))
     }
 
     fun petsButtonObservable(): Observable<Shelter> {

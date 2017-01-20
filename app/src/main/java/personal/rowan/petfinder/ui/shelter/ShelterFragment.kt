@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.shelter.master
+package personal.rowan.petfinder.ui.shelter
 
 import android.Manifest
 import android.content.Context
@@ -24,8 +24,8 @@ import personal.rowan.petfinder.model.shelter.Shelter
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
 import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterContainerActivity
-import personal.rowan.petfinder.ui.shelter.master.dagger.ShelterMasterComponent
-import personal.rowan.petfinder.ui.shelter.master.recycler.ShelterMasterAdapter
+import personal.rowan.petfinder.ui.shelter.dagger.ShelterComponent
+import personal.rowan.petfinder.ui.shelter.recycler.ShelterAdapter
 import personal.rowan.petfinder.util.PermissionUtils
 import rx.Subscription
 import java.util.*
@@ -34,43 +34,43 @@ import javax.inject.Inject
 /**
  * Created by Rowan Hall
  */
-class ShelterMasterFragment : BasePresenterFragment<ShelterMasterPresenter, ShelterMasterView>(), ShelterMasterView {
+class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), ShelterView {
 
     @Inject
-    lateinit var mPresenterFactory: ShelterMasterPresenterFactory
+    lateinit var mPresenterFactory: ShelterPresenterFactory
 
     companion object {
 
-        fun getInstance(): ShelterMasterFragment {
-            return ShelterMasterFragment()
+        fun getInstance(): ShelterFragment {
+            return ShelterFragment()
         }
     }
 
-    private val toolbar: Toolbar by bindView(R.id.shelter_master_toolbar)
-    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.shelter_master_swipe_refresh)
-    private val shelterList: RecyclerView by bindView(R.id.shelter_master_recycler)
-    private val pagination: ProgressBar by bindView(R.id.shelter_master_pagination)
-    private val emptyView: TextView by bindView(R.id.shelter_master_empty_message)
-    private val locationRationale: LinearLayout by bindView(R.id.shelter_master_container_location_container)
-    private val locationButton: Button by bindView(R.id.shelter_master_container_location_button)
+    private val toolbar: Toolbar by bindView(R.id.shelter_toolbar)
+    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.shelter_swipe_refresh)
+    private val shelterList: RecyclerView by bindView(R.id.shelter_recycler)
+    private val pagination: ProgressBar by bindView(R.id.shelter_pagination)
+    private val emptyView: TextView by bindView(R.id.shelter_empty_message)
+    private val locationRationale: LinearLayout by bindView(R.id.shelter_container_location_container)
+    private val locationButton: Button by bindView(R.id.shelter_container_location_button)
 
-    private lateinit var mPresenter: ShelterMasterPresenter
-    private val mAdapter: ShelterMasterAdapter = ShelterMasterAdapter(ArrayList<Shelter>())
+    private lateinit var mPresenter: ShelterPresenter
+    private val mAdapter: ShelterAdapter = ShelterAdapter(ArrayList<Shelter>())
     private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
     private var mPetButtonSubscription: Subscription? = null
     private var mDirectionsButtonSubscription: Subscription? = null
 
     override fun beforePresenterPrepared() {
-        ShelterMasterComponent.injector.call(this)
+        ShelterComponent.injector.call(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_shelter_master, container, false)
+        return inflater!!.inflate(R.layout.fragment_shelter, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setToolbar(toolbar, getString(R.string.shelter_master_title))
+        setToolbar(toolbar, getString(R.string.shelter_title))
         shelterList.layoutManager = mLayoutManager
         shelterList.adapter = mAdapter
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
@@ -78,7 +78,7 @@ class ShelterMasterFragment : BasePresenterFragment<ShelterMasterPresenter, Shel
         locationButton.setOnClickListener { handleLocationPermission() }
     }
 
-    override fun onPresenterPrepared(presenter: ShelterMasterPresenter) {
+    override fun onPresenterPrepared(presenter: ShelterPresenter) {
         mPresenter = presenter
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -135,7 +135,7 @@ class ShelterMasterFragment : BasePresenterFragment<ShelterMasterPresenter, Shel
         }
     }
 
-    override val presenterFactory: PresenterFactory<ShelterMasterPresenter>
+    override val presenterFactory: PresenterFactory<ShelterPresenter>
         get() = mPresenterFactory
 
     override fun displayShelters(shelters: List<Shelter>) {

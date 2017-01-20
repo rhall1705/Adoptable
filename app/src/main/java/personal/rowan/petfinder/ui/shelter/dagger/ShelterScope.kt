@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.shelter.master.dagger
+package personal.rowan.petfinder.ui.shelter.dagger
 
 import javax.inject.Scope
 
@@ -8,4 +8,4 @@ import javax.inject.Scope
 
 @Scope
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
-annotation class ShelterMasterScope
+annotation class ShelterScope

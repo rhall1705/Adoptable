@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.shelter.master.recycler
+package personal.rowan.petfinder.ui.shelter.recycler
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -16,20 +16,20 @@ import rx.subjects.PublishSubject
 /**
  * Created by Rowan Hall
  */
-class ShelterMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)  {
+class ShelterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)  {
 
-    val titleView: TextView by bindView(R.id.shelter_master_title)
-    val subtitleView: TextView by bindView(R.id.shelter_master_subtitle)
-    val subtextView: TextView by bindView(R.id.shelter_master_subtext)
-    val petsButton: Button by bindView(R.id.shelter_master_pets_button)
-    val directionsButton: Button by bindView(R.id.shelter_master_directions_button)
+    val titleView: TextView by bindView(R.id.shelter_title)
+    val subtitleView: TextView by bindView(R.id.shelter_subtitle)
+    val subtextView: TextView by bindView(R.id.shelter_subtext)
+    val petsButton: Button by bindView(R.id.shelter_pets_button)
+    val directionsButton: Button by bindView(R.id.shelter_directions_button)
 
     private var mPetsButtonSubscription: Subscription? = null
     private var mDirectionsButtonSubscription: Subscription? = null
 
     fun bind(shelter: Shelter, petsButtonSubject: PublishSubject<Shelter>, directionsButtonSubject: PublishSubject<Shelter>) {
         titleView.text = shelter.name!!.`$t`
-        subtitleView.text = subtitleView.context.getString(R.string.shelter_master_subtitle, shelter.city!!.`$t`, shelter.state!!.`$t`, shelter.zip!!.`$t`)
+        subtitleView.text = subtitleView.context.getString(R.string.shelter_subtitle, shelter.city!!.`$t`, shelter.state!!.`$t`, shelter.zip!!.`$t`)
 
         val subtextBuilder: StringBuilder = StringBuilder()
         val address1: String? = shelter.address1?.`$t`
@@ -43,15 +43,15 @@ class ShelterMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemVie
         val subtextContext: Context = subtitleView.context
         val phone: String? = shelter.phone?.`$t`
         if (!TextUtils.isEmpty(phone)) {
-            subtextBuilder.append(subtextContext.getString(R.string.shelter_master_phone, phone)).append("\n")
+            subtextBuilder.append(subtextContext.getString(R.string.shelter_phone, phone)).append("\n")
         }
         val fax: String? = shelter.fax?.`$t`
         if (!TextUtils.isEmpty(fax)) {
-            subtextBuilder.append(subtextContext.getString(R.string.shelter_master_fax, fax)).append("\n")
+            subtextBuilder.append(subtextContext.getString(R.string.shelter_fax, fax)).append("\n")
         }
         val email: String? = shelter.email?.`$t`
         if (!TextUtils.isEmpty(email)) {
-            subtextBuilder.append(subtextContext.getString(R.string.shelter_master_email, email)).append("\n")
+            subtextBuilder.append(subtextContext.getString(R.string.shelter_email, email)).append("\n")
         }
         var subtextString: String = subtextBuilder.toString()
         if (!subtextString.isEmpty()) {
