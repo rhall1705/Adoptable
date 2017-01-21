@@ -27,21 +27,21 @@ class BreedsTypeAdapter : TypeAdapter<Breeds>() {
 
     @Throws(IOException::class)
     override fun read(jsonReader: JsonReader): Breeds {
-        val Breeds: Breeds
+        val breeds: Breeds
 
         jsonReader.beginObject()
         jsonReader.nextName()
 
         if (jsonReader.peek() == JsonToken.BEGIN_ARRAY) {
             @Suppress("UNCHECKED_CAST")
-            Breeds = Breeds(gson.fromJson<Any>(jsonReader, Array<Breed>::class.java) as Array<Breed>)
+            breeds = Breeds(gson.fromJson<Any>(jsonReader, Array<Breed>::class.java) as Array<Breed>)
         } else if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
-            Breeds = Breeds(gson.fromJson<Any>(jsonReader, Breed::class.java) as Breed)
+            breeds = Breeds(gson.fromJson<Any>(jsonReader, Breed::class.java) as Breed)
         } else {
             throw JsonParseException("Unexpected token " + jsonReader.peek())
         }
 
         jsonReader.endObject()
-        return Breeds
+        return breeds
     }
 }

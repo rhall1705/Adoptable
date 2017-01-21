@@ -25,7 +25,7 @@ class OptionsTypeAdapter : TypeAdapter<Options>() {
 
     @Throws(IOException::class)
     override fun read(jsonReader: JsonReader): Options {
-        val Options: Options
+        val options: Options
 
         jsonReader.beginObject()
         if (jsonReader.peek() == JsonToken.END_OBJECT) {
@@ -40,14 +40,14 @@ class OptionsTypeAdapter : TypeAdapter<Options>() {
 
         if (jsonReader.peek() == JsonToken.BEGIN_ARRAY) {
             @Suppress("UNCHECKED_CAST")
-            Options = Options(gson.fromJson<Any>(jsonReader, Array<Option>::class.java) as Array<Option>)
+            options = Options(gson.fromJson<Any>(jsonReader, Array<Option>::class.java) as Array<Option>)
         } else if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
-            Options = Options(gson.fromJson<Any>(jsonReader, Option::class.java) as Option)
+            options = Options(gson.fromJson<Any>(jsonReader, Option::class.java) as Option)
         } else {
             throw JsonParseException("Unexpected token " + jsonReader.peek())
         }
 
         jsonReader.endObject()
-        return Options
+        return options
     }
 }
