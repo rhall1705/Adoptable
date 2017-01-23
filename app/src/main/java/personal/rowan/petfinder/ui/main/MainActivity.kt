@@ -50,7 +50,7 @@ class MainActivity : BaseActivity() {
             when(position) {
                 POSITION_NEARBY_ANIMALS -> return PetMasterNearbyContainerFragment.getInstance()
                 POSITION_NEARBY_SHELTERS -> return ShelterFragment.getInstance()
-                POSITION_SEARCH -> return SearchFragment()
+                POSITION_SEARCH -> return SearchFragment.getInstance()
                 else -> throw RuntimeException("Invalid viewpager position")
             }
         }
