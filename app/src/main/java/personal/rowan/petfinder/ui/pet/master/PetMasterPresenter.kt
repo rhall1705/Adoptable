@@ -28,6 +28,9 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
 
     private var mLocation: String? = null
     private var mAnimal: String? = null
+    private var mSize: String? = null
+    private var mAge: String? = null
+    private var mBreed: String? = null
 
     private var mShelterId: String? = null
     private var mStatus: Char? = null
@@ -36,10 +39,13 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
     private var mOffset: String = "0"
     private var mError: Throwable? = null
 
-    fun loadData(location: String, animal: String) {
+    @JvmOverloads fun loadData(location: String, animal: String? = null, size: String? = null, age: String? = null, breed: String? = null) {
         mType = PetMasterFragment.TYPE_FIND
         mLocation = location
         mAnimal = animal
+        mSize = size
+        mAge = age
+        mBreed = breed
         loadData(false)
     }
 
@@ -64,7 +70,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
 
         val petObservable: Observable<PetResult>
         when (mType) {
-            PetMasterFragment.TYPE_FIND -> petObservable = mPetfinderService.getNearbyPets(mLocation!!, mAnimal!!, mOffset)
+            PetMasterFragment.TYPE_FIND -> petObservable = mPetfinderService.getNearbyPets(mLocation!!, mAnimal, mSize, mAge, mBreed, mOffset)
             PetMasterFragment.TYPE_SHELTER -> petObservable = mPetfinderService.getPetsForShelter(mShelterId!!, mStatus!!, mOffset)
             else -> throw RuntimeException("invalid pet master type")
         }
