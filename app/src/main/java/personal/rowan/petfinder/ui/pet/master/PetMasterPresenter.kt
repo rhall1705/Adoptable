@@ -77,7 +77,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
 
         val petObservable: Observable<PetResult>
         when (mType) {
-            PetMasterFragment.TYPE_FIND -> petObservable = mPetfinderService.getNearbyPets(mLocation!!, mAnimal, mSize, mAge, mBreed, mSex, mOffset)
+            PetMasterFragment.TYPE_FIND -> petObservable = mPetfinderService.getNearbyPets(mLocation!!, mAnimal, mSize, mAge, mSex, mBreed, mOffset)
             PetMasterFragment.TYPE_SHELTER -> petObservable = mPetfinderService.getPetsForShelter(mShelterId!!, mStatus!!, mOffset)
             else -> throw RuntimeException("invalid pet master type")
         }

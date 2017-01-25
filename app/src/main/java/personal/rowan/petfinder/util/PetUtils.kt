@@ -51,10 +51,10 @@ object PetUtils {
 
     fun searchAgeByIndex(index: Int): String? {
         when(index) {
-            0 -> return "baby"
-            1 -> return "young"
-            2 -> return "adult"
-            3 -> return "senior"
+            0 -> return "Baby"
+            1 -> return "Young"
+            2 -> return "Adult"
+            3 -> return "Senior"
             else -> return null
         }
     }
