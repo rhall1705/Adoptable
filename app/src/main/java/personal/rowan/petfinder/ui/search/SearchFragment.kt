@@ -13,6 +13,8 @@ import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
+import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchContainerActivity
+import personal.rowan.petfinder.util.PetUtils
 import rx.Subscription
 
 /**
@@ -54,11 +56,23 @@ class SearchFragment : BaseFragment() {
         ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         ageView.adapter = ageAdapter
 
-        mSearchClickSubscription = RxView.clicks(searchFab).subscribe {  }
+        mSearchClickSubscription = RxView.clicks(searchFab).subscribe { performSearch() }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if(mSearchClickSubscription != null && !mSearchClickSubscription!!.isUnsubscribed) {
+            mSearchClickSubscription!!.unsubscribe()
+        }
     }
 
     private fun performSearch() {
-        //val location: String =
+        val location = locationView.text.toString()
+        val animal = PetUtils.searchAnimalByIndex(animalView.selectedItemPosition)
+        val size = PetUtils.searchSizeByIndex(sizeView.selectedItemPosition)
+        val age = PetUtils.searchAgeByIndex(sizeView.selectedItemPosition)
+        val breed = null
+        startActivity(PetMasterSearchContainerActivity.getIntent(context, location, animal, size, age, breed))
     }
 
 }
