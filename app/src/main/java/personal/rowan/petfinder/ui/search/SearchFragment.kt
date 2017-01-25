@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.RadioButton
 import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import personal.rowan.petfinder.R
@@ -34,6 +35,7 @@ class SearchFragment : BaseFragment() {
     private val animalView: AppCompatSpinner by bindView(R.id.search_animal_spinner)
     private val sizeView: AppCompatSpinner by bindView(R.id.search_size_spinner)
     private val ageView: AppCompatSpinner by bindView(R.id.search_age_spinner)
+    private val maleSexView: RadioButton by bindView(R.id.search_male_radio)
     private val searchFab: FloatingActionButton by bindView(R.id.search_fab)
 
     private var mSearchClickSubscription: Subscription? = null
@@ -70,9 +72,10 @@ class SearchFragment : BaseFragment() {
         val location = locationView.text.toString()
         val animal = PetUtils.searchAnimalByIndex(animalView.selectedItemPosition)
         val size = PetUtils.searchSizeByIndex(sizeView.selectedItemPosition)
-        val age = PetUtils.searchAgeByIndex(sizeView.selectedItemPosition)
+        val age = PetUtils.searchAgeByIndex(ageView.selectedItemPosition)
+        val sex = if(maleSexView.isChecked) "M" else "F"
         val breed = null
-        startActivity(PetMasterSearchContainerActivity.getIntent(context, location, animal, size, age, breed))
+        startActivity(PetMasterSearchContainerActivity.getIntent(context, location, animal, size, age, sex, breed))
     }
 
 }

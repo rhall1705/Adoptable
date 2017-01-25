@@ -18,6 +18,7 @@ interface PetfinderService {
                       @Query("animal") animal: String?,
                       @Query("size") size: String?,
                       @Query("age") age: String?,
+                      @Query("sex") sex: String?,
                       @Query("breed") breed: String?,
                       @Query("offset") offset: String?): Observable<PetResult>
 

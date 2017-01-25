@@ -44,6 +44,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     private var mAnimal: String? = null
     private var mSize: String? = null
     private var mAge: String? = null
+    private var mSex: String? = null
     private var mBreed: String? = null
 
     private var mShelterId: String? = null
@@ -64,6 +65,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         private val ARG_PET_MASTER_ANIMAL = "PetMasterFragment.Arg.Animal"
         private val ARG_PET_MASTER_SIZE = "PetMasterFragment.Arg.Size"
         private val ARG_PET_MASTER_AGE = "PetMasterFragment.Arg.Age"
+        private val ARG_PET_MASTER_SEX = "PetMasterFragment.Arg.Sex"
         private val ARG_PET_MASTER_BREED = "PetMasterFragment.Arg.Breed"
 
         private val ARG_PET_MASTER_SHELTER_ID = "PetMasterFragment.Arg.ShelterId"
@@ -83,7 +85,12 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val STATUS_OPTION_PENDING = 'P'
         val STATUS_OPTION_ADOPTED = 'X'
 
-        @JvmOverloads fun getInstance(location: String, animal: String? = null, size: String? = null, age: String? = null, breed: String? = null): PetMasterFragment {
+        @JvmOverloads fun getInstance(location: String,
+                                      animal: String? = null,
+                                      size: String? = null,
+                                      age: String? = null,
+                                      sex: String? = null,
+                                      breed: String? = null): PetMasterFragment {
             val fragment: PetMasterFragment = PetMasterFragment()
             val args: Bundle = Bundle()
             args.putInt(ARG_PET_MASTER_TYPE, TYPE_FIND)
@@ -91,6 +98,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
             args.putString(ARG_PET_MASTER_ANIMAL, animal)
             args.putString(ARG_PET_MASTER_SIZE, size)
             args.putString(ARG_PET_MASTER_AGE, age)
+            args.putString(ARG_PET_MASTER_SEX, sex)
             args.putString(ARG_PET_MASTER_BREED, breed)
             fragment.arguments = args
             return fragment
@@ -116,6 +124,10 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
             TYPE_FIND -> {
                 mLocation = args.getString(ARG_PET_MASTER_LOCATION)
                 mAnimal = args.getString(ARG_PET_MASTER_ANIMAL)
+                mSize = args.getString(ARG_PET_MASTER_SIZE)
+                mAge = args.getString(ARG_PET_MASTER_AGE)
+                mSex = args.getString(ARG_PET_MASTER_SEX)
+                mBreed = args.getString(ARG_PET_MASTER_BREED)
             }
             TYPE_SHELTER -> {
                 mShelterId = args.getString(ARG_PET_MASTER_SHELTER_ID)
@@ -139,7 +151,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
         when(mType) {
-            TYPE_FIND -> mPresenter.loadData(mLocation!!, mAnimal, mSize, mAge, mBreed)
+            TYPE_FIND -> mPresenter.loadData(mLocation!!, mAnimal, mSize, mAge, mSex, mBreed)
             TYPE_SHELTER -> mPresenter.loadData(mShelterId!!, mStatus!!)
         }
         mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))

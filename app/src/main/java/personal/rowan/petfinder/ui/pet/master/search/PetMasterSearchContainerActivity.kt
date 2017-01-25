@@ -24,14 +24,22 @@ class PetMasterSearchContainerActivity : BaseActivity() {
         private val ARG_ANIMAL = "PetMasterSearchContainerActivity.Animal"
         private val ARG_SIZE = "PetMasterSearchContainerActivity.Size"
         private val ARG_AGE = "PetMasterSearchContainerActivity.Age"
+        private val ARG_SEX = "PetMasterSearchContainerActivity.Sex"
         private val ARG_BREED = "PetMasterSearchContainerActivity.Breed"
 
-        @JvmOverloads fun getIntent(context: Context, location: String, animal: String? = null, size: String? = null, age: String? = null, breed: String? = null): Intent {
+        @JvmOverloads fun getIntent(context: Context,
+                                    location: String,
+                                    animal: String? = null,
+                                    size: String? = null,
+                                    age: String? = null,
+                                    sex: String? = null,
+                                    breed: String? = null): Intent {
             val intent: Intent = Intent(context, PetMasterSearchContainerActivity::class.java)
             intent.putExtra(ARG_LOCATION, location)
             intent.putExtra(ARG_ANIMAL, animal)
             intent.putExtra(ARG_SIZE, size)
             intent.putExtra(ARG_AGE, age)
+            intent.putExtra(ARG_SEX, sex)
             intent.putExtra(ARG_BREED, breed)
             return intent
         }
@@ -45,7 +53,13 @@ class PetMasterSearchContainerActivity : BaseActivity() {
         if(savedInstanceState == null) {
             val fragmentTransaction = supportFragmentManager.beginTransaction()
             val intent = intent
-            fragmentTransaction.replace(container.id, PetMasterFragment.getInstance(intent.getStringExtra(ARG_LOCATION), intent.getStringExtra(ARG_ANIMAL), intent.getStringExtra(ARG_SIZE), intent.getStringExtra(ARG_AGE), intent.getStringExtra(ARG_BREED)))
+            fragmentTransaction.replace(container.id,
+                    PetMasterFragment.getInstance(intent.getStringExtra(ARG_LOCATION),
+                            intent.getStringExtra(ARG_ANIMAL),
+                            intent.getStringExtra(ARG_SIZE),
+                            intent.getStringExtra(ARG_AGE),
+                            intent.getStringExtra(ARG_SEX),
+                            intent.getStringExtra(ARG_BREED)))
             fragmentTransaction.commit()
         }
     }
