@@ -24,6 +24,8 @@
 
         <activity android:name=".ui.pet.master.shelter.PetMasterShelterContainerActivity"/>
 
+        <activity android:name=".ui.pet.master.search.PetMasterSearchContainerActivity"/>
+
     </application>
 
 </manifest>

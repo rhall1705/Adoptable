@@ -1,6 +1,7 @@
 package personal.rowan.petfinder.ui.search
 
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TextInputEditText
 import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
@@ -9,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import butterknife.bindView
+import com.jakewharton.rxbinding.view.RxView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
+import rx.Subscription
 
 /**
  * Created by Rowan Hall
@@ -29,6 +32,9 @@ class SearchFragment : BaseFragment() {
     private val animalView: AppCompatSpinner by bindView(R.id.search_animal_spinner)
     private val sizeView: AppCompatSpinner by bindView(R.id.search_size_spinner)
     private val ageView: AppCompatSpinner by bindView(R.id.search_age_spinner)
+    private val searchFab: FloatingActionButton by bindView(R.id.search_fab)
+
+    private var mSearchClickSubscription: Subscription? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_search, container, false)
@@ -47,6 +53,12 @@ class SearchFragment : BaseFragment() {
         val ageAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.search_age_options))
         ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         ageView.adapter = ageAdapter
+
+        mSearchClickSubscription = RxView.clicks(searchFab).subscribe {  }
+    }
+
+    private fun performSearch() {
+        //val location: String =
     }
 
 }

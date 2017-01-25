@@ -38,12 +38,18 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     private val pagination: ProgressBar by bindView(R.id.pet_master_pagination)
     private val emptyView: TextView by bindView(R.id.pet_master_empty_message)
 
-    private lateinit var mPresenter: PetMasterPresenter
     private var mType: Int? = null
+
     private var mLocation: String? = null
     private var mAnimal: String? = null
+    private var mSize: String? = null
+    private var mAge: String? = null
+    private var mBreed: String? = null
+
     private var mShelterId: String? = null
     private var mStatus: Char? = null
+
+    private lateinit var mPresenter: PetMasterPresenter
     private val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList<Pet>())
     private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
     private var mItemClickSubscription: Subscription? = null
@@ -56,6 +62,10 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
 
         private val ARG_PET_MASTER_LOCATION = "PetMasterFragment.Arg.Location"
         private val ARG_PET_MASTER_ANIMAL = "PetMasterFragment.Arg.Animal"
+        private val ARG_PET_MASTER_SIZE = "PetMasterFragment.Arg.Size"
+        private val ARG_PET_MASTER_AGE = "PetMasterFragment.Arg.Age"
+        private val ARG_PET_MASTER_BREED = "PetMasterFragment.Arg.Breed"
+
         private val ARG_PET_MASTER_SHELTER_ID = "PetMasterFragment.Arg.ShelterId"
         private val ARG_PET_MASTER_STATUS = "PetMasterFragment.Arg.Status"
 
@@ -73,12 +83,15 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val STATUS_OPTION_PENDING = 'P'
         val STATUS_OPTION_ADOPTED = 'X'
 
-        fun getInstance(location: String, animal: String): PetMasterFragment {
+        @JvmOverloads fun getInstance(location: String, animal: String? = null, size: String? = null, age: String? = null, breed: String? = null): PetMasterFragment {
             val fragment: PetMasterFragment = PetMasterFragment()
             val args: Bundle = Bundle()
             args.putInt(ARG_PET_MASTER_TYPE, TYPE_FIND)
             args.putString(ARG_PET_MASTER_LOCATION, location)
             args.putString(ARG_PET_MASTER_ANIMAL, animal)
+            args.putString(ARG_PET_MASTER_SIZE, size)
+            args.putString(ARG_PET_MASTER_AGE, age)
+            args.putString(ARG_PET_MASTER_BREED, breed)
             fragment.arguments = args
             return fragment
         }
@@ -126,7 +139,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
         when(mType) {
-            TYPE_FIND -> mPresenter.loadData(mLocation!!, mAnimal!!)
+            TYPE_FIND -> mPresenter.loadData(mLocation!!, mAnimal, mSize, mAge, mBreed)
             TYPE_SHELTER -> mPresenter.loadData(mShelterId!!, mStatus!!)
         }
         mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))

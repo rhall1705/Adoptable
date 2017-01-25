@@ -1,4 +1,4 @@
-package personal.rowan.petfinder.ui.pet.master.container
+package personal.rowan.petfinder.ui.pet.master.nearby
 
 import android.content.Context
 import android.support.v4.app.Fragment

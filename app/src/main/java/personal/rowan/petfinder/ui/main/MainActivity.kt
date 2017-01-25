@@ -10,7 +10,7 @@ import butterknife.bindView
 
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseActivity
-import personal.rowan.petfinder.ui.pet.master.container.PetMasterNearbyContainerFragment
+import personal.rowan.petfinder.ui.pet.master.nearby.PetMasterNearbyContainerFragment
 import personal.rowan.petfinder.ui.search.SearchFragment
 import personal.rowan.petfinder.ui.shelter.ShelterFragment
 
