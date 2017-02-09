@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
+import com.jakewharton.rxbinding.widget.RxTextView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
 import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchContainerActivity
@@ -36,6 +37,7 @@ class SearchFragment : BaseFragment() {
     private val sizeView: AppCompatSpinner by bindView(R.id.search_size_spinner)
     private val ageView: AppCompatSpinner by bindView(R.id.search_age_spinner)
     private val maleSexView: RadioButton by bindView(R.id.search_male_radio)
+    private val femaleSexView: RadioButton by bindView(R.id.search_female_radio)
     private val searchFab: FloatingActionButton by bindView(R.id.search_fab)
 
     private var mSearchClickSubscription: Subscription? = null
@@ -57,6 +59,8 @@ class SearchFragment : BaseFragment() {
         val ageAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.search_age_options))
         ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         ageView.adapter = ageAdapter
+        RxTextView.textChanges(locationView).subscribe { s -> searchFab.setEnabled(!s.isEmpty())}
+        searchFab.setEnabled(false)
 
         mSearchClickSubscription = RxView.clicks(searchFab).subscribe { performSearch() }
     }
@@ -73,7 +77,7 @@ class SearchFragment : BaseFragment() {
         val animal = PetUtils.searchAnimalByIndex(animalView.selectedItemPosition)
         val size = PetUtils.searchSizeByIndex(sizeView.selectedItemPosition)
         val age = PetUtils.searchAgeByIndex(ageView.selectedItemPosition)
-        val sex = if(maleSexView.isChecked) "M" else "F"
+        val sex = if(maleSexView.isChecked) "M" else if(femaleSexView.isChecked) "F" else null
         val breed = null
         startActivity(PetMasterSearchContainerActivity.getIntent(context, location, animal, size, age, sex, breed))
     }

@@ -40,7 +40,8 @@
     <string name="search_title">Search Pets</string>
     <string name="search_location_hint">Zip Code</string>
     <string-array name="search_animal_options">
-        <item name="search_animal_option_tab_dogs">Dogs</item>
+        <item name="search_animal_option_none">Any Animal</item>
+        <item name="search_animal_option_dogs">Dogs</item>
         <item name="search_animal_option_cats">Cats</item>
         <item name="search_animal_option_birds">Birds</item>
         <item name="search_animal_option_reptiles">Reptiles</item>
@@ -50,17 +51,20 @@
         <item name="search_animal_option_barnyard">Barnyard</item>
     </string-array>
     <string-array name="search_size_options">
+        <item name="search_size_option_none">Any Size</item>
         <item name="search_size_option_small">Small</item>
         <item name="search_size_option_medium">Medium</item>
         <item name="search_size_option_large">Large</item>
         <item name="search_size_option_xl">Extra Large</item>
     </string-array>
     <string-array name="search_age_options">
+        <item name="search_age_none">Any Age</item>
         <item name="search_age_baby">Baby</item>
         <item name="search_age_young">Young</item>
         <item name="search_age_adult">Adult</item>
         <item name="search_age_senior">Senior</item>
     </string-array>
+    <string name="search_radio_option_none">Either</string>
     <string name="search_radio_option_male">Male</string>
     <string name="search_radio_option_female">Female</string>
 

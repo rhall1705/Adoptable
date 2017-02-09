@@ -69,11 +69,19 @@
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/search_male_radio"
+                    android:id="@+id/search_either_radio"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="true"
+                    android:text="@string/search_radio_option_none"/>
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/search_male_radio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="false"
                     android:text="@string/search_radio_option_male"/>
 
                 <android.support.v7.widget.AppCompatRadioButton

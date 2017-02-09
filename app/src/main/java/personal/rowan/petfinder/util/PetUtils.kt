@@ -27,34 +27,34 @@ object PetUtils {
 
     fun searchAnimalByIndex(index: Int): String? {
         when(index) {
-            0 -> return PetMasterFragment.ANIMAL_OPTION_DOG
-            1 -> return PetMasterFragment.ANIMAL_OPTION_CAT
-            2 -> return PetMasterFragment.ANIMAL_OPTION_BIRD
-            3 -> return PetMasterFragment.ANIMAL_OPTION_REPTILE
-            4 -> return PetMasterFragment.ANIMAL_OPTION_SMALL_FURRY
-            5 -> return PetMasterFragment.ANIMAL_OPTION_HORSE
-            6 -> return PetMasterFragment.ANIMAL_OPTION_PIG
-            7 -> return PetMasterFragment.ANIMAL_OPTION_BARNYARD
+            1 -> return PetMasterFragment.ANIMAL_OPTION_DOG
+            2 -> return PetMasterFragment.ANIMAL_OPTION_CAT
+            3 -> return PetMasterFragment.ANIMAL_OPTION_BIRD
+            4 -> return PetMasterFragment.ANIMAL_OPTION_REPTILE
+            5 -> return PetMasterFragment.ANIMAL_OPTION_SMALL_FURRY
+            6 -> return PetMasterFragment.ANIMAL_OPTION_HORSE
+            7 -> return PetMasterFragment.ANIMAL_OPTION_PIG
+            8 -> return PetMasterFragment.ANIMAL_OPTION_BARNYARD
             else -> return null
         }
     }
 
     fun searchSizeByIndex(index: Int): String? {
         when(index) {
-            0 -> return "S"
-            1 -> return "M"
-            2 -> return "L"
-            3 -> return "XL"
+            1 -> return "S"
+            2 -> return "M"
+            3 -> return "L"
+            4 -> return "XL"
             else -> return null
         }
     }
 
     fun searchAgeByIndex(index: Int): String? {
         when(index) {
-            0 -> return "Baby"
-            1 -> return "Young"
-            2 -> return "Adult"
-            3 -> return "Senior"
+            1 -> return "Baby"
+            2 -> return "Young"
+            3 -> return "Adult"
+            4 -> return "Senior"
             else -> return null
         }
     }
