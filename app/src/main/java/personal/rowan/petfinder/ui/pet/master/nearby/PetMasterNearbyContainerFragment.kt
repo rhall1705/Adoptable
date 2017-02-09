@@ -15,20 +15,29 @@ import android.widget.Button
 import android.widget.LinearLayout
 import butterknife.bindView
 import personal.rowan.petfinder.R
+import personal.rowan.petfinder.application.LocationPermissionManager
 import personal.rowan.petfinder.ui.base.BaseFragment
+import personal.rowan.petfinder.ui.pet.master.nearby.dagger.PetMasterNearbyContainerComponent
 import personal.rowan.petfinder.util.PermissionUtils
+import rx.Subscription
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by Rowan Hall
  */
 class PetMasterNearbyContainerFragment : BaseFragment() {
 
+    @Inject
+    lateinit var mLocationPermissionManager: LocationPermissionManager
+
     private val toolbar: Toolbar by bindView(R.id.pet_master_nearby_container_toolbar)
     private val tabLayout: TabLayout by bindView(R.id.pet_master_nearby_container_tabs)
     private val viewPager: ViewPager by bindView(R.id.pet_master_nearby_container_pager)
     private val locationRationale: LinearLayout by bindView(R.id.pet_master_nearby_container_location_container)
     private val locationButton: Button by bindView(R.id.pet_master_nearby_container_location_button)
+
+    private var mLocationPermissionSubscription: Subscription? = null
 
     companion object {
         fun getInstance(): PetMasterNearbyContainerFragment {
@@ -42,8 +51,11 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        PetMasterNearbyContainerComponent.injector.call(this)
         setToolbar(toolbar, getString(R.string.pet_master_nearby_container_title))
         locationButton.setOnClickListener { handleLocationPermission() }
+
+        mLocationPermissionSubscription = mLocationPermissionManager.permissionObservable().subscribe { enabled -> if(enabled) setupViewPagerWithLocation() }
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
@@ -51,6 +63,13 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
         }
 
         setupViewPagerWithLocation()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if(mLocationPermissionSubscription != null && !mLocationPermissionSubscription!!.isUnsubscribed) {
+            mLocationPermissionSubscription!!.unsubscribe()
+        }
     }
 
     override fun onStart() {
@@ -79,9 +98,7 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode) {
             PermissionUtils.PERMISSION_CODE_LOCATION ->
-                    if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        setupViewPagerWithLocation()
-                    }
+                    mLocationPermissionManager.permissionEvent(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
         }
     }
 

@@ -20,6 +20,7 @@ import android.widget.TextView
 import butterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import personal.rowan.petfinder.R
+import personal.rowan.petfinder.application.LocationPermissionManager
 import personal.rowan.petfinder.model.shelter.Shelter
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
@@ -27,7 +28,7 @@ import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterContainerA
 import personal.rowan.petfinder.ui.shelter.dagger.ShelterComponent
 import personal.rowan.petfinder.ui.shelter.recycler.ShelterAdapter
 import personal.rowan.petfinder.util.PermissionUtils
-import rx.Subscription
+import rx.subscriptions.CompositeSubscription
 import java.util.*
 import javax.inject.Inject
 
@@ -38,6 +39,8 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
 
     @Inject
     lateinit var mPresenterFactory: ShelterPresenterFactory
+    @Inject
+    lateinit var mLocationPermissionManager: LocationPermissionManager
 
     companion object {
 
@@ -57,8 +60,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     private lateinit var mPresenter: ShelterPresenter
     private val mAdapter: ShelterAdapter = ShelterAdapter(ArrayList<Shelter>())
     private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-    private var mPetButtonSubscription: Subscription? = null
-    private var mDirectionsButtonSubscription: Subscription? = null
+    private val mCompositeSubscription: CompositeSubscription = CompositeSubscription()
 
     override fun beforePresenterPrepared() {
         ShelterComponent.injector.call(this)
@@ -81,6 +83,8 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     override fun onPresenterPrepared(presenter: ShelterPresenter) {
         mPresenter = presenter
 
+        mCompositeSubscription.add(mLocationPermissionManager.permissionObservable().subscribe { enabled -> if(enabled) setupRecycler() })
+
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
             return
@@ -100,8 +104,8 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
 
         mPresenter.loadData(addresses.get(0).postalCode)
         mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(shelterList))
-        mPetButtonSubscription = mAdapter.petsButtonObservable().subscribe { shelter -> mPresenter.onPetsClicked(shelter) }
-        mDirectionsButtonSubscription = mAdapter.directionsButtonObservable().subscribe { shelter -> mPresenter.onDirectionsClicked(shelter) }
+        mCompositeSubscription.add(mAdapter.petsButtonObservable().subscribe { shelter -> mPresenter.onPetsClicked(shelter) })
+        mCompositeSubscription.add(mAdapter.directionsButtonObservable().subscribe { shelter -> mPresenter.onDirectionsClicked(shelter) })
     }
 
     private fun handleLocationPermission() {
@@ -120,18 +124,13 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode) {
             PermissionUtils.PERMISSION_CODE_LOCATION ->
-                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    setupRecycler()
-                }
+                mLocationPermissionManager.permissionEvent(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
         }
     }
 
     override fun onPresenterDestroyed() {
-        if(mPetButtonSubscription != null && !mPetButtonSubscription!!.isUnsubscribed) {
-            mPetButtonSubscription!!.unsubscribe()
-        }
-        if(mDirectionsButtonSubscription != null && !mDirectionsButtonSubscription!!.isUnsubscribed) {
-            mDirectionsButtonSubscription!!.unsubscribe()
+        if(!mCompositeSubscription.isUnsubscribed) {
+            mCompositeSubscription.unsubscribe()
         }
     }
 
