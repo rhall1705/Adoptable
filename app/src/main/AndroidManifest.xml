@@ -26,6 +26,8 @@
 
         <activity android:name=".ui.pet.master.search.PetMasterSearchContainerActivity"/>
 
+        <activity android:name=".ui.pet.detail.PetDetailActivity"/>
+
     </application>
 
 </manifest>

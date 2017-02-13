@@ -16,6 +16,7 @@ import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
+import personal.rowan.petfinder.ui.pet.detail.PetDetailActivity
 import personal.rowan.petfinder.ui.pet.master.dagger.PetMasterComponent
 import personal.rowan.petfinder.ui.pet.master.dagger.PetMasterScope
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterAdapter
@@ -177,8 +178,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     }
 
     override fun onPetClicked(pet: Pet) {
-        // todo: implement navigation
-        showToastMessage("Navigate to detail for " + pet.name!!.`$t`!!)
+        startActivity(PetDetailActivity.createIntent(context, pet))
     }
 
     override fun shouldPaginate(): Boolean {

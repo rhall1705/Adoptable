@@ -7,20 +7,22 @@ import personal.rowan.petfinder.ui.pet.master.PetMasterFragment
  */
 object PetUtils {
 
-    fun formatSize(size: String): String {
+    fun formatSize(size: String?): String {
         when(size) {
             "S" -> return "Small"
             "M" -> return "Medium"
             "L" -> return "Large"
             "XL" -> return "Extra Large"
+            null -> return ""
             else -> return size
         }
     }
 
-    fun formatSex(sex: String): String {
+    fun formatSex(sex: String?): String {
         when(sex) {
             "M" -> return "Male"
             "F" -> return "Female"
+            null -> return ""
             else -> return sex
         }
     }
