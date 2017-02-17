@@ -29,13 +29,17 @@
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerCrop"
                     android:background="@color/lightGray"
-                    android:contentDescription="@string/pet_master_image_content_description"/>
+                    android:transitionName="@string/pet_master_detail_image_transition"
+                    android:contentDescription="@string/pet_master_image_content_description"
+                    tools:ignore="UnusedAttribute" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
                     android:background="@drawable/gradient_black_bottom_up"
-                    android:layout_gravity="bottom"/>
+                    android:layout_gravity="bottom"
+                    android:transitionName="@string/pet_master_detail_fade_transition"
+                    tools:ignore="UnusedAttribute"/>
 
             </FrameLayout>
 
@@ -58,7 +62,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:transitionName="@string/pet_master_detail_text_transition"
+            tools:ignore="UnusedAttribute">
 
             <TextView
                 android:id="@+id/pet_detail_header"

@@ -23,6 +23,9 @@ import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterAdapter
 import rx.Subscription
 import java.util.*
 import javax.inject.Inject
+import android.support.v4.app.ActivityOptionsCompat
+import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
+
 
 /**
  * Created by Rowan Hall
@@ -156,7 +159,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
             TYPE_SHELTER -> mPresenter.loadData(mShelterId!!, mStatus!!)
         }
         mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))
-        mItemClickSubscription = mAdapter.itemClickObservable().subscribe { pet -> mPresenter.onPetClicked(pet) }
+        mItemClickSubscription = mAdapter.itemClickObservable().subscribe { clickData -> mPresenter.onPetClicked(clickData) }
     }
 
     override fun onPresenterDestroyed() {
@@ -177,8 +180,10 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         }
     }
 
-    override fun onPetClicked(pet: Pet) {
-        startActivity(PetDetailActivity.createIntent(context, pet))
+    override fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData) {
+        val transitionViews: List<android.support.v4.util.Pair<View, String>> = petMasterClickData.transitionViews()
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionViews.get(0), transitionViews.get(1), transitionViews.get(2))
+        startActivity(PetDetailActivity.createIntent(context, petMasterClickData.pet()), options.toBundle())
     }
 
     override fun shouldPaginate(): Boolean {

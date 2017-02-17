@@ -42,6 +42,6 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
         dest?.writeString(name())
         dest?.writeString(header())
         dest?.writeString(detail())
-        dest?.writeString(mDescription)
+        dest?.writeString(description())
     }
 }

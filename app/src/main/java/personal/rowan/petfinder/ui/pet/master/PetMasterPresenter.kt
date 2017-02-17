@@ -6,6 +6,7 @@ import personal.rowan.petfinder.model.pet.PetResult
 import personal.rowan.petfinder.network.PetfinderService
 import personal.rowan.petfinder.ui.base.presenter.BasePresenter
 import personal.rowan.petfinder.ui.pet.master.dagger.PetMasterScope
+import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
 import rx.Observable
 import rx.Subscriber
 import rx.Subscription
@@ -129,8 +130,8 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
                 })
     }
 
-    fun onPetClicked(pet: Pet) {
-        mView.onPetClicked(pet)
+    fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData) {
+        mView.onPetClicked(petMasterClickData)
     }
 
     private fun isApiSubscriptionActive(): Boolean {

@@ -2,6 +2,7 @@ package personal.rowan.petfinder.ui.pet.master.recycler
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.pet.Pet
@@ -13,7 +14,7 @@ import rx.subjects.PublishSubject
  */
 class PetMasterAdapter(private var mData: List<Pet>?) : RecyclerView.Adapter<PetMasterViewHolder>() {
 
-    private var mPetClickSubject: PublishSubject<Pet>
+    private var mPetClickSubject: PublishSubject<PetMasterViewHolder.PetMasterClickData>
 
     init {
         mPetClickSubject = PublishSubject.create()
@@ -42,7 +43,7 @@ class PetMasterAdapter(private var mData: List<Pet>?) : RecyclerView.Adapter<Pet
         return PetMasterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.listitem_pet_master, parent, false))
     }
 
-    fun itemClickObservable(): Observable<Pet> {
+    fun itemClickObservable(): Observable<PetMasterViewHolder.PetMasterClickData> {
         return mPetClickSubject
     }
 

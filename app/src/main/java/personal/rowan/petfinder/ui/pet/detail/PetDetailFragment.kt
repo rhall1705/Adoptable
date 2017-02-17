@@ -1,7 +1,6 @@
 package personal.rowan.petfinder.ui.pet.detail
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View

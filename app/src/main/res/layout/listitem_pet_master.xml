@@ -13,10 +13,10 @@
         android:id="@+id/pet_master_click_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?attr/selectableItemBackground">
+        android:orientation="vertical">
 
         <FrameLayout
+            android:id="@+id/pet_master_photo_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -27,13 +27,18 @@
                 android:layout_gravity="center_horizontal"
                 android:scaleType="centerCrop"
                 android:background="@color/lightGray"
-                android:contentDescription="@string/pet_master_image_content_description"/>
+                android:contentDescription="@string/pet_master_image_content_description"
+                android:transitionName="@string/pet_master_detail_image_transition"
+                tools:ignore="UnusedAttribute" />
 
             <View
+                android:id="@+id/pet_master_fade_view"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:background="@drawable/gradient_black_bottom_up"
-                android:layout_gravity="bottom"/>
+                android:layout_gravity="bottom"
+                android:transitionName="@string/pet_master_detail_fade_transition"
+                tools:ignore="UnusedAttribute"/>
 
             <TextView
                 android:id="@+id/pet_master_name"
@@ -49,28 +54,39 @@
 
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/pet_master_header"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/pet_master_text_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:textColor="@color/textColorPrimary"
-            android:textSize="18sp"
-            tools:text="Dog - Great Dane"/>
+            android:orientation="vertical"
+            android:background="@drawable/clickable_card_background"
+            android:transitionName="@string/pet_master_detail_text_transition"
+            tools:ignore="UnusedAttribute">
 
-        <TextView
-            android:id="@+id/pet_master_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/textColorPrimaryLight"
-            android:textSize="14sp"
-            tools:text="Extra Large - Adult - Female - Nashville, TN"/>
+            <TextView
+                android:id="@+id/pet_master_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="18sp"
+                tools:text="Dog - Great Dane"/>
+
+            <TextView
+                android:id="@+id/pet_master_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:textColor="@color/textColorPrimaryLight"
+                android:textSize="14sp"
+                tools:text="Extra Large - Adult - Female - Nashville, TN"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
