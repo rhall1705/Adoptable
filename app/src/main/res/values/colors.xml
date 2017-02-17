@@ -24,7 +24,7 @@
     <color name="textColorDivider">@color/colorAccent</color>
 
     <color name="colorButton">@color/colorAccent</color>
-    <color name="colorDivider">@color/gray</color>
+    <color name="colorDivider">@color/lightGray</color>
 
     <color name="colorTabBackground">@color/colorPrimary</color>
     <color name="colorTabIndicator">@color/white</color>

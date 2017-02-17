@@ -21,6 +21,7 @@ class PetDetailFragment : BaseFragment() {
     private val photoView: ImageView by bindView(R.id.pet_detail_photo)
     private val headerView: TextView by bindView(R.id.pet_detail_header)
     private val detailView: TextView by bindView(R.id.pet_detail_detail)
+    private val descriptionView: TextView by bindView(R.id.pet_detail_description)
 
     companion object {
 
@@ -50,6 +51,7 @@ class PetDetailFragment : BaseFragment() {
                 .into(photoView)
         headerView.setText(viewModel.header())
         detailView.setText(viewModel.detail())
+        descriptionView.setText(viewModel.description())
     }
 
 }
