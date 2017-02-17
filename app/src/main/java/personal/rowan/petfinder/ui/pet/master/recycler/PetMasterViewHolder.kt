@@ -2,7 +2,6 @@ package personal.rowan.petfinder.ui.pet.master.recycler
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -22,7 +21,6 @@ import java.util.*
 class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
 
     val clickContainer: LinearLayout by bindView(R.id.pet_master_click_container)
-    val photoContainer: FrameLayout by bindView(R.id.pet_master_photo_container)
     val textContainer: LinearLayout by bindView(R.id.pet_master_text_container)
     val photoView: ImageView by bindView(R.id.pet_master_photo)
     val fadeView: View by bindView(R.id.pet_master_fade_view)

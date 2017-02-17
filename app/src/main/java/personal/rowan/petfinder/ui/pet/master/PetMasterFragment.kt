@@ -181,8 +181,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     }
 
     override fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData) {
-        val transitionViews: List<android.support.v4.util.Pair<View, String>> = petMasterClickData.transitionViews()
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionViews.get(0), transitionViews.get(1), transitionViews.get(2))
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, *petMasterClickData.transitionViews().toTypedArray())
         startActivity(PetDetailActivity.createIntent(context, petMasterClickData.pet()), options.toBundle())
     }
 
