@@ -7,6 +7,7 @@ import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.model.pet.Photo
 import personal.rowan.petfinder.util.PetUtils
+import personal.rowan.petfinder.util.StringUtils
 
 /**
  * Created by Rowan Hall
@@ -48,11 +49,11 @@ open class PetMasterViewModel : Parcelable {
     private val mDetail: String
 
     fun photoUrl(): String {
-        if (mPhotoUrl == null) return "" else return mPhotoUrl
+        return StringUtils.emptyIfNull(mPhotoUrl)
     }
 
     fun name(): String {
-        if (mName == null) return "" else return mName
+        return StringUtils.emptyIfNull(mName)
     }
 
     fun header(): String {

@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.ui.pet.master.PetMasterViewModel
+import personal.rowan.petfinder.util.StringUtils
 
 /**
  * Created by Rowan Hall
@@ -13,17 +14,24 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
 
     constructor(context: Context, pet: Pet): super(context, pet) {
         mDescription = pet.description?.`$t`
+        mPhone = pet.contact?.phone?.`$t`
     }
 
-    constructor(photoUrl: String?, name: String?, header: String, detail: String, description: String):
+    constructor(photoUrl: String?, name: String?, header: String, detail: String, description: String, phone: String):
             super(photoUrl, name, header, detail) {
         mDescription = description
+        mPhone = phone
     }
 
     private val mDescription: String?
+    private val mPhone: String?
 
     fun description(): String {
-        if (mDescription == null) return "" else return mDescription
+        return StringUtils.emptyIfNull(mDescription)
+    }
+
+    fun phone(): String {
+        return StringUtils.emptyIfNull(mPhone)
     }
 
     companion object {
@@ -33,7 +41,7 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
         }
     }
 
-    constructor(source: Parcel) : this(source.readString(), source.readString(), source.readString(), source.readString(), source.readString())
+    constructor(source: Parcel) : this(source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString())
 
     override fun describeContents() = 0
 
@@ -43,5 +51,6 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
         dest?.writeString(header())
         dest?.writeString(detail())
         dest?.writeString(description())
+        dest?.writeString(phone())
     }
 }

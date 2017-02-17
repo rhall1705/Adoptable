@@ -92,6 +92,7 @@
                 tools:text="Extra Large - Adult - Female - Nashville, TN"/>
 
             <View
+                android:id="@+id/pet_detail_description_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/lightGray"/>
@@ -104,6 +105,25 @@
                 android:textColor="@color/textColorPrimaryLight"
                 android:textSize="14sp"
                 tools:text="A very good dog yes she is"/>
+
+            <View
+                android:id="@+id/pet_detail_phone_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"/>
+
+            <TextView
+                android:id="@+id/pet_detail_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="14sp"
+                android:drawableStart="@drawable/ic_phone"
+                android:drawablePadding="8dp"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                tools:text="555-555-5555"/>
 
             <View
                 android:layout_width="match_parent"

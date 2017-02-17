@@ -1,5 +1,7 @@
 package personal.rowan.petfinder.ui.pet.detail
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.bindView
+import com.jakewharton.rxbinding.view.RxView
 import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
@@ -22,6 +25,9 @@ class PetDetailFragment : BaseFragment() {
     private val headerView: TextView by bindView(R.id.pet_detail_header)
     private val detailView: TextView by bindView(R.id.pet_detail_detail)
     private val descriptionView: TextView by bindView(R.id.pet_detail_description)
+    private val descriptionDivider: View by bindView(R.id.pet_detail_description_divider)
+    private val phoneView: TextView by bindView(R.id.pet_detail_phone)
+    private val phoneDivider: View by bindView(R.id.pet_detail_phone_divider)
 
     companion object {
 
@@ -44,14 +50,38 @@ class PetDetailFragment : BaseFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel: PetDetailViewModel = arguments.getParcelable(ARG_PET_DETAIL_MODEL)
+        setDetails(arguments.getParcelable(ARG_PET_DETAIL_MODEL))
+    }
+
+    private fun setDetails(viewModel: PetDetailViewModel) {
         setToolbar(toolbar, viewModel.name(), true)
         Picasso.with(context)
                 .load(viewModel.photoUrl())
                 .into(photoView)
         headerView.setText(viewModel.header())
         detailView.setText(viewModel.detail())
-        descriptionView.setText(viewModel.description())
+
+        handleDescription(viewModel.description())
+        handlePhone(viewModel.phone())
+    }
+
+    private fun handleDescription(description: String) {
+        if (description.trim().isEmpty()) {
+            descriptionDivider.visibility = View.GONE
+            descriptionView.visibility = View.GONE
+        } else {
+            descriptionView.setText(description)
+        }
+    }
+
+    private fun handlePhone(phone: String) {
+        if (phone.trim().isEmpty()) {
+            phoneDivider.visibility = View.GONE
+            phoneView.visibility = View.GONE
+        } else {
+            phoneView.setText(phone)
+            RxView.clicks(phoneView).subscribe { startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null))) }
+        }
     }
 
 }
