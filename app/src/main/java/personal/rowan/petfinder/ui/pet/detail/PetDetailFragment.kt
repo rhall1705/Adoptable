@@ -56,9 +56,12 @@ class PetDetailFragment : BaseFragment() {
 
     private fun setDetails(viewModel: PetDetailViewModel) {
         setToolbar(toolbar, viewModel.name(), true)
-        Picasso.with(context)
-                .load(viewModel.photoUrl())
-                .into(photoView)
+        val photoUrl = viewModel.photoUrl()
+        if (!photoUrl.isBlank()) {
+            Picasso.with(context)
+                    .load(viewModel.photoUrl())
+                    .into(photoView)
+        }
         headerView.setText(viewModel.header())
         detailView.setText(viewModel.detail())
 

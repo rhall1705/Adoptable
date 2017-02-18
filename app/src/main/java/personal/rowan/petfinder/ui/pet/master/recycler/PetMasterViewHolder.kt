@@ -33,9 +33,12 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
     fun bind(pet: Pet, clickSubject: PublishSubject<PetMasterClickData>) {
         val viewModel = PetMasterViewModel(clickContainer.context, pet)
 
-        Picasso.with(photoView.context)
-                .load(viewModel.photoUrl())
-                .into(photoView)
+        val photoUrl = viewModel.photoUrl()
+        if (!photoUrl.isBlank()) {
+            Picasso.with(photoView.context)
+                    .load(viewModel.photoUrl())
+                    .into(photoView)
+        }
         nameView.setText(viewModel.name())
         headerView.setText(viewModel.header())
         detailView.setText(viewModel.detail())
