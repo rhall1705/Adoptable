@@ -1,17 +1,15 @@
 package personal.rowan.petfinder.ui.shelter
 
-import personal.rowan.petfinder.model.shelter.Shelter
-
 /**
  * Created by Rowan Hall
  */
 interface ShelterView {
 
-    fun displayShelters(shelters: List<Shelter>)
+    fun displayShelters(shelters: List<ShelterViewModel>)
 
-    fun onPetsButtonClicked(shelter: Shelter)
+    fun onPetsButtonClicked(pair: Pair<String?, String?>)
 
-    fun onDirectionsButtonClicked(shelter: Shelter)
+    fun onDirectionsButtonClicked(address: String)
 
     fun shouldPaginate(): Boolean
 

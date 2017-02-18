@@ -1,7 +1,5 @@
 package personal.rowan.petfinder.ui.pet.detail
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
@@ -14,6 +12,7 @@ import com.jakewharton.rxbinding.view.RxView
 import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
+import personal.rowan.petfinder.util.IntentUtils
 
 /**
  * Created by Rowan Hall
@@ -28,6 +27,8 @@ class PetDetailFragment : BaseFragment() {
     private val descriptionDivider: View by bindView(R.id.pet_detail_description_divider)
     private val phoneView: TextView by bindView(R.id.pet_detail_phone)
     private val phoneDivider: View by bindView(R.id.pet_detail_phone_divider)
+    private val addressView: TextView by bindView(R.id.pet_detail_address)
+    private val addressDivider: View by bindView(R.id.pet_detail_address_divider)
 
     companion object {
 
@@ -63,6 +64,7 @@ class PetDetailFragment : BaseFragment() {
 
         handleDescription(viewModel.description())
         handlePhone(viewModel.phone())
+        handleAddress(viewModel.address())
     }
 
     private fun handleDescription(description: String) {
@@ -75,12 +77,22 @@ class PetDetailFragment : BaseFragment() {
     }
 
     private fun handlePhone(phone: String) {
-        if (phone.trim().isEmpty()) {
+        if (phone.isBlank()) {
             phoneDivider.visibility = View.GONE
             phoneView.visibility = View.GONE
         } else {
             phoneView.setText(phone)
-            RxView.clicks(phoneView).subscribe { startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null))) }
+            RxView.clicks(phoneView).subscribe { startActivity(IntentUtils.dialerIntent(phone)) }
+        }
+    }
+
+    private fun handleAddress(address: String) {
+        if (address.isBlank()) {
+            addressDivider.visibility = View.GONE
+            addressView.visibility = View.GONE
+        } else {
+            addressView.setText(address)
+            RxView.clicks(addressView).subscribe { startActivity(IntentUtils.addressIntent(address)) }
         }
     }
 

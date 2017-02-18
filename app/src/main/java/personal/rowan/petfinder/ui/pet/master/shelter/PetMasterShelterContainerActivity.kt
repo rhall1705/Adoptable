@@ -24,7 +24,7 @@ class PetMasterShelterContainerActivity : BaseActivity() {
         private val ARG_SHELTER_ID = "PetMasterShelterContainerActivity.ShelterId"
         private val ARG_SHELTER_NAME = "PetMasterShelterContainerActivity.ShelterName"
 
-        fun getIntent(context: Context, shelterId: String, shelterName: String): Intent {
+        fun getIntent(context: Context, shelterId: String?, shelterName: String?): Intent {
             val intent: Intent = Intent(context, PetMasterShelterContainerActivity::class.java)
             intent.putExtra(ARG_SHELTER_ID, shelterId)
             intent.putExtra(ARG_SHELTER_NAME, shelterName)

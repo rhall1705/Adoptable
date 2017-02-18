@@ -4,24 +4,24 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.model.shelter.Shelter
+import personal.rowan.petfinder.ui.shelter.ShelterViewModel
 import rx.Observable
 import rx.subjects.PublishSubject
 
 /**
  * Created by Rowan Hall
  */
-class ShelterAdapter(private var mData: List<Shelter>?) : RecyclerView.Adapter<ShelterViewHolder>() {
+class ShelterAdapter(private var mData: List<ShelterViewModel>?) : RecyclerView.Adapter<ShelterViewHolder>() {
 
-    private var mPetsButtonSubject: PublishSubject<Shelter>
-    private var mDirectionsButtonSubject: PublishSubject<Shelter>
+    private var mPetsButtonSubject: PublishSubject<Pair<String?, String?>>
+    private var mDirectionsButtonSubject: PublishSubject<String>
 
     init {
         mPetsButtonSubject = PublishSubject.create()
         mDirectionsButtonSubject = PublishSubject.create()
     }
 
-    fun paginateData(data: List<Shelter>) {
+    fun paginateData(data: List<ShelterViewModel>) {
         if(mData == null || mData!!.isEmpty()) {
             mData = data
             notifyDataSetChanged()
@@ -44,11 +44,11 @@ class ShelterAdapter(private var mData: List<Shelter>?) : RecyclerView.Adapter<S
         return ShelterViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.listitem_shelter, parent, false))
     }
 
-    fun petsButtonObservable(): Observable<Shelter> {
+    fun petsButtonObservable(): Observable<Pair<String?, String?>> {
         return mPetsButtonSubject
     }
 
-    fun directionsButtonObservable(): Observable<Shelter> {
+    fun directionsButtonObservable(): Observable<String> {
         return mDirectionsButtonSubject
     }
     

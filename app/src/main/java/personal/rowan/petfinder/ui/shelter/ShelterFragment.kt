@@ -21,12 +21,12 @@ import butterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.application.LocationPermissionManager
-import personal.rowan.petfinder.model.shelter.Shelter
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
 import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterContainerActivity
 import personal.rowan.petfinder.ui.shelter.dagger.ShelterComponent
 import personal.rowan.petfinder.ui.shelter.recycler.ShelterAdapter
+import personal.rowan.petfinder.util.IntentUtils
 import personal.rowan.petfinder.util.PermissionUtils
 import rx.subscriptions.CompositeSubscription
 import java.util.*
@@ -58,7 +58,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     private val locationButton: Button by bindView(R.id.shelter_container_location_button)
 
     private lateinit var mPresenter: ShelterPresenter
-    private val mAdapter: ShelterAdapter = ShelterAdapter(ArrayList<Shelter>())
+    private val mAdapter: ShelterAdapter = ShelterAdapter(ArrayList<ShelterViewModel>())
     private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
     private val mCompositeSubscription: CompositeSubscription = CompositeSubscription()
 
@@ -76,7 +76,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         shelterList.layoutManager = mLayoutManager
         shelterList.adapter = mAdapter
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
-        swipeRefresh.setOnRefreshListener { mPresenter.refreshData() }
+        swipeRefresh.setOnRefreshListener { mPresenter.refreshData(context) }
         locationButton.setOnClickListener { handleLocationPermission() }
     }
 
@@ -97,15 +97,16 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         swipeRefresh.visibility = View.VISIBLE
         locationRationale.visibility = View.GONE
 
+        val context = context
         val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val location: Location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
         val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
         val addresses: List<Address> = geocoder.getFromLocation(location.latitude, location.longitude, 1)
 
-        mPresenter.loadData(addresses.get(0).postalCode)
-        mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(shelterList))
-        mCompositeSubscription.add(mAdapter.petsButtonObservable().subscribe { shelter -> mPresenter.onPetsClicked(shelter) })
-        mCompositeSubscription.add(mAdapter.directionsButtonObservable().subscribe { shelter -> mPresenter.onDirectionsClicked(shelter) })
+        mPresenter.loadData(context, addresses.get(0).postalCode)
+        mPresenter.bindRecyclerView(context, RxRecyclerView.scrollEvents(shelterList))
+        mCompositeSubscription.add(mAdapter.petsButtonObservable().subscribe { pair -> mPresenter.onPetsClicked(pair) })
+        mCompositeSubscription.add(mAdapter.directionsButtonObservable().subscribe { address -> mPresenter.onDirectionsClicked(address) })
     }
 
     private fun handleLocationPermission() {
@@ -137,7 +138,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     override val presenterFactory: PresenterFactory<ShelterPresenter>
         get() = mPresenterFactory
 
-    override fun displayShelters(shelters: List<Shelter>) {
+    override fun displayShelters(shelters: List<ShelterViewModel>) {
         if(shelters.isEmpty()) {
             emptyView.visibility = View.VISIBLE
         } else {
@@ -146,13 +147,12 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         }
     }
 
-    override fun onPetsButtonClicked(shelter: Shelter) {
-        startActivity(PetMasterShelterContainerActivity.getIntent(context, shelter.id!!.`$t`!!, shelter.name!!.`$t`!!))
+    override fun onPetsButtonClicked(pair: Pair<String?, String?>) {
+        startActivity(PetMasterShelterContainerActivity.getIntent(context, pair.first, pair.second))
     }
 
-    override fun onDirectionsButtonClicked(shelter: Shelter) {
-        // todo: implement maps intent
-        showToastMessage("Go to Gmaps intent for " + shelter.name!!.`$t`)
+    override fun onDirectionsButtonClicked(address: String) {
+        startActivity(IntentUtils.addressIntent(address))
     }
 
     override fun shouldPaginate(): Boolean {

@@ -119,11 +119,30 @@
                 android:textColor="@color/textColorPrimary"
                 android:textSize="14sp"
                 android:drawableStart="@drawable/ic_phone"
-                android:drawablePadding="8dp"
+                android:drawablePadding="16dp"
                 android:padding="16dp"
                 android:gravity="center_vertical"
                 android:background="?attr/selectableItemBackground"
                 tools:text="555-555-5555"/>
+
+            <View
+                android:id="@+id/pet_detail_address_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"/>
+
+            <TextView
+                android:id="@+id/pet_detail_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="14sp"
+                android:drawableStart="@drawable/ic_location"
+                android:drawablePadding="16dp"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                tools:text="Address line 1\nAddress line 2\nCity, State, Zip"/>
 
             <View
                 android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package personal.rowan.petfinder.ui.shelter
 
+import android.content.Context
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent
 import personal.rowan.petfinder.model.shelter.Shelter
 import personal.rowan.petfinder.model.shelter.ShelterResult
@@ -22,20 +23,20 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
     private var mApiSubscription: Subscription? = null
 
     private lateinit var mLocation: String
-    private var mShelterList: MutableList<Shelter>? = null
+    private var mShelterList: MutableList<ShelterViewModel>? = null
     private var mOffset: String = "0"
     private var mError: Throwable? = null
 
-    fun loadData(location: String) {
+    fun loadData(context: Context, location: String) {
         mLocation = location
-        loadData(false)
+        loadData(context, false)
     }
 
-    fun refreshData() {
-        loadData(true)
+    fun refreshData(context: Context) {
+        loadData(context, true)
     }
 
-    private fun loadData(clear: Boolean) {
+    private fun loadData(context: Context, clear: Boolean) {
         if(isApiSubscriptionActive()) return
 
         if(clear) {
@@ -64,11 +65,15 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
                             mShelterList = ArrayList()
                         }
 
-                        val shelters: List<Shelter>? = result!!.petfinder?.shelters?.shelter
+                        val shelters: List<Shelter>? = result?.petfinder?.shelters?.shelter
                         if(shelters != null) {
-                            mShelterList!!.addAll(shelters)
+                            val viewModels: MutableList<ShelterViewModel> = ArrayList()
+                            for (shelter in shelters) {
+                                viewModels.add(ShelterViewModel(context, shelter))
+                            }
+                            mShelterList!!.addAll(viewModels)
                         }
-                        val offset = result.petfinder!!.lastOffset?.`$t`
+                        val offset = result?.petfinder!!.lastOffset?.`$t`
                         if(offset != null) {
                             mOffset = offset
                         }
@@ -80,23 +85,23 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
         mCompositeSubscription.add(mApiSubscription)
     }
 
-    fun bindRecyclerView(observable: Observable<RecyclerViewScrollEvent>) {
+    fun bindRecyclerView(context: Context, observable: Observable<RecyclerViewScrollEvent>) {
         mCompositeSubscription.add(observable
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe { scrollEvent ->
                     if (mView.shouldPaginate() && !isApiSubscriptionActive()) {
                         mView.showPagination()
-                        loadData(false)
+                        loadData(context, false)
                     }
                 })
     }
 
-    fun onPetsClicked(shelter: Shelter) {
-        mView.onPetsButtonClicked(shelter)
+    fun onPetsClicked(pair: Pair<String?, String?>) {
+        mView.onPetsButtonClicked(pair)
     }
 
-    fun onDirectionsClicked(shelter: Shelter) {
-        mView.onDirectionsButtonClicked(shelter)
+    fun onDirectionsClicked(address: String) {
+        mView.onDirectionsButtonClicked(address)
     }
 
     private fun isApiSubscriptionActive(): Boolean {
