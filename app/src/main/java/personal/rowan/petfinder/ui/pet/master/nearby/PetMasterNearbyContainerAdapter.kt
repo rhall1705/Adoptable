@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.pet.master.PetMasterFragment
+import personal.rowan.petfinder.util.PetUtils
 
 /**
  * Created by Rowan Hall
@@ -27,14 +28,14 @@ class PetMasterNearbyContainerAdapter(fm: FragmentManager, val mContext: Context
 
     override fun getItem(position: Int): Fragment {
         when(position) {
-            POSITION_DOG -> return PetMasterFragment.getInstance(mLocation, PetMasterFragment.ANIMAL_OPTION_DOG)
-            POSITION_CAT -> return PetMasterFragment.getInstance(mLocation, PetMasterFragment.ANIMAL_OPTION_CAT)
-            POSITION_BIRD -> return PetMasterFragment.getInstance(mLocation, PetMasterFragment.ANIMAL_OPTION_BIRD)
-            POSITION_REPTILE -> return PetMasterFragment.getInstance(mLocation, PetMasterFragment.ANIMAL_OPTION_REPTILE)
-            POSITION_SMALL_FURRY -> return PetMasterFragment.getInstance(mLocation, PetMasterFragment.ANIMAL_OPTION_SMALL_FURRY)
-            POSITION_HORSE -> return PetMasterFragment.getInstance(mLocation, PetMasterFragment.ANIMAL_OPTION_HORSE)
-            POSITION_PIG -> return PetMasterFragment.getInstance(mLocation, PetMasterFragment.ANIMAL_OPTION_PIG)
-            POSITION_BARNYARD -> return PetMasterFragment.getInstance(mLocation, PetMasterFragment.ANIMAL_OPTION_BARNYARD)
+            POSITION_DOG -> return PetMasterFragment.getInstance(mLocation, PetUtils.ANIMAL_OPTION_DOG)
+            POSITION_CAT -> return PetMasterFragment.getInstance(mLocation, PetUtils.ANIMAL_OPTION_CAT)
+            POSITION_BIRD -> return PetMasterFragment.getInstance(mLocation, PetUtils.ANIMAL_OPTION_BIRD)
+            POSITION_REPTILE -> return PetMasterFragment.getInstance(mLocation, PetUtils.ANIMAL_OPTION_REPTILE)
+            POSITION_SMALL_FURRY -> return PetMasterFragment.getInstance(mLocation, PetUtils.ANIMAL_OPTION_SMALL_FURRY)
+            POSITION_HORSE -> return PetMasterFragment.getInstance(mLocation, PetUtils.ANIMAL_OPTION_HORSE)
+            POSITION_PIG -> return PetMasterFragment.getInstance(mLocation, PetUtils.ANIMAL_OPTION_PIG)
+            POSITION_BARNYARD -> return PetMasterFragment.getInstance(mLocation, PetUtils.ANIMAL_OPTION_BARNYARD)
             else -> throw RuntimeException("Invalid viewpager position")
         }
     }

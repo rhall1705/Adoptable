@@ -25,6 +25,7 @@ import java.util.*
 import javax.inject.Inject
 import android.support.v4.app.ActivityOptionsCompat
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
+import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchArguments
 
 
 /**
@@ -44,12 +45,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
 
     private var mType: Int? = null
 
-    private var mLocation: String? = null
-    private var mAnimal: String? = null
-    private var mSize: String? = null
-    private var mAge: String? = null
-    private var mSex: String? = null
-    private var mBreed: String? = null
+    private var mSearchParams: PetMasterSearchArguments? = null
 
     private var mShelterId: String? = null
     private var mStatus: Char? = null
@@ -65,24 +61,10 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val TYPE_FIND = 0
         val TYPE_SHELTER = 1
 
-        private val ARG_PET_MASTER_LOCATION = "PetMasterFragment.Arg.Location"
-        private val ARG_PET_MASTER_ANIMAL = "PetMasterFragment.Arg.Animal"
-        private val ARG_PET_MASTER_SIZE = "PetMasterFragment.Arg.Size"
-        private val ARG_PET_MASTER_AGE = "PetMasterFragment.Arg.Age"
-        private val ARG_PET_MASTER_SEX = "PetMasterFragment.Arg.Sex"
-        private val ARG_PET_MASTER_BREED = "PetMasterFragment.Arg.Breed"
+        private val ARG_PET_MASTER_SEARCH_PARAMS = "PetMasterFragment.Arg.SearchParams"
 
         private val ARG_PET_MASTER_SHELTER_ID = "PetMasterFragment.Arg.ShelterId"
         private val ARG_PET_MASTER_STATUS = "PetMasterFragment.Arg.Status"
-
-        val ANIMAL_OPTION_DOG = "dog"
-        val ANIMAL_OPTION_CAT = "cat"
-        val ANIMAL_OPTION_BIRD = "bird"
-        val ANIMAL_OPTION_REPTILE = "reptile"
-        val ANIMAL_OPTION_SMALL_FURRY = "smallfurry"
-        val ANIMAL_OPTION_HORSE = "horse"
-        val ANIMAL_OPTION_PIG = "pig"
-        val ANIMAL_OPTION_BARNYARD = "barnyard"
 
         val STATUS_OPTION_ADOPTABLE = 'A'
         val STATUS_OPTION_HOLD = 'H'
@@ -90,20 +72,15 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val STATUS_OPTION_ADOPTED = 'X'
 
         @JvmOverloads fun getInstance(location: String,
-                                      animal: String? = null,
-                                      size: String? = null,
-                                      age: String? = null,
-                                      sex: String? = null,
-                                      breed: String? = null): PetMasterFragment {
+                                      animal: String? = "",
+                                      size: String? = "",
+                                      age: String? = "",
+                                      sex: String? = "",
+                                      breed: String? = ""): PetMasterFragment {
             val fragment: PetMasterFragment = PetMasterFragment()
             val args: Bundle = Bundle()
             args.putInt(ARG_PET_MASTER_TYPE, TYPE_FIND)
-            args.putString(ARG_PET_MASTER_LOCATION, location)
-            args.putString(ARG_PET_MASTER_ANIMAL, animal)
-            args.putString(ARG_PET_MASTER_SIZE, size)
-            args.putString(ARG_PET_MASTER_AGE, age)
-            args.putString(ARG_PET_MASTER_SEX, sex)
-            args.putString(ARG_PET_MASTER_BREED, breed)
+            args.putParcelable(ARG_PET_MASTER_SEARCH_PARAMS, PetMasterSearchArguments(location, animal, size, age, sex, breed))
             fragment.arguments = args
             return fragment
         }
@@ -126,12 +103,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         mType = args.getInt(ARG_PET_MASTER_TYPE)
         when(mType) {
             TYPE_FIND -> {
-                mLocation = args.getString(ARG_PET_MASTER_LOCATION)
-                mAnimal = args.getString(ARG_PET_MASTER_ANIMAL)
-                mSize = args.getString(ARG_PET_MASTER_SIZE)
-                mAge = args.getString(ARG_PET_MASTER_AGE)
-                mSex = args.getString(ARG_PET_MASTER_SEX)
-                mBreed = args.getString(ARG_PET_MASTER_BREED)
+                mSearchParams = args.getParcelable(ARG_PET_MASTER_SEARCH_PARAMS)
             }
             TYPE_SHELTER -> {
                 mShelterId = args.getString(ARG_PET_MASTER_SHELTER_ID)
@@ -155,7 +127,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
         when(mType) {
-            TYPE_FIND -> mPresenter.loadData(mLocation!!, mAnimal, mSize, mAge, mSex, mBreed)
+            TYPE_FIND -> mPresenter.loadData(mSearchParams!!.location(), mSearchParams!!.animal(), mSearchParams!!.size(), mSearchParams!!.age(), mSearchParams!!.sex(), mSearchParams!!.breed())
             TYPE_SHELTER -> mPresenter.loadData(mShelterId!!, mStatus!!)
         }
         mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))

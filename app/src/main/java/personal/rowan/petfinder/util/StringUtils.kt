@@ -8,7 +8,11 @@ import android.text.TextUtils
 object StringUtils {
 
     fun emptyIfNull(string: String?): String {
-        if (string == null) return "" else return string
+        return if (string == null) "" else string
+    }
+
+    fun nullIfEmpty(string: String?): String? {
+        return if (string == null || string.isBlank()) null else string
     }
 
     fun separateWithDelimiter(strings: List<String?>, delimiter: String): String {
