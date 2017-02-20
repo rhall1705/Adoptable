@@ -7,6 +7,8 @@ import personal.rowan.petfinder.network.PetfinderService
 import personal.rowan.petfinder.ui.base.presenter.BasePresenter
 import personal.rowan.petfinder.ui.pet.master.dagger.PetMasterScope
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
+import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchArguments
+import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterArguments
 import rx.Observable
 import rx.Subscriber
 import rx.Subscription
@@ -26,41 +28,15 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
     private var mApiSubscription: Subscription? = null
 
     private var mType: Int? = null
-
-    private var mLocation: String? = null
-    private var mAnimal: String? = null
-    private var mSize: String? = null
-    private var mAge: String? = null
-    private var mSex: String? = null
-    private var mBreed: String? = null
-
-    private var mShelterId: String? = null
-    private var mStatus: Char? = null
+    private lateinit var mArguments: PetMasterArguments
 
     private var mPetList: MutableList<Pet>? = null
     private var mOffset: String = "0"
     private var mError: Throwable? = null
 
-    @JvmOverloads fun loadData(location: String,
-                               animal: String? = null,
-                               size: String? = null,
-                               age: String? = null,
-                               sex: String? = null,
-                               breed: String? = null) {
-        mType = PetMasterFragment.TYPE_FIND
-        mLocation = location
-        mAnimal = animal
-        mSize = size
-        mAge = age
-        mSex = sex
-        mBreed = breed
-        loadData(false)
-    }
-
-    fun loadData(shelterId: String, status: Char) {
-        mType = PetMasterFragment.TYPE_SHELTER
-        mShelterId = shelterId
-        mStatus = status
+    fun loadData(type: Int?, arguments: PetMasterArguments) {
+        mType = type
+        mArguments = arguments
         loadData(false)
     }
 
@@ -78,8 +54,14 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
 
         val petObservable: Observable<PetResult>
         when (mType) {
-            PetMasterFragment.TYPE_FIND -> petObservable = mPetfinderService.getNearbyPets(mLocation!!, mAnimal, mSize, mAge, mSex, mBreed, mOffset)
-            PetMasterFragment.TYPE_SHELTER -> petObservable = mPetfinderService.getPetsForShelter(mShelterId!!, mStatus!!, mOffset)
+            PetMasterFragment.TYPE_FIND -> {
+                val searchArgs: PetMasterSearchArguments = mArguments as PetMasterSearchArguments
+                petObservable = mPetfinderService.getNearbyPets(searchArgs.location(), searchArgs.animal(), searchArgs.size(), searchArgs.age(), searchArgs.size(), searchArgs.breed(), mOffset)
+            }
+            PetMasterFragment.TYPE_SHELTER -> {
+                val shelterArgs: PetMasterShelterArguments = mArguments as PetMasterShelterArguments
+                petObservable = mPetfinderService.getPetsForShelter(shelterArgs.shelterId(), shelterArgs.status(), mOffset)
+            }
             else -> throw RuntimeException("invalid pet master type")
         }
         mApiSubscription = petObservable

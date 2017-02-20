@@ -26,6 +26,7 @@ import javax.inject.Inject
 import android.support.v4.app.ActivityOptionsCompat
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
 import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchArguments
+import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterArguments
 
 
 /**
@@ -45,10 +46,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
 
     private var mType: Int? = null
 
-    private var mSearchParams: PetMasterSearchArguments? = null
-
-    private var mShelterId: String? = null
-    private var mStatus: Char? = null
+    private lateinit var mArguments: PetMasterArguments
 
     private lateinit var mPresenter: PetMasterPresenter
     private val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList<Pet>())
@@ -61,10 +59,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val TYPE_FIND = 0
         val TYPE_SHELTER = 1
 
-        private val ARG_PET_MASTER_SEARCH_PARAMS = "PetMasterFragment.Arg.SearchParams"
-
-        private val ARG_PET_MASTER_SHELTER_ID = "PetMasterFragment.Arg.ShelterId"
-        private val ARG_PET_MASTER_STATUS = "PetMasterFragment.Arg.Status"
+        private val ARG_PET_MASTER_ARGUMENTS = "PetMasterFragment.Arg.SearchParams"
 
         val STATUS_OPTION_ADOPTABLE = 'A'
         val STATUS_OPTION_HOLD = 'H'
@@ -80,7 +75,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
             val fragment: PetMasterFragment = PetMasterFragment()
             val args: Bundle = Bundle()
             args.putInt(ARG_PET_MASTER_TYPE, TYPE_FIND)
-            args.putParcelable(ARG_PET_MASTER_SEARCH_PARAMS, PetMasterSearchArguments(location, animal, size, age, sex, breed))
+            args.putParcelable(ARG_PET_MASTER_ARGUMENTS, PetMasterSearchArguments(location, animal, size, age, sex, breed))
             fragment.arguments = args
             return fragment
         }
@@ -89,8 +84,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
             val fragment: PetMasterFragment = PetMasterFragment()
             val args: Bundle = Bundle()
             args.putInt(ARG_PET_MASTER_TYPE, TYPE_SHELTER)
-            args.putString(ARG_PET_MASTER_SHELTER_ID, shelterId)
-            args.putChar(ARG_PET_MASTER_STATUS, status)
+            args.putParcelable(ARG_PET_MASTER_ARGUMENTS, PetMasterShelterArguments(shelterId, status))
             fragment.arguments = args
             return fragment
         }
@@ -101,15 +95,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val args: Bundle = arguments
 
         mType = args.getInt(ARG_PET_MASTER_TYPE)
-        when(mType) {
-            TYPE_FIND -> {
-                mSearchParams = args.getParcelable(ARG_PET_MASTER_SEARCH_PARAMS)
-            }
-            TYPE_SHELTER -> {
-                mShelterId = args.getString(ARG_PET_MASTER_SHELTER_ID)
-                mStatus = args.getChar(ARG_PET_MASTER_STATUS)
-            }
-        }
+        mArguments = args.getParcelable(ARG_PET_MASTER_ARGUMENTS)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -126,10 +112,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
 
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
-        when(mType) {
-            TYPE_FIND -> mPresenter.loadData(mSearchParams!!.location(), mSearchParams!!.animal(), mSearchParams!!.size(), mSearchParams!!.age(), mSearchParams!!.sex(), mSearchParams!!.breed())
-            TYPE_SHELTER -> mPresenter.loadData(mShelterId!!, mStatus!!)
-        }
+        mPresenter.loadData(mType, mArguments)
         mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))
         mItemClickSubscription = mAdapter.itemClickObservable().subscribe { clickData -> mPresenter.onPetClicked(clickData) }
     }

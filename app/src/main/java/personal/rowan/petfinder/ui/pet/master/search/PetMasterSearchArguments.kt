@@ -2,6 +2,7 @@ package personal.rowan.petfinder.ui.pet.master.search
 
 import android.os.Parcel
 import android.os.Parcelable
+import personal.rowan.petfinder.ui.pet.master.PetMasterArguments
 import personal.rowan.petfinder.util.StringUtils
 
 /**
@@ -12,7 +13,7 @@ class PetMasterSearchArguments @JvmOverloads constructor(private val mLocation: 
                                            private val mSize: String? = "",
                                            private val mAge: String? = "",
                                            private val mSex: String? = "",
-                                           private val mBreed: String? = "") : Parcelable {
+                                           private val mBreed: String? = "") : PetMasterArguments {
 
     fun location(): String {
         return mLocation
