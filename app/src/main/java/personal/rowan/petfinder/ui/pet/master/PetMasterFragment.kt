@@ -13,7 +13,6 @@ import android.widget.TextView
 import butterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
 import personal.rowan.petfinder.ui.pet.detail.PetDetailActivity
@@ -59,12 +58,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val TYPE_FIND = 0
         val TYPE_SHELTER = 1
 
-        private val ARG_PET_MASTER_ARGUMENTS = "PetMasterFragment.Arg.SearchParams"
-
-        val STATUS_OPTION_ADOPTABLE = 'A'
-        val STATUS_OPTION_HOLD = 'H'
-        val STATUS_OPTION_PENDING = 'P'
-        val STATUS_OPTION_ADOPTED = 'X'
+        private val ARG_PET_MASTER_ARGUMENTS = "PetMasterFragment.Arg.Arguments"
 
         @JvmOverloads fun getInstance(location: String,
                                       animal: String? = "",
