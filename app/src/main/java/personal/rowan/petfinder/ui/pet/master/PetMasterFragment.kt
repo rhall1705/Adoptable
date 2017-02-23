@@ -43,13 +43,9 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     private val pagination: ProgressBar by bindView(R.id.pet_master_pagination)
     private val emptyView: TextView by bindView(R.id.pet_master_empty_message)
 
-    private var mType: Int? = null
-
-    private lateinit var mArguments: PetMasterArguments
-
     private lateinit var mPresenter: PetMasterPresenter
-    private val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList())
-    private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
+    private val mAdapter = PetMasterAdapter(ArrayList())
+    private val mLayoutManager = LinearLayoutManager(context)
     private var mItemClickSubscription: Subscription? = null
 
     companion object {
@@ -86,10 +82,6 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
 
     override fun beforePresenterPrepared() {
         PetMasterComponent.injector.call(this)
-        val args: Bundle = arguments
-
-        mType = args.getInt(ARG_PET_MASTER_TYPE)
-        mArguments = args.getParcelable(ARG_PET_MASTER_ARGUMENTS)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -107,7 +99,8 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
         val context = context
-        mPresenter.loadData(context, mType, mArguments)
+        val args = arguments
+        mPresenter.loadData(context, args.getInt(ARG_PET_MASTER_TYPE), args.getParcelable(ARG_PET_MASTER_ARGUMENTS))
         mPresenter.bindRecyclerView(context, RxRecyclerView.scrollEvents(petList))
         mItemClickSubscription = mAdapter.itemClickObservable().subscribe { clickData -> mPresenter.onPetClicked(clickData) }
     }

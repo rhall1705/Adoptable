@@ -58,9 +58,9 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     private val locationButton: Button by bindView(R.id.shelter_container_location_button)
 
     private lateinit var mPresenter: ShelterPresenter
-    private val mAdapter: ShelterAdapter = ShelterAdapter(ArrayList<ShelterViewModel>())
-    private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-    private val mCompositeSubscription: CompositeSubscription = CompositeSubscription()
+    private val mAdapter = ShelterAdapter(ArrayList<ShelterViewModel>())
+    private val mLayoutManager = LinearLayoutManager(context)
+    private val mCompositeSubscription = CompositeSubscription()
 
     override fun beforePresenterPrepared() {
         ShelterComponent.injector.call(this)

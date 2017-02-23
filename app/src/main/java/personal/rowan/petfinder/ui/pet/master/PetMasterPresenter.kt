@@ -26,14 +26,14 @@ import java.util.*
 @PetMasterScope
 class PetMasterPresenter(private var mPetfinderService: PetfinderService) : BasePresenter<PetMasterView>(PetMasterView::class.java) {
 
-    private val mCompositeSubscription: CompositeSubscription = CompositeSubscription()
+    private val mCompositeSubscription = CompositeSubscription()
     private var mApiSubscription: Subscription? = null
 
     private var mType: Int? = null
     private lateinit var mArguments: PetMasterArguments
 
     private var mResults: MutableList<PetDetailViewModel>? = null
-    private var mOffset: String = "0"
+    private var mOffset = "0"
     private var mError: Throwable? = null
 
     fun loadData(context: Context, type: Int?, arguments: PetMasterArguments) {
