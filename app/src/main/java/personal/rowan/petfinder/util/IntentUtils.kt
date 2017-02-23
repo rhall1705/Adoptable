@@ -16,4 +16,8 @@ object IntentUtils {
         return Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.co.in/maps?q=" + address))
     }
 
+    fun emailIntent(email: String): Intent {
+        return Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto: " + email))
+    }
+
 }

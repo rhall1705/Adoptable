@@ -16,25 +16,27 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
 
     constructor(context: Context, pet: Pet): super(context, pet) {
         mDescription = pet.description?.`$t`
-        mPhone = pet.contact?.phone?.`$t`
-
-        val addressStrings: MutableList<String?> = ArrayList()
         val contact = pet.contact
+        mPhone = contact?.phone?.`$t`
+        mEmail = contact?.email?.`$t`
+        val addressStrings: MutableList<String?> = ArrayList()
         addressStrings.add(contact?.address1?.`$t`)
         addressStrings.add(contact?.address2?.`$t`)
         addressStrings.add(context.getString(R.string.shelter_subtitle, contact?.city?.`$t`, contact?.state?.`$t`, contact?.zip?.`$t`))
         mAddress = StringUtils.separateWithDelimiter(addressStrings, "\n")
     }
 
-    constructor(photoUrl: String?, name: String?, header: String, detail: String, description: String, phone: String?, address: String?):
+    constructor(photoUrl: String?, name: String?, header: String, detail: String, description: String, phone: String?, email: String?, address: String?):
             super(photoUrl, name, header, detail) {
         mDescription = description
         mPhone = phone
+        mEmail = email
         mAddress = address
     }
 
     private val mDescription: String?
     private val mPhone: String?
+    private val mEmail: String?
     private val mAddress: String?
 
     fun description(): String {
@@ -49,6 +51,10 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
         return StringUtils.emptyIfNull(mAddress)
     }
 
+    fun email(): String {
+        return StringUtils.emptyIfNull(mEmail)
+    }
+
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<PetDetailViewModel> = object : Parcelable.Creator<PetDetailViewModel> {
             override fun createFromParcel(source: Parcel): PetDetailViewModel = PetDetailViewModel(source)
@@ -56,17 +62,15 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
         }
     }
 
-    constructor(source: Parcel) : this(source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString())
+    constructor(source: Parcel) : this(source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString())
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeString(photoUrl())
-        dest?.writeString(name())
-        dest?.writeString(header())
-        dest?.writeString(detail())
+        super.writeToParcel(dest, flags)
         dest?.writeString(description())
         dest?.writeString(phone())
+        dest?.writeString(email())
         dest?.writeString(address())
     }
 }

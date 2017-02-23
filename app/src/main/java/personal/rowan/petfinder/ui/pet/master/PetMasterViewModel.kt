@@ -76,9 +76,9 @@ open class PetMasterViewModel : Parcelable {
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeString(mPhotoUrl)
-        dest?.writeString(mName)
-        dest?.writeString(mHeader)
-        dest?.writeString(mDetail)
+        dest?.writeString(photoUrl())
+        dest?.writeString(name())
+        dest?.writeString(header())
+        dest?.writeString(detail())
     }
 }

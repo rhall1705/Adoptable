@@ -27,6 +27,8 @@ class PetDetailFragment : BaseFragment() {
     private val descriptionDivider: View by bindView(R.id.pet_detail_description_divider)
     private val phoneView: TextView by bindView(R.id.pet_detail_phone)
     private val phoneDivider: View by bindView(R.id.pet_detail_phone_divider)
+    private val emailView: TextView by bindView(R.id.pet_detail_email)
+    private val emailDivider: View by bindView(R.id.pet_detail_email_divider)
     private val addressView: TextView by bindView(R.id.pet_detail_address)
     private val addressDivider: View by bindView(R.id.pet_detail_address_divider)
 
@@ -67,6 +69,7 @@ class PetDetailFragment : BaseFragment() {
 
         handleDescription(viewModel.description())
         handlePhone(viewModel.phone())
+        handleEmail(viewModel.email())
         handleAddress(viewModel.address())
     }
 
@@ -86,6 +89,16 @@ class PetDetailFragment : BaseFragment() {
         } else {
             phoneView.setText(phone)
             RxView.clicks(phoneView).subscribe { startActivity(IntentUtils.dialerIntent(phone)) }
+        }
+    }
+
+    private fun handleEmail(email: String) {
+        if (email.isBlank()) {
+            emailDivider.visibility = View.GONE
+            emailView.visibility = View.GONE
+        } else {
+            emailView.setText(email)
+            RxView.clicks(emailView).subscribe { startActivity(IntentUtils.emailIntent(email)) }
         }
     }
 
