@@ -9,7 +9,7 @@ import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.model.pet.Pet
+import personal.rowan.petfinder.ui.pet.detail.PetDetailViewModel
 import personal.rowan.petfinder.ui.pet.master.PetMasterViewModel
 import rx.Subscription
 import rx.subjects.PublishSubject
@@ -29,9 +29,7 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
 
     private var clickSubscription: Subscription? = null
 
-    fun bind(pet: Pet, clickSubject: PublishSubject<PetMasterClickData>) {
-        val viewModel = PetMasterViewModel(clickContainer.context, pet)
-
+    fun bind(viewModel: PetMasterViewModel, clickSubject: PublishSubject<PetMasterClickData>) {
         val photoUrl = viewModel.photoUrl()
         if (!photoUrl.isBlank()) {
             Picasso.with(photoView.context)
@@ -51,13 +49,13 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
                 android.support.v4.util.Pair.create(fadeView, fadeView.context.getString(R.string.pet_master_detail_fade_transition)),
                 android.support.v4.util.Pair.create(textContainer as View, textContainer.context.getString(R.string.pet_master_detail_text_transition)))
 
-        clickSubscription = RxView.clicks(clickContainer).subscribe { v -> clickSubject.onNext(PetMasterClickData(pet, transitionViews)) }
+        clickSubscription = RxView.clicks(clickContainer).subscribe { v -> clickSubject.onNext(PetMasterClickData(viewModel as PetDetailViewModel, transitionViews)) }
     }
 
-    class PetMasterClickData(private val mPet: Pet, private val mTransitionViews: Array<android.support.v4.util.Pair<View, String>>){
+    class PetMasterClickData(private val mViewModel: PetDetailViewModel, private val mTransitionViews: Array<android.support.v4.util.Pair<View, String>>){
 
-        fun pet(): Pet {
-            return mPet
+        fun viewModel(): PetDetailViewModel {
+            return mViewModel
         }
 
         fun transitionViews(): Array<android.support.v4.util.Pair<View, String>> {

@@ -49,7 +49,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     private lateinit var mArguments: PetMasterArguments
 
     private lateinit var mPresenter: PetMasterPresenter
-    private val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList<Pet>())
+    private val mAdapter: PetMasterAdapter = PetMasterAdapter(ArrayList())
     private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
     private var mItemClickSubscription: Subscription? = null
 
@@ -107,13 +107,14 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         petList.layoutManager = mLayoutManager
         petList.adapter = mAdapter
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
-        swipeRefresh.setOnRefreshListener { mPresenter.refreshData() }
+        swipeRefresh.setOnRefreshListener { mPresenter.refreshData(context) }
     }
 
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
-        mPresenter.loadData(mType, mArguments)
-        mPresenter.bindRecyclerView(RxRecyclerView.scrollEvents(petList))
+        val context = context
+        mPresenter.loadData(context, mType, mArguments)
+        mPresenter.bindRecyclerView(context, RxRecyclerView.scrollEvents(petList))
         mItemClickSubscription = mAdapter.itemClickObservable().subscribe { clickData -> mPresenter.onPetClicked(clickData) }
     }
 
@@ -126,17 +127,17 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     override val presenterFactory: PresenterFactory<PetMasterPresenter>
         get() = mPresenterFactory
 
-    override fun displayPets(pets: List<Pet>) {
-        if(pets.isEmpty()) {
+    override fun displayPets(viewModels: List<PetMasterViewModel>) {
+        if(viewModels.isEmpty()) {
             emptyView.visibility = View.VISIBLE
         } else {
             emptyView.visibility = View.GONE
-            mAdapter.paginateData(pets)
+            mAdapter.paginateData(viewModels)
         }
     }
 
     override fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData) {
-        startActivity(PetDetailActivity.createIntent(context, petMasterClickData.pet()),
+        startActivity(PetDetailActivity.createIntent(context, petMasterClickData.viewModel()),
                 ActivityOptionsCompat.makeSceneTransitionAnimation(activity, *petMasterClickData.transitionViews()).toBundle())
     }
 

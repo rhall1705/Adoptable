@@ -1,10 +1,12 @@
 package personal.rowan.petfinder.ui.pet.master
 
+import android.content.Context
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent
 import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.model.pet.PetResult
 import personal.rowan.petfinder.network.PetfinderService
 import personal.rowan.petfinder.ui.base.presenter.BasePresenter
+import personal.rowan.petfinder.ui.pet.detail.PetDetailViewModel
 import personal.rowan.petfinder.ui.pet.master.dagger.PetMasterScope
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
 import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchArguments
@@ -30,25 +32,25 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
     private var mType: Int? = null
     private lateinit var mArguments: PetMasterArguments
 
-    private var mPetList: MutableList<Pet>? = null
+    private var mResults: MutableList<PetDetailViewModel>? = null
     private var mOffset: String = "0"
     private var mError: Throwable? = null
 
-    fun loadData(type: Int?, arguments: PetMasterArguments) {
+    fun loadData(context: Context, type: Int?, arguments: PetMasterArguments) {
         mType = type
         mArguments = arguments
-        loadData(false)
+        loadData(context, false)
     }
 
-    fun refreshData() {
-        loadData(true)
+    fun refreshData(context: Context) {
+        loadData(context, true)
     }
 
-    private fun loadData(clear: Boolean) {
+    private fun loadData(context: Context, clear: Boolean) {
         if(isApiSubscriptionActive()) return
 
         if(clear) {
-            mPetList?.clear()
+            mResults?.clear()
             mOffset = "0"
         }
 
@@ -81,15 +83,15 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
                         }
 
                         override fun onNext(result: PetResult?) {
-                            if(mPetList == null) {
-                                mPetList = ArrayList()
+                            if(mResults == null) {
+                                mResults = ArrayList()
                             }
 
-                            val pets: List<Pet>? = result!!.petfinder?.pets?.pet
+                            val pets: List<Pet>? = result?.petfinder?.pets?.pet
                             if(pets != null) {
-                                mPetList!!.addAll(pets)
+                                mResults!!.addAll(PetDetailViewModel.fromPetList(context, pets))
                             }
-                            val offset = result.petfinder!!.lastOffset?.`$t`
+                            val offset = result?.petfinder?.lastOffset?.`$t`
                             if(offset != null) {
                                 mOffset = offset
                             }
@@ -101,13 +103,13 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
         mCompositeSubscription.add(mApiSubscription)
     }
 
-    fun bindRecyclerView(observable: Observable<RecyclerViewScrollEvent>) {
+    fun bindRecyclerView(context: Context, observable: Observable<RecyclerViewScrollEvent>) {
         mCompositeSubscription.add(observable
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe { scrollEvent ->
                     if (mView.shouldPaginate() && !isApiSubscriptionActive()) {
                         mView.showPagination()
-                        loadData(false)
+                        loadData(context, false)
                     }
                 })
     }
@@ -121,8 +123,8 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
     }
 
     override fun publish() {
-        if (mPetList != null) {
-            mView.displayPets(mPetList!!)
+        if (mResults != null) {
+            mView.displayPets(mResults!!)
         } else if (mError != null) {
             mView.showError(mError.toString())
         } else {
@@ -135,7 +137,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
             mCompositeSubscription.unsubscribe()
         }
         mApiSubscription = null
-        mPetList = null
+        mResults = null
         mError = null
     }
 

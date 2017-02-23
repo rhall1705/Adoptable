@@ -2,17 +2,16 @@ package personal.rowan.petfinder.ui.pet.master.recycler
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.model.pet.Pet
+import personal.rowan.petfinder.ui.pet.master.PetMasterViewModel
 import rx.Observable
 import rx.subjects.PublishSubject
 
 /**
  * Created by Rowan Hall
  */
-class PetMasterAdapter(private var mData: List<Pet>?) : RecyclerView.Adapter<PetMasterViewHolder>() {
+class PetMasterAdapter(private var mData: List<PetMasterViewModel>?) : RecyclerView.Adapter<PetMasterViewHolder>() {
 
     private var mPetClickSubject: PublishSubject<PetMasterViewHolder.PetMasterClickData>
 
@@ -20,7 +19,7 @@ class PetMasterAdapter(private var mData: List<Pet>?) : RecyclerView.Adapter<Pet
         mPetClickSubject = PublishSubject.create()
     }
 
-    fun paginateData(data: List<Pet>) {
+    fun paginateData(data: List<PetMasterViewModel>) {
         if(mData == null || mData!!.isEmpty()) {
             mData = data
             notifyDataSetChanged()

@@ -83,6 +83,16 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
             override fun createFromParcel(source: Parcel): PetDetailViewModel = PetDetailViewModel(source)
             override fun newArray(size: Int): Array<PetDetailViewModel?> = arrayOfNulls(size)
         }
+
+        fun fromPetList(context: Context, pets: List<Pet>?): List<PetDetailViewModel> {
+            val viewModels: MutableList<PetDetailViewModel> = ArrayList()
+            if (pets != null) {
+                for (pet in pets) {
+                    viewModels.add(PetDetailViewModel(context, pet))
+                }
+            }
+            return viewModels
+        }
     }
 
     constructor(source: Parcel) : this(

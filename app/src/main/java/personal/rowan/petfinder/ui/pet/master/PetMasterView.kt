@@ -8,7 +8,7 @@ import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
  */
 interface PetMasterView {
 
-    fun displayPets(pets: List<Pet>)
+    fun displayPets(viewModels: List<PetMasterViewModel>)
 
     fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData)
 
