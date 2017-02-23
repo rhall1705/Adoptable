@@ -13,7 +13,6 @@ import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.ui.pet.master.PetMasterViewModel
 import rx.Subscription
 import rx.subjects.PublishSubject
-import java.util.*
 
 /**
  * Created by Rowan Hall
