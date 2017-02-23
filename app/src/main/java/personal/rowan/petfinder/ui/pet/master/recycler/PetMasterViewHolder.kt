@@ -27,7 +27,7 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
     val headerView: TextView by bindView(R.id.pet_master_header)
     val detailView: TextView by bindView(R.id.pet_master_detail)
 
-    private var clickSubscription: Subscription? = null
+    private var mClickSubscription: Subscription? = null
 
     fun bind(viewModel: PetMasterViewModel, clickSubject: PublishSubject<PetMasterClickData>) {
         val photoUrl = viewModel.photoUrl()
@@ -40,8 +40,8 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         headerView.setText(viewModel.header())
         detailView.setText(viewModel.detail())
 
-        if(clickSubscription != null && !clickSubscription!!.isUnsubscribed) {
-            clickSubscription!!.unsubscribe()
+        if(mClickSubscription != null && !mClickSubscription!!.isUnsubscribed) {
+            mClickSubscription!!.unsubscribe()
         }
 
         val transitionViews: Array<android.support.v4.util.Pair<View, String>> = arrayOf(
@@ -49,7 +49,7 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
                 android.support.v4.util.Pair.create(fadeView, fadeView.context.getString(R.string.pet_master_detail_fade_transition)),
                 android.support.v4.util.Pair.create(textContainer as View, textContainer.context.getString(R.string.pet_master_detail_text_transition)))
 
-        clickSubscription = RxView.clicks(clickContainer).subscribe { v -> clickSubject.onNext(PetMasterClickData(viewModel as PetDetailViewModel, transitionViews)) }
+        mClickSubscription = RxView.clicks(clickContainer).subscribe { v -> clickSubject.onNext(PetMasterClickData(viewModel as PetDetailViewModel, transitionViews)) }
     }
 
     class PetMasterClickData(private val mViewModel: PetDetailViewModel, private val mTransitionViews: Array<android.support.v4.util.Pair<View, String>>){
