@@ -136,8 +136,8 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     }
 
     override fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData) {
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, *petMasterClickData.transitionViews().toTypedArray())
-        startActivity(PetDetailActivity.createIntent(context, petMasterClickData.pet()), options.toBundle())
+        startActivity(PetDetailActivity.createIntent(context, petMasterClickData.pet()),
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, *petMasterClickData.transitionViews()).toBundle())
     }
 
     override fun shouldPaginate(): Boolean {

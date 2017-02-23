@@ -47,28 +47,21 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
             clickSubscription!!.unsubscribe()
         }
 
-        val transitionViews: MutableList<android.support.v4.util.Pair<View, String>> = ArrayList()
-        transitionViews.add(android.support.v4.util.Pair.create(photoView, photoView.context.getString(R.string.pet_master_detail_image_transition)))
-        transitionViews.add(android.support.v4.util.Pair.create(fadeView, fadeView.context.getString(R.string.pet_master_detail_fade_transition)))
-        transitionViews.add(android.support.v4.util.Pair.create(textContainer, textContainer.context.getString(R.string.pet_master_detail_text_transition)))
+        val transitionViews: Array<android.support.v4.util.Pair<View, String>> = arrayOf(
+                android.support.v4.util.Pair.create(photoView as View, photoView.context.getString(R.string.pet_master_detail_image_transition)),
+                android.support.v4.util.Pair.create(fadeView, fadeView.context.getString(R.string.pet_master_detail_fade_transition)),
+                android.support.v4.util.Pair.create(textContainer as View, textContainer.context.getString(R.string.pet_master_detail_text_transition)))
 
         clickSubscription = RxView.clicks(clickContainer).subscribe { v -> clickSubject.onNext(PetMasterClickData(pet, transitionViews)) }
     }
 
-    class PetMasterClickData(pet: Pet, transitionViews: List<android.support.v4.util.Pair<View, String>>){
-        private val mPet: Pet
-        private val mTransitionViews: List<android.support.v4.util.Pair<View, String>>
-
-        init {
-            mPet = pet
-            mTransitionViews = transitionViews
-        }
+    class PetMasterClickData(private val mPet: Pet, private val mTransitionViews: Array<android.support.v4.util.Pair<View, String>>){
 
         fun pet(): Pet {
             return mPet
         }
 
-        fun transitionViews(): List<android.support.v4.util.Pair<View, String>> {
+        fun transitionViews(): Array<android.support.v4.util.Pair<View, String>> {
             return mTransitionViews
         }
 
