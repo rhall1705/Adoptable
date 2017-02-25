@@ -1,9 +1,7 @@
 package personal.rowan.petfinder.ui.shelter
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
-import android.location.*
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -20,7 +18,7 @@ import android.widget.TextView
 import butterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.application.LocationPermissionManager
+import personal.rowan.petfinder.application.UserLocationManager
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
 import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterContainerActivity
@@ -40,7 +38,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     @Inject
     lateinit var mPresenterFactory: ShelterPresenterFactory
     @Inject
-    lateinit var mLocationPermissionManager: LocationPermissionManager
+    lateinit var mUserLocationManager: UserLocationManager
 
     companion object {
 
@@ -83,27 +81,26 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     override fun onPresenterPrepared(presenter: ShelterPresenter) {
         mPresenter = presenter
 
-        mCompositeSubscription.add(mLocationPermissionManager.permissionObservable().subscribe { enabled -> if(enabled) setupRecycler() })
+        mCompositeSubscription.add(mUserLocationManager.permissionObservable().subscribe { enabled -> if(enabled) findZipcode() })
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
             return
         }
 
-        setupRecycler()
+        findZipcode()
     }
 
-    private fun setupRecycler() {
+    private fun findZipcode() {
+        mCompositeSubscription.add(mUserLocationManager.zipcodeObservable().subscribe { zipcode -> setupRecyclerWithZipcode(zipcode) })
+        mUserLocationManager.getZipcode(context)
+    }
+
+    private fun setupRecyclerWithZipcode(zipcode: String) {
         swipeRefresh.visibility = View.VISIBLE
         locationRationale.visibility = View.GONE
 
-        val context = context
-        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
-        val geocoder = Geocoder(context, Locale.getDefault())
-        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-
-        mPresenter.loadData(context, addresses.get(0).postalCode)
+        mPresenter.loadData(context, zipcode)
         mPresenter.bindRecyclerView(context, RxRecyclerView.scrollEvents(shelterList))
         mCompositeSubscription.add(mAdapter.petsButtonObservable().subscribe { pair -> mPresenter.onPetsClicked(pair) })
         mCompositeSubscription.add(mAdapter.directionsButtonObservable().subscribe { address -> mPresenter.onDirectionsClicked(address) })
@@ -118,14 +115,14 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     override fun onStart() {
         super.onStart()
         if(PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) && shelterList.adapter == null) {
-            setupRecycler()
+            findZipcode()
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode) {
             PermissionUtils.PERMISSION_CODE_LOCATION ->
-                mLocationPermissionManager.permissionEvent(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                mUserLocationManager.permissionEvent(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
         }
     }
 

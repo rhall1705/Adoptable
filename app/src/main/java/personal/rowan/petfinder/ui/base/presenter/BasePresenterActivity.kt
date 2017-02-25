@@ -46,7 +46,7 @@ abstract class BasePresenterActivity<P : BasePresenter<V>, V: Any> : BaseActivit
     }
 
     /**
-     * Instance of [PresenterFactory] use to getInstance a Presenter when needed. This instance should
+     * Instance of [PresenterFactory] use to getINSTANCE a Presenter when needed. This INSTANCE should
      * not contain [android.app.Activity] context reference since it will be keep on rotations.
      */
     protected abstract val presenterFactory: PresenterFactory<P>

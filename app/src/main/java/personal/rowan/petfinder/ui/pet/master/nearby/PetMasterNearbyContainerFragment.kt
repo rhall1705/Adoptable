@@ -1,9 +1,7 @@
 package personal.rowan.petfinder.ui.pet.master.nearby
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
-import android.location.*
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
@@ -15,12 +13,11 @@ import android.widget.Button
 import android.widget.LinearLayout
 import butterknife.bindView
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.application.LocationPermissionManager
+import personal.rowan.petfinder.application.UserLocationManager
 import personal.rowan.petfinder.ui.base.BaseFragment
 import personal.rowan.petfinder.ui.pet.master.nearby.dagger.PetMasterNearbyContainerComponent
 import personal.rowan.petfinder.util.PermissionUtils
-import rx.Subscription
-import java.util.*
+import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 /**
@@ -29,7 +26,7 @@ import javax.inject.Inject
 class PetMasterNearbyContainerFragment : BaseFragment() {
 
     @Inject
-    lateinit var mLocationPermissionManager: LocationPermissionManager
+    lateinit var mUserLocationManager: UserLocationManager
 
     private val toolbar: Toolbar by bindView(R.id.pet_master_nearby_container_toolbar)
     private val tabLayout: TabLayout by bindView(R.id.pet_master_nearby_container_tabs)
@@ -37,7 +34,7 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     private val locationRationale: LinearLayout by bindView(R.id.pet_master_nearby_container_location_container)
     private val locationButton: Button by bindView(R.id.pet_master_nearby_container_location_button)
 
-    private var mLocationPermissionSubscription: Subscription? = null
+    private var mLocationCompositeSubscription = CompositeSubscription()
 
     companion object {
         fun getInstance(): PetMasterNearbyContainerFragment {
@@ -55,27 +52,27 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
         setToolbar(toolbar, getString(R.string.pet_master_nearby_container_title))
         locationButton.setOnClickListener { handleLocationPermission() }
 
-        mLocationPermissionSubscription = mLocationPermissionManager.permissionObservable().subscribe { enabled -> if(enabled) setupViewPagerWithLocation() }
+        mLocationCompositeSubscription.add(mUserLocationManager.permissionObservable().subscribe { enabled -> if(enabled) findZipcode() })
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
             return
         }
 
-        setupViewPagerWithLocation()
+        findZipcode()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if(mLocationPermissionSubscription != null && !mLocationPermissionSubscription!!.isUnsubscribed) {
-            mLocationPermissionSubscription!!.unsubscribe()
+        if(!mLocationCompositeSubscription.isUnsubscribed) {
+            mLocationCompositeSubscription.unsubscribe()
         }
     }
 
     override fun onStart() {
         super.onStart()
         if(PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) && viewPager.adapter == null) {
-            setupViewPagerWithLocation()
+            findZipcode()
         }
     }
 
@@ -83,14 +80,13 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
         requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PermissionUtils.PERMISSION_CODE_LOCATION)
     }
 
-    private fun setupViewPagerWithLocation() {
-        val context = context
-        val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val location: Location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
-        val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
-        val addresses: List<Address> = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+    private fun findZipcode() {
+        mLocationCompositeSubscription.add(mUserLocationManager.zipcodeObservable().subscribe { zipcode -> setupViewPagerWithZipcode(zipcode) })
+        mUserLocationManager.getZipcode(context)
+    }
 
-        viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, addresses.get(0).postalCode))
+    private fun setupViewPagerWithZipcode(zipcode: String) {
+        viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, zipcode))
         viewPager.offscreenPageLimit = PetMasterNearbyContainerAdapter.NUM_PAGES
         locationRationale.visibility = View.GONE
         tabLayout.visibility = View.VISIBLE
@@ -100,7 +96,7 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode) {
             PermissionUtils.PERMISSION_CODE_LOCATION ->
-                    mLocationPermissionManager.permissionEvent(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    mUserLocationManager.permissionEvent(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
         }
     }
 
