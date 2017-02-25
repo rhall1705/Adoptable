@@ -26,9 +26,7 @@
                 android:layout_gravity="center_horizontal"
                 android:scaleType="centerCrop"
                 android:background="@color/lightGray"
-                android:contentDescription="@string/pet_master_image_content_description"
-                android:transitionName="@string/pet_master_detail_image_transition"
-                tools:ignore="UnusedAttribute" />
+                android:contentDescription="@string/pet_master_image_content_description" />
 
             <View
                 android:id="@+id/pet_master_fade_view"

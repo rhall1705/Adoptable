@@ -1,11 +1,12 @@
 package personal.rowan.petfinder.ui.pet.detail.photo
 
 import android.view.ViewGroup
-import android.view.LayoutInflater
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.content.Context
-import personal.rowan.petfinder.R
+import android.os.Build
+import android.widget.ImageView
+import com.squareup.picasso.Picasso
 
 /**
  * Created by Rowan Hall
@@ -13,9 +14,17 @@ import personal.rowan.petfinder.R
 class PetDetailPhotosAdapter(private val mContext: Context, private val mPhotoUrls: List<String>) : PagerAdapter() {
 
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
-        val photoView = PetDetailPhotosView(mContext)
+        val photoView = ImageView(mContext)
+        val url = mPhotoUrls.get(position)
         collection.addView(photoView)
-        photoView.loadPhoto(mPhotoUrls.get(position))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            photoView.transitionName = url
+        }
+
+        Picasso.with(photoView.context)
+                .load(url)
+                .into(photoView)
+
         return photoView
     }
 

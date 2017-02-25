@@ -30,7 +30,6 @@
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerCrop"
                     android:background="@color/lightGray"
-                    android:transitionName="@string/pet_master_detail_image_transition"
                     android:contentDescription="@string/pet_master_image_content_description"
                     tools:ignore="UnusedAttribute" />
 

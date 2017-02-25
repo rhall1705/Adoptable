@@ -1,5 +1,6 @@
 package personal.rowan.petfinder.ui.pet.master.recycler
 
+import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
@@ -35,7 +36,12 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
             Picasso.with(photoView.context)
                     .load(viewModel.photoUrl())
                     .into(photoView)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                photoView.transitionName = photoUrl
+            }
         }
+
         nameView.setText(viewModel.name())
         headerView.setText(viewModel.header())
         detailView.setText(viewModel.detail())
@@ -45,7 +51,7 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         }
 
         val transitionViews: Array<android.support.v4.util.Pair<View, String>> = arrayOf(
-                android.support.v4.util.Pair.create(photoView as View, photoView.context.getString(R.string.pet_master_detail_image_transition)),
+                android.support.v4.util.Pair.create(photoView as View, photoUrl),
                 android.support.v4.util.Pair.create(fadeView, fadeView.context.getString(R.string.pet_master_detail_fade_transition)),
                 android.support.v4.util.Pair.create(textContainer as View, textContainer.context.getString(R.string.pet_master_detail_text_transition)))
 

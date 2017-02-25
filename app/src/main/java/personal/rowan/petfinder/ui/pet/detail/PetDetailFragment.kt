@@ -1,6 +1,9 @@
 package personal.rowan.petfinder.ui.pet.detail
 
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.util.Pair
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
@@ -72,15 +75,19 @@ class PetDetailFragment : BaseFragment() {
 
     private fun handlePhotos(photoUrl: String, allPhotos: List<String>) {
         if (!photoUrl.isBlank()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                photoView.transitionName = photoUrl
+            }
+
             Picasso.with(context)
                     .load(photoUrl)
                     .into(photoView)
 
             val allPhotosArrayList = ArrayList<String>()
             allPhotosArrayList.addAll(allPhotos)
-            RxView.clicks(photoView).subscribe { startActivity(PetDetailPhotosActivity.createIntent(context, allPhotosArrayList)) }
+            RxView.clicks(photoView).subscribe { startActivity(PetDetailPhotosActivity.createIntent(context, allPhotosArrayList),
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair.create(photoView, photoUrl)).toBundle()) }
         }
-
     }
 
     private fun handleDescription(description: String) {
