@@ -3,6 +3,7 @@ package personal.rowan.petfinder.ui.pet.detail
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import android.text.TextUtils
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.model.pet.Photo
@@ -30,12 +31,15 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
 
         val photoList: List<Photo>? = pet.media?.photos?.photo
         val photoUrlList: MutableList<String> = ArrayList()
+        photoUrlList.add(photoUrl())
         if (photoList != null && photoList.isNotEmpty()) {
             for(i in  0..photoList.size - 1) {
-                if (i != 2) {
-                    val photoUrl = photoList.get(i).`$t`
-                    if (photoUrl != null) {
-                        photoUrlList.add(photoUrl)
+                val photo = photoList.get(i)
+                val size = photo.size
+                if (i != 2 && "t" != size && "pnt" != size) {
+                    val photoUrl = photo.`$t`
+                    if (!TextUtils.isEmpty(photoUrl)) {
+                        photoUrlList.add(photoUrl!!)
                     }
                 }
             }

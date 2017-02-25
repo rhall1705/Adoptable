@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.animation.DecelerateInterpolator
 import android.widget.Scroller
-import java.lang.reflect.Field
 
 class NoSwipeViewPager : ViewPager {
 

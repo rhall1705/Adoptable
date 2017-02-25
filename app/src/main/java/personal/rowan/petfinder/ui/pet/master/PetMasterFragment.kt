@@ -62,8 +62,8 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
                                       age: String? = "",
                                       sex: String? = "",
                                       breed: String? = ""): PetMasterFragment {
-            val fragment: PetMasterFragment = PetMasterFragment()
-            val args: Bundle = Bundle()
+            val fragment = PetMasterFragment()
+            val args = Bundle()
             args.putInt(ARG_PET_MASTER_TYPE, TYPE_FIND)
             args.putParcelable(ARG_PET_MASTER_ARGUMENTS, PetMasterSearchArguments(location, animal, size, age, sex, breed))
             fragment.arguments = args
@@ -71,8 +71,8 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         }
 
         fun getInstance(shelterId: String, status: Char): PetMasterFragment {
-            val fragment: PetMasterFragment = PetMasterFragment()
-            val args: Bundle = Bundle()
+            val fragment = PetMasterFragment()
+            val args = Bundle()
             args.putInt(ARG_PET_MASTER_TYPE, TYPE_SHELTER)
             args.putParcelable(ARG_PET_MASTER_ARGUMENTS, PetMasterShelterArguments(shelterId, status))
             fragment.arguments = args

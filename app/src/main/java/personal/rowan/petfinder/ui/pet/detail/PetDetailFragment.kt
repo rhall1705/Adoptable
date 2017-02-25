@@ -12,7 +12,9 @@ import com.jakewharton.rxbinding.view.RxView
 import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
+import personal.rowan.petfinder.ui.pet.detail.photo.PetDetailPhotosActivity
 import personal.rowan.petfinder.util.IntentUtils
+import java.util.*
 
 /**
  * Created by Rowan Hall
@@ -37,8 +39,8 @@ class PetDetailFragment : BaseFragment() {
         private val ARG_PET_DETAIL_MODEL = "PetDetailFragment.Arg.Model"
 
         fun getInstance(petDetailViewModel: PetDetailViewModel): PetDetailFragment {
-            val fragment: PetDetailFragment = PetDetailFragment()
-            val args: Bundle = Bundle()
+            val fragment = PetDetailFragment()
+            val args = Bundle()
             args.putParcelable(ARG_PET_DETAIL_MODEL, petDetailViewModel)
             fragment.arguments = args
             return fragment
@@ -58,12 +60,7 @@ class PetDetailFragment : BaseFragment() {
 
     private fun setDetails(viewModel: PetDetailViewModel) {
         setToolbar(toolbar, viewModel.name(), true)
-        val photoUrl = viewModel.photoUrl()
-        if (!photoUrl.isBlank()) {
-            Picasso.with(context)
-                    .load(viewModel.photoUrl())
-                    .into(photoView)
-        }
+        handlePhotos(viewModel.photoUrl(), viewModel.photos())
         headerView.setText(viewModel.header())
         detailView.setText(viewModel.detail())
 
@@ -71,6 +68,19 @@ class PetDetailFragment : BaseFragment() {
         handlePhone(viewModel.phone())
         handleEmail(viewModel.email())
         handleAddress(viewModel.address())
+    }
+
+    private fun handlePhotos(photoUrl: String, allPhotos: List<String>) {
+        if (!photoUrl.isBlank()) {
+            Picasso.with(context)
+                    .load(photoUrl)
+                    .into(photoView)
+
+            val allPhotosArrayList = ArrayList<String>()
+            allPhotosArrayList.addAll(allPhotos)
+            RxView.clicks(photoView).subscribe { startActivity(PetDetailPhotosActivity.createIntent(context, allPhotosArrayList)) }
+        }
+
     }
 
     private fun handleDescription(description: String) {
