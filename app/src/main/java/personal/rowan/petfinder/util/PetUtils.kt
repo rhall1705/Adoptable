@@ -1,5 +1,9 @@
 package personal.rowan.petfinder.util
 
+import personal.rowan.petfinder.model.pet.Photo
+import java.net.URLDecoder
+import java.util.*
+
 /**
  * Created by Rowan Hall
  */
@@ -66,6 +70,40 @@ object PetUtils {
             4 -> return "Senior"
             else -> return null
         }
+    }
+
+    fun findFirstLargePhotoUrl(photos: List<Photo>?): String? {
+        val largePhotos = findLargePhotoUrls(photos, true)
+        return if (largePhotos.isNotEmpty()) largePhotos.get(0) else null
+    }
+
+    @JvmOverloads fun findLargePhotoUrls(photos: List<Photo>?, endAfterFirst: Boolean = false): List<String> {
+        val largePhotos = ArrayList<String>()
+
+        if (photos != null) {
+            for (photo in photos) {
+                val photoUrl = photo.`$t`
+                if (photoUrl != null) {
+                    val queryPairs = LinkedHashMap<String, String>()
+                    val pairStrings = photoUrl.split("&")
+                    for (pairString in pairStrings) {
+                        val equalsIndex = pairString.indexOf("=")
+                        if (equalsIndex > 0) {
+                            queryPairs.put(URLDecoder.decode(pairString.substring(0, equalsIndex), "UTF-8"), URLDecoder.decode(pairString.substring(equalsIndex + 1), "UTF-8"))
+                            val width = queryPairs.get("width")
+                            if (width != null && width.toInt() >= 400) {
+                                largePhotos.add(photoUrl)
+                                if (endAfterFirst) {
+                                    return largePhotos
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return largePhotos
     }
 
 }

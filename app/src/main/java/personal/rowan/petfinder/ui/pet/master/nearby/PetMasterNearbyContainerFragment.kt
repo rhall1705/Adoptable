@@ -84,13 +84,13 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     }
 
     private fun setupViewPagerWithLocation() {
-        /*val context = context
+        val context = context
         val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val location: Location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
         val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
-        val addresses: List<Address> = geocoder.getFromLocation(location.latitude, location.longitude, 1)*/
+        val addresses: List<Address> = geocoder.getFromLocation(location.latitude, location.longitude, 1)
 
-        viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, /*addresses.get(0).postalCode*/"30308"))
+        viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, addresses.get(0).postalCode))
         viewPager.offscreenPageLimit = PetMasterNearbyContainerAdapter.NUM_PAGES
         locationRationale.visibility = View.GONE
         tabLayout.visibility = View.VISIBLE

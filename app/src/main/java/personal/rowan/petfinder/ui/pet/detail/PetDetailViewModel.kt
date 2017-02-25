@@ -3,11 +3,10 @@ package personal.rowan.petfinder.ui.pet.detail
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import android.text.TextUtils
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.pet.Pet
-import personal.rowan.petfinder.model.pet.Photo
 import personal.rowan.petfinder.ui.pet.master.PetMasterViewModel
+import personal.rowan.petfinder.util.PetUtils
 import personal.rowan.petfinder.util.StringUtils
 import java.util.*
 
@@ -28,23 +27,7 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
         addressStrings.add(contact?.address2?.`$t`)
         addressStrings.add(context.getString(R.string.shelter_subtitle, contact?.city?.`$t`, contact?.state?.`$t`, contact?.zip?.`$t`))
         mAddress = StringUtils.separateWithDelimiter(addressStrings, "\n")
-
-        val photoList: List<Photo>? = pet.media?.photos?.photo
-        val photoUrlList: MutableList<String> = ArrayList()
-        photoUrlList.add(photoUrl())
-        if (photoList != null && photoList.isNotEmpty()) {
-            for(i in  0..photoList.size - 1) {
-                val photo = photoList.get(i)
-                val size = photo.size
-                if (i != 2 && "t" != size && "pnt" != size) {
-                    val photoUrl = photo.`$t`
-                    if (!TextUtils.isEmpty(photoUrl)) {
-                        photoUrlList.add(photoUrl!!)
-                    }
-                }
-            }
-        }
-        mPhotos = photoUrlList
+        mPhotos = PetUtils.findLargePhotoUrls(pet.media?.photos?.photo)
     }
 
     constructor(photoUrl: String?, name: String?, header: String, detail: String, description: String, phone: String?, email: String?, address: String?):

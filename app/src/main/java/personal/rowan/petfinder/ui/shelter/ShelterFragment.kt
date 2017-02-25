@@ -97,13 +97,13 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         swipeRefresh.visibility = View.VISIBLE
         locationRationale.visibility = View.GONE
 
-        /*val context = context
+        val context = context
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
         val geocoder = Geocoder(context, Locale.getDefault())
-        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)*/
+        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
 
-        mPresenter.loadData(context, /*addresses.get(0).postalCode*/"30308")
+        mPresenter.loadData(context, addresses.get(0).postalCode)
         mPresenter.bindRecyclerView(context, RxRecyclerView.scrollEvents(shelterList))
         mCompositeSubscription.add(mAdapter.petsButtonObservable().subscribe { pair -> mPresenter.onPetsClicked(pair) })
         mCompositeSubscription.add(mAdapter.directionsButtonObservable().subscribe { address -> mPresenter.onDirectionsClicked(address) })

@@ -5,7 +5,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.pet.Pet
-import personal.rowan.petfinder.model.pet.Photo
 import personal.rowan.petfinder.util.PetUtils
 import personal.rowan.petfinder.util.StringUtils
 
@@ -15,13 +14,7 @@ import personal.rowan.petfinder.util.StringUtils
 open class PetMasterViewModel : Parcelable {
 
     constructor(context: Context, pet: Pet) {
-        val photoList: List<Photo>? = pet.media?.photos?.photo
-        if (photoList != null && photoList.size > 2) {
-            mPhotoUrl = photoList[2].`$t`
-        } else {
-            mPhotoUrl = null
-        }
-
+        mPhotoUrl = PetUtils.findFirstLargePhotoUrl(pet.media?.photos?.photo)
         mName = pet.name?.`$t`
         mHeader = context.getString(
                 R.string.pet_master_header,
