@@ -4,6 +4,7 @@ import dagger.Component
 import personal.rowan.petfinder.application.App
 import personal.rowan.petfinder.application.dagger.component.ApplicationComponent
 import personal.rowan.petfinder.application.dagger.module.PetfinderApiModule
+import personal.rowan.petfinder.application.dagger.module.RealmModule
 import personal.rowan.petfinder.ui.pet.master.PetMasterFragment
 import rx.functions.Action1
 
@@ -12,7 +13,7 @@ import rx.functions.Action1
  */
 
 @PetMasterScope
-@Component(modules = arrayOf(PetfinderApiModule::class), dependencies = arrayOf(ApplicationComponent::class))
+@Component(modules = arrayOf(PetfinderApiModule::class, RealmModule::class), dependencies = arrayOf(ApplicationComponent::class))
 interface PetMasterComponent {
 
     fun inject(petMasterFragment: PetMasterFragment)

@@ -2,6 +2,7 @@ package personal.rowan.petfinder.ui.pet.master
 
 import android.content.Context
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent
+import personal.rowan.petfinder.ui.pet.master.favorite.RealmFavoritesManager
 import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.model.pet.PetResult
 import personal.rowan.petfinder.network.PetfinderService
@@ -24,7 +25,7 @@ import java.util.*
  */
 
 @PetMasterScope
-class PetMasterPresenter(private var mPetfinderService: PetfinderService) : BasePresenter<PetMasterView>(PetMasterView::class.java) {
+class PetMasterPresenter(private var mPetfinderService: PetfinderService, private var mRealmManager: RealmFavoritesManager) : BasePresenter<PetMasterView>(PetMasterView::class.java) {
 
     private val mCompositeSubscription = CompositeSubscription()
     private var mApiSubscription: Subscription? = null
@@ -64,6 +65,14 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
                 val shelterArgs: PetMasterShelterArguments = mArguments as PetMasterShelterArguments
                 petObservable = mPetfinderService.getPetsForShelter(shelterArgs.shelterId(), shelterArgs.status(), mOffset)
             }
+            PetMasterFragment.TYPE_FAVORITE -> {
+                if (mResults == null) {
+                    mResults = ArrayList()
+                }
+                mResults!!.addAll(mRealmManager.loadFavorites())
+                publish()
+                return
+            }
             else -> throw RuntimeException("invalid pet master type")
         }
         mApiSubscription = petObservable
@@ -89,7 +98,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
 
                             val pets: List<Pet>? = result?.petfinder?.pets?.pet
                             if(pets != null) {
-                                mResults!!.addAll(PetDetailViewModel.fromPetList(context, pets))
+                                mResults!!.addAll(PetDetailViewModel.fromPetList(context, pets, mRealmManager))
                             }
                             val offset = result?.petfinder?.lastOffset?.`$t`
                             if(offset != null) {
@@ -104,14 +113,16 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
     }
 
     fun bindRecyclerView(context: Context, observable: Observable<RecyclerViewScrollEvent>) {
-        mCompositeSubscription.add(observable
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe { scrollEvent ->
-                    if (mView.shouldPaginate() && !isApiSubscriptionActive()) {
-                        mView.showPagination()
-                        loadData(context, false)
-                    }
-                })
+        if (mType != PetMasterFragment.TYPE_FAVORITE) {
+            mCompositeSubscription.add(observable
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe { scrollEvent ->
+                        if (mView.shouldPaginate() && !isApiSubscriptionActive()) {
+                            mView.showPagination()
+                            loadData(context, false)
+                        }
+                    })
+        }
     }
 
     fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData) {
@@ -136,6 +147,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService) : Base
         if(!mCompositeSubscription.isUnsubscribed) {
             mCompositeSubscription.unsubscribe()
         }
+        mRealmManager.close()
         mApiSubscription = null
         mResults = null
         mError = null

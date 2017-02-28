@@ -25,10 +25,12 @@ abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragmen
 
             override fun onLoadFinished(loader: Loader<P>, presenter: P) {
                 mPresenter = presenter
+                mPresenter!!.attach(presenterView)
                 onPresenterPrepared(presenter)
             }
 
             override fun onLoaderReset(loader: Loader<P>) {
+                mPresenter?.detach()
                 mPresenter = null
                 onPresenterDestroyed()
             }
@@ -41,7 +43,7 @@ abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragmen
     }
 
     override fun onStop() {
-        mPresenter!!.detach()
+        mPresenter?.detach()
         super.onStop()
     }
 

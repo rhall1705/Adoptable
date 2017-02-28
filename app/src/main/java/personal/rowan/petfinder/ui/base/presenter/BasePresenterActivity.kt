@@ -25,10 +25,12 @@ abstract class BasePresenterActivity<P : BasePresenter<V>, V: Any> : BaseActivit
 
             override fun onLoadFinished(loader: Loader<P>, presenter: P) {
                 this@BasePresenterActivity.mPresenter = presenter
+                mPresenter!!.attach(presenterView)
                 onPresenterPrepared(presenter)
             }
 
             override fun onLoaderReset(loader: Loader<P>) {
+                mPresenter?.detach()
                 this@BasePresenterActivity.mPresenter = null
                 onPresenterDestroyed()
             }
@@ -41,7 +43,7 @@ abstract class BasePresenterActivity<P : BasePresenter<V>, V: Any> : BaseActivit
     }
 
     override fun onStop() {
-        mPresenter!!.detach()
+        mPresenter?.detach()
         super.onStop()
     }
 

@@ -53,6 +53,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         private val ARG_PET_MASTER_TYPE = "PetMasterFragment.Arg.Type"
         val TYPE_FIND = 0
         val TYPE_SHELTER = 1
+        val TYPE_FAVORITE = 2
 
         private val ARG_PET_MASTER_ARGUMENTS = "PetMasterFragment.Arg.Arguments"
 
@@ -75,6 +76,15 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
             val args = Bundle()
             args.putInt(ARG_PET_MASTER_TYPE, TYPE_SHELTER)
             args.putParcelable(ARG_PET_MASTER_ARGUMENTS, PetMasterShelterArguments(shelterId, status))
+            fragment.arguments = args
+            return fragment
+        }
+
+        fun getInstance(): PetMasterFragment {
+            val fragment = PetMasterFragment()
+            val args = Bundle()
+            args.putInt(ARG_PET_MASTER_TYPE, TYPE_FAVORITE)
+            args.putParcelable(ARG_PET_MASTER_ARGUMENTS, PetMasterFavoriteArguments())
             fragment.arguments = args
             return fragment
         }

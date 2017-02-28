@@ -23,4 +23,11 @@
         android:title="@string/main_bottom_nav_search"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_favorites"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/main_bottom_nav_favorites"
+        app:showAsAction="ifRoom"/>
+
 </menu>

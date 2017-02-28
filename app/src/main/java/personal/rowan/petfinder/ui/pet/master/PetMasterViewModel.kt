@@ -13,7 +13,8 @@ import personal.rowan.petfinder.util.StringUtils
  */
 open class PetMasterViewModel : Parcelable {
 
-    constructor(context: Context, pet: Pet) {
+    constructor(context: Context, pet: Pet, favorite: Boolean) {
+        mId = pet.id?.`$t`
         mPhotoUrl = PetUtils.findFirstLargePhotoUrl(pet.media?.photos?.photo)
         mName = pet.name?.`$t`
         mHeader = context.getString(
@@ -27,19 +28,28 @@ open class PetMasterViewModel : Parcelable {
                 PetUtils.formatSex(pet.sex?.`$t`),
                 pet.contact?.city?.`$t`,
                 pet.contact?.state?.`$t`)
+        mFavorite = favorite
     }
 
-    constructor(photoUrl: String?, name: String?, header: String, detail: String) {
+    constructor(id: String?, photoUrl: String?, name: String?, header: String, detail: String, favorite: Boolean) {
+        mId = id
         mPhotoUrl = photoUrl
         mName = name
         mHeader = header
         mDetail = detail
+        mFavorite = favorite
     }
 
+    private val mId: String?
     private val mPhotoUrl: String?
     private val mName: String?
     private val mHeader: String
     private val mDetail: String
+    private var mFavorite: Boolean
+
+    fun id(): String {
+        return StringUtils.emptyIfNull(mId)
+    }
 
     fun photoUrl(): String {
         return StringUtils.emptyIfNull(mPhotoUrl)
@@ -57,6 +67,14 @@ open class PetMasterViewModel : Parcelable {
         return mDetail
     }
 
+    fun favorite(): Boolean {
+        return mFavorite
+    }
+
+    fun toggleFavorite(favorite: Boolean) {
+        mFavorite = favorite
+    }
+
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<PetMasterViewModel> = object : Parcelable.Creator<PetMasterViewModel> {
             override fun createFromParcel(source: Parcel): PetMasterViewModel = PetMasterViewModel(source)
@@ -64,14 +82,16 @@ open class PetMasterViewModel : Parcelable {
         }
     }
 
-    constructor(source: Parcel) : this(source.readString(), source.readString(), source.readString(), source.readString())
+    constructor(source: Parcel) : this(source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readInt() != 0)
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.writeString(id())
         dest?.writeString(photoUrl())
         dest?.writeString(name())
         dest?.writeString(header())
         dest?.writeString(detail())
+        dest?.writeInt(if(favorite()) 1 else 0)
     }
 }

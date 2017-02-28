@@ -10,6 +10,7 @@ import butterknife.bindView
 
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseActivity
+import personal.rowan.petfinder.ui.pet.master.PetMasterFragment
 import personal.rowan.petfinder.ui.pet.master.nearby.PetMasterNearbyContainerFragment
 import personal.rowan.petfinder.ui.search.SearchFragment
 import personal.rowan.petfinder.ui.shelter.ShelterFragment
@@ -31,6 +32,7 @@ class MainActivity : BaseActivity() {
                 R.id.action_nearby_animals -> pager.setCurrentItem(MainPagerAdapter.POSITION_NEARBY_ANIMALS, false)
                 R.id.action_nearby_shelters -> pager.setCurrentItem(MainPagerAdapter.POSITION_NEARBY_SHELTERS, false)
                 R.id.action_search -> pager.setCurrentItem(MainPagerAdapter.POSITION_SEARCH, false)
+                R.id.action_favorites -> pager.setCurrentItem(MainPagerAdapter.POSITION_FAVORITES, false)
             }
             true
         })
@@ -39,11 +41,12 @@ class MainActivity : BaseActivity() {
     private class MainPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
         companion object {
-            val NUM_PAGES = 3
+            val NUM_PAGES = 4
 
             val POSITION_NEARBY_ANIMALS = 0
             val POSITION_NEARBY_SHELTERS = 1
             val POSITION_SEARCH = 2
+            val POSITION_FAVORITES = 3
         }
 
         override fun getItem(position: Int): Fragment {
@@ -51,6 +54,7 @@ class MainActivity : BaseActivity() {
                 POSITION_NEARBY_ANIMALS -> return PetMasterNearbyContainerFragment.getInstance()
                 POSITION_NEARBY_SHELTERS -> return ShelterFragment.getInstance()
                 POSITION_SEARCH -> return SearchFragment.getInstance()
+                POSITION_FAVORITES -> return PetMasterFragment.getInstance()
                 else -> throw RuntimeException("Invalid viewpager position")
             }
         }

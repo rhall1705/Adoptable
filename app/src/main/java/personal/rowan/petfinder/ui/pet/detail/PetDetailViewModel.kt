@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import personal.rowan.petfinder.R
+import personal.rowan.petfinder.ui.pet.master.favorite.RealmFavoritesManager
 import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.ui.pet.master.PetMasterViewModel
 import personal.rowan.petfinder.util.PetUtils
@@ -15,7 +16,7 @@ import java.util.*
  */
 class PetDetailViewModel: PetMasterViewModel, Parcelable {
 
-    constructor(context: Context, pet: Pet): super(context, pet) {
+    constructor(context: Context, pet: Pet, favorite: Boolean): super(context, pet, favorite) {
         mDescription = pet.description?.`$t`
 
         val contact = pet.contact
@@ -30,8 +31,8 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
         mPhotos = PetUtils.findLargePhotoUrls(pet.media?.photos?.photo)
     }
 
-    constructor(photoUrl: String?, name: String?, header: String, detail: String, description: String, phone: String?, email: String?, address: String?):
-            super(photoUrl, name, header, detail) {
+    constructor(id: String?, photoUrl: String?, name: String?, header: String, detail: String, favorite: Boolean, description: String, phone: String?, email: String?, address: String?):
+            super(id, photoUrl, name, header, detail, favorite) {
         mDescription = description
         mPhone = phone
         mEmail = email
@@ -39,11 +40,20 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
         mPhotos = ArrayList()
     }
 
+    constructor(id: String, photoUrl: String, name: String, header: String, detail: String, favorite: Boolean, description: String, phone: String, email: String, address: String, photos: List<String>):
+            super(id, photoUrl, name, header, detail, favorite) {
+        mDescription = description
+        mPhone = phone
+        mEmail = email
+        mAddress = address
+        mPhotos = photos
+    }
+
     private val mDescription: String?
     private val mPhone: String?
     private val mEmail: String?
     private val mAddress: String?
-    private val mPhotos: List<String>
+    private var mPhotos: List<String>
 
     fun description(): String {
         return StringUtils.emptyIfNull(mDescription)
@@ -71,11 +81,11 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
             override fun newArray(size: Int): Array<PetDetailViewModel?> = arrayOfNulls(size)
         }
 
-        fun fromPetList(context: Context, pets: List<Pet>?): List<PetDetailViewModel> {
+        fun fromPetList(context: Context, pets: List<Pet>?, favoritesManager: RealmFavoritesManager): List<PetDetailViewModel> {
             val viewModels: MutableList<PetDetailViewModel> = ArrayList()
             if (pets != null) {
                 for (pet in pets) {
-                    viewModels.add(PetDetailViewModel(context, pet))
+                    viewModels.add(PetDetailViewModel(context, pet, favoritesManager.isFavorite(pet.id?.`$t`)))
                 }
             }
             return viewModels
@@ -87,6 +97,8 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
             source.readString(),
             source.readString(),
             source.readString(),
+            source.readString(),
+            source.readInt() != 0,
             source.readString(),
             source.readString(),
             source.readString(),
