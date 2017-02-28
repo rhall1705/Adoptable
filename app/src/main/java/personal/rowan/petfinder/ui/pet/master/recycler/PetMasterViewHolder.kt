@@ -1,6 +1,7 @@
 package personal.rowan.petfinder.ui.pet.master.recycler
 
 import android.os.Build
+import android.support.v4.util.Pair
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
@@ -50,21 +51,21 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
             mClickSubscription!!.unsubscribe()
         }
 
-        val transitionViews: Array<android.support.v4.util.Pair<View, String>> = arrayOf(
-                android.support.v4.util.Pair.create(photoView as View, photoUrl),
-                android.support.v4.util.Pair.create(fadeView, fadeView.context.getString(R.string.pet_master_detail_fade_transition)),
-                android.support.v4.util.Pair.create(textContainer as View, textContainer.context.getString(R.string.pet_master_detail_text_transition)))
+        val transitionViews: Array<Pair<View, String>> = arrayOf(
+                Pair.create(photoView as View, photoUrl),
+                Pair.create(fadeView, fadeView.context.getString(R.string.pet_master_detail_fade_transition)),
+                Pair.create(textContainer as View, textContainer.context.getString(R.string.pet_master_detail_text_transition)))
 
         mClickSubscription = RxView.clicks(clickContainer).subscribe { v -> clickSubject.onNext(PetMasterClickData(viewModel as PetDetailViewModel, transitionViews)) }
     }
 
-    class PetMasterClickData(private val mViewModel: PetDetailViewModel, private val mTransitionViews: Array<android.support.v4.util.Pair<View, String>>){
+    class PetMasterClickData(private val mViewModel: PetDetailViewModel, private val mTransitionViews: Array<Pair<View, String>>){
 
         fun viewModel(): PetDetailViewModel {
             return mViewModel
         }
 
-        fun transitionViews(): Array<android.support.v4.util.Pair<View, String>> {
+        fun transitionViews(): Array<Pair<View, String>> {
             return mTransitionViews
         }
 
