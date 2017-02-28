@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import personal.rowan.petfinder.ui.base.BaseFragment
 import personal.rowan.petfinder.ui.base.ContainerActivity
-import personal.rowan.petfinder.ui.pet.detail.PetDetailViewModel
 import java.util.*
 
 /**
@@ -13,7 +12,7 @@ import java.util.*
 class PetDetailPhotosActivity : ContainerActivity() {
 
     companion object {
-        private val ARG_PET_DETAIL_PHOTO_URLS = "PetDetailActivity.Extra.PhotoUrls"
+        private val ARG_PET_DETAIL_PHOTO_URLS = "PetDetailPhotosActivity.Extra.PhotoUrls"
 
         fun createIntent(context: Context, photoUrls: ArrayList<String>): Intent {
             val intent = Intent(context, PetDetailPhotosActivity::class.java)

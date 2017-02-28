@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.bindView
+import com.jakewharton.rxbinding.support.v4.view.RxViewPager
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
 import java.util.*
@@ -21,7 +22,7 @@ class PetDetailPhotosFragment : BaseFragment() {
 
     companion object {
 
-        private val ARG_PET_DETAIL_PHOTO_URLS = "PetDetailFragment.Arg.PhotoUrls"
+        private val ARG_PET_DETAIL_PHOTO_URLS = "PetDetailPhotosFragment.Arg.PhotoUrls"
 
         fun getInstance(photoUrls: ArrayList<String>): PetDetailPhotosFragment {
             val fragment = PetDetailPhotosFragment()
@@ -40,8 +41,16 @@ class PetDetailPhotosFragment : BaseFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setToolbar(toolbar, "", true)
-        photoPager.adapter = PetDetailPhotosAdapter(context, arguments.getStringArrayList(ARG_PET_DETAIL_PHOTO_URLS))
+        val photoUrls = arguments.getStringArrayList(ARG_PET_DETAIL_PHOTO_URLS)
+        val adapter = PetDetailPhotosAdapter(context, photoUrls)
+        val maxCount = adapter.count
+        RxViewPager.pageSelections(photoPager).subscribe { position -> toolbar.title = getTitle(position, maxCount) }
+        photoPager.adapter = adapter
+        setToolbar(toolbar, getTitle(0, maxCount), true)
+    }
+
+    private fun getTitle(position: Int, maxSize: Int): String {
+        return getString(R.string.pet_detail_photo_title, (position + 1).toString(), maxSize.toString())
     }
 
 }

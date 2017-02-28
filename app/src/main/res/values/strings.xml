@@ -28,6 +28,8 @@
     <string name="pet_master_detail_fade_transition">MasterDetailFadeTransition</string>
     <string name="pet_master_detail_text_transition">MasterDetailTextTransition</string>
 
+    <string name="pet_detail_photo_title">%1$s of %2$s</string>
+
     <string name="shelter_title">Nearby Shelters</string>
     <string name="shelter_container_location_message">Adoptable requires your location in order to find nearby shelters. If you don\'t want to reveal your location, please check out the search tab.</string>
     <string name="shelter_container_location_button">Grant Permission</string>
