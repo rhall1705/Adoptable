@@ -24,7 +24,7 @@ class PetMasterAdapter(private var mData: List<PetMasterViewModel>?) : RecyclerV
             mData = data
             notifyDataSetChanged()
         } else {
-            val originalSize: Int = itemCount
+            val originalSize = itemCount
             mData = data
             notifyItemRangeInserted(originalSize, data.size)
         }

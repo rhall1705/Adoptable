@@ -17,7 +17,8 @@ class RealmFavoritesManager @Inject constructor(realm: Realm) {
         if (id == null) {
             return false
         }
-        return mRealm.where(RealmFavorite::class.java).beginsWith("mId", id, Case.INSENSITIVE) != null
+        val results = mRealm.where(RealmFavorite::class.java).beginsWith("mId", id, Case.INSENSITIVE).findAll()
+        return results != null && results.size > 0
     }
 
     fun loadFavorites(): List<PetDetailViewModel> {
@@ -35,6 +36,7 @@ class RealmFavoritesManager @Inject constructor(realm: Realm) {
         viewModel.toggleFavorite(false)
         mRealm.beginTransaction()
         mRealm.where(RealmFavorite::class.java).beginsWith("mId", viewModel.id(), Case.INSENSITIVE).findAll().deleteAllFromRealm()
+        mRealm.commitTransaction()
     }
 
     fun close() {

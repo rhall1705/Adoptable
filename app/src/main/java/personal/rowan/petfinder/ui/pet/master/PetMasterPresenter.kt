@@ -68,6 +68,8 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
             PetMasterFragment.TYPE_FAVORITE -> {
                 if (mResults == null) {
                     mResults = ArrayList()
+                } else {
+                    mResults!!.clear()
                 }
                 mResults!!.addAll(mRealmManager.loadFavorites())
                 publish()

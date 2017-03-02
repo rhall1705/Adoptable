@@ -1,6 +1,5 @@
 package personal.rowan.petfinder.ui.pet.master
 
-import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
 
 /**

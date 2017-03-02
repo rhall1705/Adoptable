@@ -8,6 +8,7 @@
     android:background="@color/backgroundColorPrimary">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/pet_detail_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -170,5 +171,15 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/pet_detail_favorite_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_favorite_border_white"
+        android:layout_margin="16dp"
+        app:layout_anchor="@id/pet_detail_appbar"
+        app:layout_anchorGravity="bottom|end"
+        app:fabSize="normal" />
 
 </android.support.design.widget.CoordinatorLayout>

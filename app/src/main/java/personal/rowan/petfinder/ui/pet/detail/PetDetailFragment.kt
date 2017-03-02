@@ -2,6 +2,7 @@ package personal.rowan.petfinder.ui.pet.detail
 
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.util.Pair
 import android.support.v7.widget.Toolbar
@@ -14,15 +15,21 @@ import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.ui.base.BaseFragment
+import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
+import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
+import personal.rowan.petfinder.ui.pet.detail.dagger.PetDetailComponent
 import personal.rowan.petfinder.ui.pet.detail.photo.PetDetailPhotosActivity
 import personal.rowan.petfinder.util.IntentUtils
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by Rowan Hall
  */
-class PetDetailFragment : BaseFragment() {
+class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailView>(), PetDetailView {
+
+    @Inject
+    lateinit var mPresenterFactory: PetDetailPresenterFactory
 
     private val toolbar: Toolbar by bindView(R.id.pet_detail_toolbar)
     private val photoView: ImageView by bindView(R.id.pet_detail_photo)
@@ -36,6 +43,9 @@ class PetDetailFragment : BaseFragment() {
     private val emailDivider: View by bindView(R.id.pet_detail_email_divider)
     private val addressView: TextView by bindView(R.id.pet_detail_address)
     private val addressDivider: View by bindView(R.id.pet_detail_address_divider)
+    private val favoriteFab: FloatingActionButton by bindView(R.id.pet_detail_favorite_fab)
+
+    private lateinit var mPresenter: PetDetailPresenter
 
     companion object {
 
@@ -51,13 +61,16 @@ class PetDetailFragment : BaseFragment() {
 
     }
 
+    override fun beforePresenterPrepared() {
+        PetDetailComponent.injector.call(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_pet_detail, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onPresenterPrepared(presenter: PetDetailPresenter) {
+        mPresenter = presenter
         setDetails(arguments.getParcelable(ARG_PET_DETAIL_MODEL))
     }
 
@@ -71,6 +84,7 @@ class PetDetailFragment : BaseFragment() {
         handlePhone(viewModel.phone())
         handleEmail(viewModel.email())
         handleAddress(viewModel.address())
+        handleFavoriteFab(viewModel)
     }
 
     private fun handlePhotos(photoUrl: String, allPhotos: List<String>) {
@@ -129,5 +143,15 @@ class PetDetailFragment : BaseFragment() {
             RxView.clicks(addressView).subscribe { startActivity(IntentUtils.addressIntent(address)) }
         }
     }
+
+    private fun handleFavoriteFab(viewModel: PetDetailViewModel) {
+        favoriteFab.setImageResource(if(mPresenter.isFavorite(viewModel.id())) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
+        RxView.clicks(favoriteFab).subscribe {
+            favoriteFab.setImageResource(if(mPresenter.toggleFavorite(viewModel)) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
+        }
+    }
+
+    override val presenterFactory: PresenterFactory<PetDetailPresenter>
+        get() = mPresenterFactory
 
 }

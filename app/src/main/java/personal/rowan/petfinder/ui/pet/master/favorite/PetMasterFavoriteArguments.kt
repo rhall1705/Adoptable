@@ -1,7 +1,8 @@
-package personal.rowan.petfinder.ui.pet.master
+package personal.rowan.petfinder.ui.pet.master.favorite
 
 import android.os.Parcel
 import android.os.Parcelable
+import personal.rowan.petfinder.ui.pet.master.PetMasterArguments
 
 /**
  * Created by Rowan Hall

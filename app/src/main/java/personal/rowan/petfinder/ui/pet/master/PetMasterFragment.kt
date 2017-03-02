@@ -26,6 +26,7 @@ import javax.inject.Inject
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.util.Pair
 import android.view.Window
+import personal.rowan.petfinder.ui.pet.master.favorite.PetMasterFavoriteArguments
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
 import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchArguments
 import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterArguments
