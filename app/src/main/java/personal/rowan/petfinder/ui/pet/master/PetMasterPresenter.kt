@@ -71,6 +71,8 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
                 }
                 mResults!!.addAll(mRealmManager.loadFavorites())
                 publish()
+                mView.hideProgress()
+                mView.hidePagination()
                 return
             }
             else -> throw RuntimeException("invalid pet master type")
