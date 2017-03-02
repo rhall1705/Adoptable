@@ -75,8 +75,9 @@ class PetDetailFragment : BaseFragment() {
 
     private fun handlePhotos(photoUrl: String, allPhotos: List<String>) {
         if (!photoUrl.isBlank()) {
+            val transition = getString(R.string.pet_detail_photo_transition)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                photoView.transitionName = photoUrl
+                photoView.transitionName = transition
             }
 
             Picasso.with(context)
@@ -86,7 +87,7 @@ class PetDetailFragment : BaseFragment() {
             val allPhotosArrayList = ArrayList<String>()
             allPhotosArrayList.addAll(allPhotos)
             RxView.clicks(photoView).subscribe { startActivity(PetDetailPhotosActivity.createIntent(context, allPhotosArrayList),
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair.create(photoView, photoUrl)).toBundle()) }
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair.create(photoView, transition)).toBundle()) }
         }
     }
 

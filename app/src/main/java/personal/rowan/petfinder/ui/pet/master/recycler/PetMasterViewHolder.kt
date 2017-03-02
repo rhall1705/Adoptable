@@ -39,7 +39,7 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
                     .into(photoView)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                photoView.transitionName = photoUrl
+                photoView.transitionName = photoView.context.getString(R.string.pet_detail_photo_transition)
             }
         }
 
@@ -52,7 +52,7 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         }
 
         val transitionViews: Array<Pair<View, String>> = arrayOf(
-                Pair.create(photoView as View, photoUrl),
+                Pair.create(photoView as View, photoView.context.getString(R.string.pet_detail_photo_transition)),
                 Pair.create(fadeView, fadeView.context.getString(R.string.pet_master_detail_fade_transition)),
                 Pair.create(textContainer as View, textContainer.context.getString(R.string.pet_master_detail_text_transition)))
 

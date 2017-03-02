@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.content.Context
-import android.os.Build
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
 
@@ -17,9 +16,6 @@ class PetDetailPhotosAdapter(private val mContext: Context, private val mPhotoUr
         val photoView = ImageView(mContext)
         val url = mPhotoUrls.get(position)
         collection.addView(photoView)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            photoView.transitionName = url
-        }
 
         Picasso.with(photoView.context)
                 .load(url)

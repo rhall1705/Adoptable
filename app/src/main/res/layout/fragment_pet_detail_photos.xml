@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,9 +12,20 @@
         android:layout_height="?attr/actionBarSize"
         style="@style/CollapsingToolbarStyle"/>
 
+    <ImageView
+        android:id="@+id/pet_detail_photos_shared_element"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="@string/pet_detail_photo_transition"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:contentDescription="@string/pet_image_content_description"
+        tools:ignore="UnusedAttribute" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/pet_detail_photos_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@color/black"/>
 
-</LinearLayout>
+</FrameLayout>

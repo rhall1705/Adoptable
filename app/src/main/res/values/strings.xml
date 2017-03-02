@@ -9,7 +9,6 @@
     <string name="pet_master_nearby_container_title">Nearby Animals</string>
     <string name="pet_master_container_location_message">Adoptable requires your location in order to find nearby pets. If you don\'t want to reveal your location, please check out the search tab.</string>
     <string name="pet_master_container_location_button">Grant Permission</string>
-    <string name="pet_master_image_content_description">The image for an animal</string>
     <string name="pet_master_header">%1$s - %2$s</string>
     <string name="pet_master_detail">%1$s - %2$s - %3$s - %4$s, %5$s</string>
     <string name="pet_master_empty">No pets found.</string>
@@ -26,9 +25,11 @@
     <string name="pet_master_tab_pending">Pending</string>
     <string name="pet_master_tab_adopted">Adopted</string>
     <string name="pet_master_search_title">Search Results</string>
+    <string name="pet_image_content_description">The image for an animal</string>
     <string name="pet_master_detail_fade_transition">MasterDetailFadeTransition</string>
     <string name="pet_master_detail_text_transition">MasterDetailTextTransition</string>
 
+    <string name="pet_detail_photo_transition">PetDetailPhotoTransition</string>
     <string name="pet_detail_photo_title">%1$s of %2$s</string>
 
     <string name="shelter_title">Nearby Shelters</string>
