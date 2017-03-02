@@ -1,5 +1,6 @@
 package personal.rowan.petfinder.ui.pet.master
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -23,6 +24,8 @@ import rx.Subscription
 import java.util.*
 import javax.inject.Inject
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.util.Pair
+import android.view.Window
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
 import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchArguments
 import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterArguments
@@ -134,8 +137,18 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     }
 
     override fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData) {
+        // Add status and navigation bars to shared element transition to prevent overlap
+        val systemTransitionViews: Array<Pair<View, String>>
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val activity = activity
+            systemTransitionViews = arrayOf(
+                    Pair.create(activity.findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
+                    Pair.create(activity.findViewById(android.R.id.navigationBarBackground), Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME))
+        } else {
+            systemTransitionViews = arrayOf()
+        }
         startActivity(PetDetailActivity.createIntent(context, petMasterClickData.viewModel()),
-                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, *petMasterClickData.transitionViews()).toBundle())
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, *petMasterClickData.transitionViews(), *systemTransitionViews).toBundle())
     }
 
     override fun shouldPaginate(): Boolean {
