@@ -139,7 +139,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
 
     override fun publish() {
         if (mResults != null) {
-            mView.displayPets(mResults!!)
+            mView.displayPets(mResults!!, mType != PetMasterFragment.TYPE_FAVORITE)
         } else if (mError != null) {
             mView.showError(mError.toString())
         } else {

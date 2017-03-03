@@ -25,6 +25,7 @@
     <string name="pet_master_tab_pending">Pending</string>
     <string name="pet_master_tab_adopted">Adopted</string>
     <string name="pet_master_search_title">Search Results</string>
+    <string name="pet_master_favorites_title">Favorite Pets</string>
     <string name="pet_image_content_description">The image for an animal</string>
     <string name="pet_master_detail_fade_transition">MasterDetailFadeTransition</string>
     <string name="pet_master_detail_text_transition">MasterDetailTextTransition</string>

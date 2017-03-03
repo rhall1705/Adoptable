@@ -19,14 +19,12 @@ class PetMasterAdapter(private var mData: List<PetMasterViewModel>?) : RecyclerV
         mPetClickSubject = PublishSubject.create()
     }
 
-    fun paginateData(data: List<PetMasterViewModel>) {
-        if(mData == null || mData!!.isEmpty()) {
-            mData = data
+    fun setData(data: List<PetMasterViewModel>, paginate: Boolean) {
+        mData = data
+        if(!paginate || mData == null || mData!!.isEmpty()) {
             notifyDataSetChanged()
         } else {
-            val originalSize = itemCount
-            mData = data
-            notifyItemRangeInserted(originalSize, data.size)
+            notifyItemRangeInserted(itemCount, data.size)
         }
     }
 

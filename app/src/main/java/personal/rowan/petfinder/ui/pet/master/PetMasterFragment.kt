@@ -128,12 +128,12 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
     override val presenterFactory: PresenterFactory<PetMasterPresenter>
         get() = mPresenterFactory
 
-    override fun displayPets(viewModels: List<PetMasterViewModel>) {
+    override fun displayPets(viewModels: List<PetMasterViewModel>, paginate: Boolean) {
         if(viewModels.isEmpty()) {
             emptyView.visibility = View.VISIBLE
         } else {
             emptyView.visibility = View.GONE
-            mAdapter.paginateData(viewModels)
+            mAdapter.setData(viewModels, paginate)
         }
     }
 

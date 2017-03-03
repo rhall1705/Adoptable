@@ -10,7 +10,7 @@ import butterknife.bindView
 
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseActivity
-import personal.rowan.petfinder.ui.pet.master.PetMasterFragment
+import personal.rowan.petfinder.ui.pet.master.favorite.PetMasterFavoritesContainerFragment
 import personal.rowan.petfinder.ui.pet.master.nearby.PetMasterNearbyContainerFragment
 import personal.rowan.petfinder.ui.search.SearchFragment
 import personal.rowan.petfinder.ui.shelter.ShelterFragment
@@ -54,7 +54,7 @@ class MainActivity : BaseActivity() {
                 POSITION_NEARBY_ANIMALS -> return PetMasterNearbyContainerFragment.getInstance()
                 POSITION_NEARBY_SHELTERS -> return ShelterFragment.getInstance()
                 POSITION_SEARCH -> return SearchFragment.getInstance()
-                POSITION_FAVORITES -> return PetMasterFragment.getInstance()
+                POSITION_FAVORITES -> return PetMasterFavoritesContainerFragment.getInstance()
                 else -> throw RuntimeException("Invalid viewpager position")
             }
         }
