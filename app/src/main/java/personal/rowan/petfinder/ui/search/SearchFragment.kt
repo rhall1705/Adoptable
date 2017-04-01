@@ -9,20 +9,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.RadioButton
 import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxbinding.widget.RxTextView
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.ui.base.BaseFragment
+import personal.rowan.petfinder.model.pet.Breeds
+import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
+import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
 import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchContainerActivity
+import personal.rowan.petfinder.ui.search.dagger.SearchComponent
 import personal.rowan.petfinder.util.PetUtils
-import rx.Subscription
+import javax.inject.Inject
 
 /**
  * Created by Rowan Hall
  */
-class SearchFragment : BaseFragment() {
+class SearchFragment : BasePresenterFragment<SearchPresenter, SearchView>(), SearchView {
+
+    @Inject
+    lateinit var mPresenterFactory: SearchPresenterFactory
 
     companion object {
 
@@ -38,9 +45,14 @@ class SearchFragment : BaseFragment() {
     private val ageView: AppCompatSpinner by bindView(R.id.search_age_spinner)
     private val maleSexView: RadioButton by bindView(R.id.search_male_radio)
     private val femaleSexView: RadioButton by bindView(R.id.search_female_radio)
+    private val breedButton: Button by bindView(R.id.search_breed_button)
     private val searchFab: FloatingActionButton by bindView(R.id.search_fab)
 
-    private var mSearchClickSubscription: Subscription? = null
+    private lateinit var mPresenter: SearchPresenter
+
+    override fun beforePresenterPrepared() {
+        SearchComponent.injector.call(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_search, container, false)
@@ -59,17 +71,36 @@ class SearchFragment : BaseFragment() {
         val ageAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.search_age_options))
         ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         ageView.adapter = ageAdapter
+        RxView.clicks(breedButton).subscribe { mPresenter.loadBreeds(PetUtils.searchAnimalByIndex(animalView.selectedItemPosition)) }
         RxTextView.textChanges(locationView).subscribe { s -> searchFab.setEnabled(!s.isEmpty())}
         searchFab.setEnabled(false)
 
-        mSearchClickSubscription = RxView.clicks(searchFab).subscribe { performSearch() }
+        RxView.clicks(searchFab).subscribe { performSearch() }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        if(mSearchClickSubscription != null && !mSearchClickSubscription!!.isUnsubscribed) {
-            mSearchClickSubscription!!.unsubscribe()
-        }
+    override fun onPresenterPrepared(presenter: SearchPresenter) {
+        mPresenter = presenter
+    }
+
+    override fun displayBreedsProgress() {
+        showProgressDialog(getString(R.string.search_breed_progress_title), getString(R.string.search_breed_progress_detail))
+    }
+
+    override fun hideBreedsProgress() {
+        dismissProgressDialog()
+    }
+
+    override fun displayBreedsEmptyAnimalError() {
+        showToastMessage(getString(R.string.search_breed_empty_animal_error))
+    }
+
+    override fun displayBreeds(breeds: Breeds) {
+        // todo: implement
+        showToastMessage(breeds.breed.get(0).`$t`!!)
+    }
+
+    override fun displayBreedsLoadingError(error: String) {
+        showToastMessage(error)
     }
 
     private fun performSearch() {
@@ -81,5 +112,8 @@ class SearchFragment : BaseFragment() {
         val breed = null
         startActivity(PetMasterSearchContainerActivity.getIntent(context, location, animal, size, age, sex, breed))
     }
+
+    override val presenterFactory: PresenterFactory<SearchPresenter>
+        get() = mPresenterFactory
 
 }

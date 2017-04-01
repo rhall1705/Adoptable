@@ -120,7 +120,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
         if (mType != PetMasterFragment.TYPE_FAVORITE) {
             mCompositeSubscription.add(observable
                     .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe { scrollEvent ->
+                    .subscribe {
                         if (mView.shouldPaginate() && !isApiSubscriptionActive()) {
                             mView.showPagination()
                             loadData(context, false)

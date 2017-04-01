@@ -1,6 +1,7 @@
 package personal.rowan.petfinder.network
 
 import personal.rowan.petfinder.BuildConfig
+import personal.rowan.petfinder.model.pet.BreedListResult
 import personal.rowan.petfinder.model.pet.PetResult
 import personal.rowan.petfinder.model.shelter.ShelterResult
 import retrofit2.http.GET
@@ -30,6 +31,9 @@ interface PetfinderService {
     fun getPetsForShelter(@Query("id") shelterId: String,
                           @Query("status") status: Char,
                           @Query("offset") offset: String?): Observable<PetResult>
+
+    @GET("breed.list")
+    fun getBreedList(@Query("animal") animal: String): Observable<BreedListResult>
 
     companion object {
         val BASE_URL = "http://api.petfinder.com/"

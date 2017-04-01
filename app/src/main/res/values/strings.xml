@@ -74,5 +74,9 @@
     <string name="search_radio_option_none">Either</string>
     <string name="search_radio_option_male">Male</string>
     <string name="search_radio_option_female">Female</string>
+    <string name="search_breed_defaut">Any Breed</string>
+    <string name="search_breed_progress_title">Finding breeds for selected animal</string>
+    <string name="search_breed_progress_detail">This will only take a moment.</string>
+    <string name="search_breed_empty_animal_error">Please select an animal to search breeds</string>
 
 </resources>

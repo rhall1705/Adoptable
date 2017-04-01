@@ -88,7 +88,7 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
     fun bindRecyclerView(context: Context, observable: Observable<RecyclerViewScrollEvent>) {
         mCompositeSubscription.add(observable
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe { scrollEvent ->
+                .subscribe {
                     if (mView.shouldPaginate() && !isApiSubscriptionActive()) {
                         mView.showPagination()
                         loadData(context, false)

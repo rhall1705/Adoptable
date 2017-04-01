@@ -41,6 +41,10 @@ class BreedsTypeAdapter : TypeAdapter<Breeds>() {
             throw JsonParseException("Unexpected token " + jsonReader.peek())
         }
 
+        while (jsonReader.peek() != JsonToken.END_OBJECT) {
+            jsonReader.skipValue();
+        }
+
         jsonReader.endObject()
         return breeds
     }
