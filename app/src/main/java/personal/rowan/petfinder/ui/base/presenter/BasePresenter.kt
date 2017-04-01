@@ -1,5 +1,6 @@
 package personal.rowan.petfinder.ui.base.presenter
 
+import android.support.annotation.CallSuper
 import android.support.annotation.VisibleForTesting
 
 import personal.rowan.petfinder.util.NullObject
@@ -12,8 +13,9 @@ abstract class BasePresenter<V: Any>(private val mViewClazz: Class<V>) {
 
     protected lateinit var mView: V
 
+    @CallSuper
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-    fun attach(view: V) {
+    open fun attach(view: V) {
         mView = view
         publish()
     }

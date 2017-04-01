@@ -110,6 +110,11 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         swipeRefresh.setOnRefreshListener { mPresenter.refreshData(context) }
     }
 
+    override fun onStart() {
+        super.onStart()
+        mPresenter.onStart(context)
+    }
+
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
         val context = context

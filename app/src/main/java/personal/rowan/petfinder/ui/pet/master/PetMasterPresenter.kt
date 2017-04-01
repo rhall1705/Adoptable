@@ -133,6 +133,12 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
         mView.onPetClicked(petMasterClickData)
     }
 
+    fun onStart(context: Context) {
+        if (mType == PetMasterFragment.TYPE_FAVORITE) {
+            refreshData(context)
+        }
+    }
+
     private fun isApiSubscriptionActive(): Boolean {
         return mApiSubscription != null && !mApiSubscription!!.isUnsubscribed
     }
