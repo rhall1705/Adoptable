@@ -1,6 +1,7 @@
 package personal.rowan.petfinder.ui.search
 
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TextInputEditText
 import android.support.v7.widget.AppCompatSpinner
@@ -62,15 +63,9 @@ class SearchFragment : BasePresenterFragment<SearchPresenter, SearchView>(), Sea
         super.onViewCreated(view, savedInstanceState)
 
         setToolbar(toolbar, getString(R.string.search_title))
-        val animalsAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.search_animal_options))
-        animalsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        animalView.adapter = animalsAdapter
-        val sizeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.search_size_options))
-        sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        sizeView.adapter = sizeAdapter
-        val ageAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.search_age_options))
-        ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        ageView.adapter = ageAdapter
+        animalView.adapter = generateSpinnerAdapter(R.array.search_animal_options)
+        sizeView.adapter = generateSpinnerAdapter(R.array.search_size_options)
+        ageView.adapter = generateSpinnerAdapter(R.array.search_age_options)
         RxView.clicks(breedButton).subscribe { mPresenter.loadBreeds(PetUtils.searchAnimalByIndex(animalView.selectedItemPosition)) }
         RxTextView.textChanges(locationView).subscribe { s -> searchFab.setEnabled(!s.isEmpty())}
         searchFab.setEnabled(false)
@@ -95,6 +90,7 @@ class SearchFragment : BasePresenterFragment<SearchPresenter, SearchView>(), Sea
     }
 
     override fun displayBreeds(breeds: Breeds) {
+        val searchBreedsDialogFragment = SearchBreedsDialogFragment.getInstance(breeds)
         // todo: implement
         showToastMessage(breeds.breed.get(0).`$t`!!)
     }
@@ -113,7 +109,18 @@ class SearchFragment : BasePresenterFragment<SearchPresenter, SearchView>(), Sea
         startActivity(PetMasterSearchContainerActivity.getIntent(context, location, animal, size, age, sex, breed))
     }
 
-    override val presenterFactory: PresenterFactory<SearchPresenter>
-        get() = mPresenterFactory
+    private fun onBreedSelected(breed: String) {
+        breedButton.setText(breed)
+    }
+
+    private fun generateSpinnerAdapter(@StringRes options: Int): ArrayAdapter<String> {
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, resources.getStringArray(options))
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        return adapter
+    }
+
+    override fun presenterFactory(): PresenterFactory<SearchPresenter> {
+        return mPresenterFactory
+    }
 
 }

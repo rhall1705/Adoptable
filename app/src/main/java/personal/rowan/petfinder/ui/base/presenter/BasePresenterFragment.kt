@@ -12,7 +12,7 @@ import personal.rowan.petfinder.ui.base.BaseFragment
 
 abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragment() {
 
-    private var mPresenter: BasePresenter<V>? = null
+    private var mPresenter: P? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,12 +20,12 @@ abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragmen
         beforePresenterPrepared()
         loaderManager.initLoader(loaderId(), null, object : LoaderManager.LoaderCallbacks<P> {
             override fun onCreateLoader(id: Int, args: Bundle?): Loader<P> {
-                return PresenterLoader(context, presenterFactory)
+                return PresenterLoader(context, presenterFactory())
             }
 
             override fun onLoadFinished(loader: Loader<P>, presenter: P) {
                 mPresenter = presenter
-                mPresenter!!.attach(presenterView)
+                mPresenter!!.attach(presenterView())
                 onPresenterPrepared(presenter)
             }
 
@@ -39,7 +39,7 @@ abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragmen
 
     override fun onStart() {
         super.onStart()
-        mPresenter!!.attach(presenterView)
+        mPresenter!!.attach(presenterView())
     }
 
     override fun onStop() {
@@ -48,10 +48,10 @@ abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragmen
     }
 
     /**
-     * Instance of [PresenterFactory] use to getINSTANCE a Presenter when needed. This INSTANCE should
+     * Instance of [PresenterFactory] use to create a Presenter when needed. This instance should
      * not contain [android.app.Activity] context reference since it will be keep on rotations.
      */
-    protected abstract val presenterFactory: PresenterFactory<P>
+    protected abstract fun presenterFactory(): PresenterFactory<P>
 
     /**
      * Hook for subclasses for before the [BasePresenter] is instantiated.
@@ -63,7 +63,7 @@ abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragmen
 
     /**
      * Hook for subclasses that deliver the [BasePresenter] before its View is attached.
-     * Can be use to initialize the Presenter or simple hold a reference to it.
+     * Can be use to initialize the Presenter or simply hold a reference to it.
      */
     open protected fun onPresenterPrepared(presenter: P) {
 
@@ -78,10 +78,11 @@ abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragmen
 
     /**
      * Override in case of activity not implementing Presenter<View> interface
-    </View> */
+     */
     @Suppress("UNCHECKED_CAST")
-    protected val presenterView: V
-        get() = this as V
+    protected fun presenterView(): V {
+        return this as V
+    }
 
     /**
      * Use this method in case you want to specify a specific ID for the [PresenterLoader].

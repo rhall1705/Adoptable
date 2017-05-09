@@ -130,8 +130,9 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         }
     }
 
-    override val presenterFactory: PresenterFactory<PetMasterPresenter>
-        get() = mPresenterFactory
+    override fun presenterFactory(): PresenterFactory<PetMasterPresenter> {
+        return mPresenterFactory
+    }
 
     override fun displayPets(viewModels: List<PetMasterViewModel>, paginate: Boolean) {
         if(viewModels.isEmpty()) {

@@ -24,12 +24,14 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
 
     private lateinit var mLocation: String
     private var mShelterList: MutableList<ShelterViewModel>? = null
-    private var mOffset: String = "0"
+    private var mOffset = "0"
     private var mError: Throwable? = null
 
     fun loadData(context: Context, location: String) {
         mLocation = location
-        loadData(context, false)
+        if (mShelterList == null) {
+            loadData(context, false)
+        }
     }
 
     fun refreshData(context: Context) {

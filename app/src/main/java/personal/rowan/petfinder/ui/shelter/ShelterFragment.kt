@@ -100,8 +100,11 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         swipeRefresh.visibility = View.VISIBLE
         locationRationale.visibility = View.GONE
 
-        mPresenter.loadData(context, zipcode)
-        mPresenter.bindRecyclerView(context, RxRecyclerView.scrollEvents(shelterList))
+        val context = context
+        if (context != null) {
+            mPresenter.loadData(context, zipcode)
+            mPresenter.bindRecyclerView(context, RxRecyclerView.scrollEvents(shelterList))
+        }
         mCompositeSubscription.add(mAdapter.petsButtonObservable().subscribe { pair -> mPresenter.onPetsClicked(pair) })
         mCompositeSubscription.add(mAdapter.directionsButtonObservable().subscribe { address -> mPresenter.onDirectionsClicked(address) })
     }
@@ -132,8 +135,9 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         }
     }
 
-    override val presenterFactory: PresenterFactory<ShelterPresenter>
-        get() = mPresenterFactory
+    override fun presenterFactory(): PresenterFactory<ShelterPresenter> {
+        return mPresenterFactory
+    }
 
     override fun displayShelters(shelters: List<ShelterViewModel>) {
         if(shelters.isEmpty()) {

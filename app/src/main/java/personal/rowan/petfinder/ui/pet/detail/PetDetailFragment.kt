@@ -151,7 +151,8 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
         }
     }
 
-    override val presenterFactory: PresenterFactory<PetDetailPresenter>
-        get() = mPresenterFactory
+    override fun presenterFactory(): PresenterFactory<PetDetailPresenter> {
+        return mPresenterFactory
+    }
 
 }
