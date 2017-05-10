@@ -40,7 +40,9 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
     fun loadData(context: Context, type: Int?, arguments: PetMasterArguments) {
         mType = type
         mArguments = arguments
-        loadData(context, false)
+        if (mResults == null) {
+            loadData(context, false)
+        }
     }
 
     fun refreshData(context: Context) {

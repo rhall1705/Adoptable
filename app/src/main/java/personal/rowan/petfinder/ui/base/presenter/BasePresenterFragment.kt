@@ -39,7 +39,7 @@ abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragmen
 
     override fun onStart() {
         super.onStart()
-        mPresenter!!.attach(presenterView())
+        mPresenter?.attach(presenterView())
     }
 
     override fun onStop() {
