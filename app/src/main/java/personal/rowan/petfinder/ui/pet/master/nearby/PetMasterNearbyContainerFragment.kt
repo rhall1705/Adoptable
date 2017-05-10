@@ -86,7 +86,9 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     }
 
     private fun setupViewPagerWithZipcode(zipcode: String) {
-        viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, zipcode))
+        if (viewPager.adapter == null) {
+            viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, zipcode))
+        }
         viewPager.offscreenPageLimit = PetMasterNearbyContainerAdapter.NUM_PAGES
         locationRationale.visibility = View.GONE
         tabLayout.visibility = View.VISIBLE
