@@ -90,9 +90,7 @@ class SearchFragment : BasePresenterFragment<SearchPresenter, SearchView>(), Sea
     }
 
     override fun displayBreeds(breeds: Breeds) {
-        val searchBreedsDialogFragment = SearchBreedsDialogFragment.getInstance(breeds)
-        // todo: implement
-        showToastMessage(breeds.breed.get(0).`$t`!!)
+        SearchBreedsDialogFragment.getInstance(breeds).show(childFragmentManager, "tag")
     }
 
     override fun displayBreedsLoadingError(error: String) {

@@ -13,20 +13,15 @@ import rx.subjects.PublishSubject
  */
 class ShelterAdapter(private var mData: List<ShelterViewModel>?) : RecyclerView.Adapter<ShelterViewHolder>() {
 
-    private var mPetsButtonSubject: PublishSubject<Pair<String?, String?>>
-    private var mDirectionsButtonSubject: PublishSubject<String>
-
-    init {
-        mPetsButtonSubject = PublishSubject.create()
-        mDirectionsButtonSubject = PublishSubject.create()
-    }
+    private val mPetsButtonSubject: PublishSubject<Pair<String?, String?>> = PublishSubject.create()
+    private val mDirectionsButtonSubject: PublishSubject<String> = PublishSubject.create()
 
     fun paginateData(data: List<ShelterViewModel>) {
         if(mData == null || mData!!.isEmpty()) {
             mData = data
             notifyDataSetChanged()
         } else {
-            val originalSize: Int = itemCount
+            val originalSize = itemCount
             mData = data
             notifyItemRangeInserted(originalSize, data.size)
         }
