@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.model.pet.Breeds
+import rx.Observable
+import rx.subjects.PublishSubject
 
 /**
  * Created by Rowan Hall
@@ -33,6 +35,7 @@ class SearchBreedsDialogFragment : DialogFragment() {
 
     }
 
+    private val mBreedsSubject: PublishSubject<String> = PublishSubject.create()
     private lateinit var mBreeds: List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,11 +49,15 @@ class SearchBreedsDialogFragment : DialogFragment() {
         val view = activity.layoutInflater.inflate(R.layout.dialog_fragment_search_breeds, null)
         val recycler = view.findViewById(R.id.search_breed_recycler) as RecyclerView
         recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.adapter = SearchBreedsAdapter(mBreeds)
+        recycler.adapter = SearchBreedsAdapter(mBreedsSubject, mBreeds)
         return AlertDialog.Builder(activity)
                 .setView(view)
-                .setTitle("Choose a breed")
+                .setTitle(getString(R.string.search_breed_dialog_title))
                 .create()
+    }
+
+    fun breedsObservable(): Observable<String> {
+        return mBreedsSubject
     }
 
 }

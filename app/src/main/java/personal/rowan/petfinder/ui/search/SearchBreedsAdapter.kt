@@ -4,15 +4,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import personal.rowan.petfinder.R
-import rx.Observable
 import rx.subjects.PublishSubject
 
 /**
  * Created by Rowan Hall
  */
-class SearchBreedsAdapter(private var mData: List<String>) : RecyclerView.Adapter<SearchBreedsViewHolder>() {
-
-    private val mBreedsSubject: PublishSubject<String> = PublishSubject.create()
+class SearchBreedsAdapter(private var mBreedsSubject: PublishSubject<String>, private var mData: List<String>) : RecyclerView.Adapter<SearchBreedsViewHolder>() {
 
     override fun onBindViewHolder(holder: SearchBreedsViewHolder?, position: Int) {
         holder!!.bind(mData.get(position), mBreedsSubject)
@@ -24,10 +21,6 @@ class SearchBreedsAdapter(private var mData: List<String>) : RecyclerView.Adapte
 
     override fun getItemCount(): Int {
         return mData.size
-    }
-
-    fun breedsObservable(): Observable<String> {
-        return mBreedsSubject
     }
 
 }
