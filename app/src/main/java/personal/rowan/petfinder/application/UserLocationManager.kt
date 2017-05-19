@@ -4,6 +4,8 @@ import android.content.Context
 import android.location.*
 import rx.Observable
 import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import java.util.*
 import javax.inject.Singleton
@@ -22,8 +24,6 @@ class UserLocationManager private constructor() {
     }
 
     private val mPermissionSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private val mZipcodeSubject: PublishSubject<String> = PublishSubject.create()
-    private var mZipcodeSubscription: Subscription? = null
 
     fun permissionEvent(granted: Boolean) {
         mPermissionSubject.onNext(granted)
@@ -33,33 +33,22 @@ class UserLocationManager private constructor() {
         return mPermissionSubject
     }
 
-    fun zipcodeObservable(): Observable<String> {
-        return mZipcodeSubject
-    }
-
-    fun getZipcode(context: Context) {
-        if (mZipcodeSubscription != null && !mZipcodeSubscription!!.isUnsubscribed) {
-            return
-        }
-
-        mZipcodeSubscription = Observable.just(true)
-                .map {
-                    var zipcode: String
-                    try {
-                        val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                        val location: Location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
-                        val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
-                        val addresses: List<Address> = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                        zipcode = addresses.get(0).postalCode
-                    } catch (ignored: Exception) {
-                        // todo: fallback to prefs
-                        zipcode = "30308"
-                    }
-                    zipcode
-                }
-                .subscribe { zipcode -> mZipcodeSubject.onNext(zipcode) }
-
-
+    fun zipcodeObservable(context: Context): Observable<String> {
+        return Observable.fromCallable {
+            var zipcode: String
+            try {
+                val appContext = context.applicationContext
+                val locationManager: LocationManager = appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                val location: Location = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), false))
+                val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                zipcode = addresses.get(0).postalCode
+            } catch (ignored: Exception) {
+                // todo: fallback to prefs
+                zipcode = "30308"
+            }
+            zipcode
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 
 }

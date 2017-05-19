@@ -71,7 +71,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setToolbar(toolbar, getString(R.string.shelter_title))
-        shelterList.layoutManager = mLayoutManager
+        shelterList.layoutManager = mLayoutManager as RecyclerView.LayoutManager?
         shelterList.adapter = mAdapter
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
         swipeRefresh.setOnRefreshListener { mPresenter.refreshData(context) }
@@ -81,7 +81,8 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     override fun onPresenterPrepared(presenter: ShelterPresenter) {
         mPresenter = presenter
 
-        mCompositeSubscription.add(mUserLocationManager.permissionObservable().subscribe { enabled -> if(enabled) findZipcode() })
+        mCompositeSubscription.add(mUserLocationManager.permissionObservable()
+                .subscribe { enabled -> if(enabled) findZipcode() else locationRationale.visibility = View.VISIBLE })
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
@@ -92,11 +93,13 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     }
 
     private fun findZipcode() {
-        mCompositeSubscription.add(mUserLocationManager.zipcodeObservable().subscribe { zipcode -> setupRecyclerWithZipcode(zipcode) })
-        mUserLocationManager.getZipcode(context)
+        if (!progressDialogShowing()) showProgressDialog(getString(R.string.pet_master_container_location_progress_title), getString(R.string.pet_master_container_location_progress_detail))
+        mCompositeSubscription.add(mUserLocationManager.zipcodeObservable(context)
+                .subscribe { zipcode -> setupRecyclerWithZipcode(zipcode) })
     }
 
     private fun setupRecyclerWithZipcode(zipcode: String) {
+        dismissProgressDialog()
         swipeRefresh.visibility = View.VISIBLE
         locationRationale.visibility = View.GONE
 

@@ -23,9 +23,13 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun dismissProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog!!.isShowing) {
+        if (progressDialogShowing()) {
             mProgressDialog!!.dismiss()
         }
+    }
+
+    fun progressDialogShowing(): Boolean {
+        return mProgressDialog != null && mProgressDialog!!.isShowing
     }
 
     override fun onDestroy() {

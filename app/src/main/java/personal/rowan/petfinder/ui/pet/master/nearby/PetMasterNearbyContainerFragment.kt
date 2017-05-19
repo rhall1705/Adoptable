@@ -52,7 +52,8 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
         setToolbar(toolbar, getString(R.string.pet_master_nearby_container_title))
         locationButton.setOnClickListener { handleLocationPermission() }
 
-        mLocationCompositeSubscription.add(mUserLocationManager.permissionObservable().subscribe { enabled -> if(enabled) findZipcode() })
+        mLocationCompositeSubscription.add(mUserLocationManager.permissionObservable()
+                .subscribe { enabled -> if(enabled) findZipcode() else locationRationale.visibility = View.VISIBLE })
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
@@ -81,11 +82,13 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     }
 
     private fun findZipcode() {
-        mLocationCompositeSubscription.add(mUserLocationManager.zipcodeObservable().subscribe { zipcode -> setupViewPagerWithZipcode(zipcode) })
-        mUserLocationManager.getZipcode(context)
+        if (!progressDialogShowing()) showProgressDialog(getString(R.string.pet_master_container_location_progress_title), getString(R.string.pet_master_container_location_progress_detail))
+        mLocationCompositeSubscription.add(mUserLocationManager.zipcodeObservable(context)
+                .subscribe { zipcode -> setupViewPagerWithZipcode(zipcode) })
     }
 
     private fun setupViewPagerWithZipcode(zipcode: String) {
+        dismissProgressDialog()
         if (viewPager.adapter == null) {
             viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, zipcode))
         }

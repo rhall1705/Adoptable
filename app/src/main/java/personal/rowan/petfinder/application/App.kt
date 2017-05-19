@@ -5,9 +5,9 @@ import android.content.Context
 
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import personal.rowan.petfinder.application.dagger.component.ApplicationComponent
-import personal.rowan.petfinder.application.dagger.component.DaggerApplicationComponent
-import personal.rowan.petfinder.application.dagger.module.ApplicationModule
+import personal.rowan.petfinder.application.dagger.component.AppComponent
+import personal.rowan.petfinder.application.dagger.component.DaggerAppComponent
+import personal.rowan.petfinder.application.dagger.module.AppModule
 
 /**
  * Created by Rowan Hall
@@ -15,7 +15,7 @@ import personal.rowan.petfinder.application.dagger.module.ApplicationModule
 
 class App : Application() {
 
-    private lateinit var mAppComponent: ApplicationComponent
+    private lateinit var mAppComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
@@ -25,13 +25,13 @@ class App : Application() {
                 .build()
         Realm.setDefaultConfiguration(realmConfiguration)
 
-        mAppComponent = DaggerApplicationComponent.builder()
-                .applicationModule(ApplicationModule(this))
+        mAppComponent = DaggerAppComponent.builder()
+                .appModule(AppModule(this))
                 .build()
     }
 
     companion object {
-        fun applicationComponent(context: Context): ApplicationComponent {
+        fun applicationComponent(context: Context): AppComponent {
             return (context.applicationContext as App).mAppComponent
         }
     }

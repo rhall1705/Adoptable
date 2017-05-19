@@ -8,6 +8,8 @@
 
     <string name="pet_master_nearby_container_title">Nearby Animals</string>
     <string name="pet_master_container_location_message">Adoptable requires your location in order to find nearby pets. If you don\'t want to reveal your location, please check out the search tab.</string>
+    <string name="pet_master_container_location_progress_title">Finding your location</string>
+    <string name="pet_master_container_location_progress_detail">@string/progress_detail_generic</string>
     <string name="pet_master_container_location_button">Grant Permission</string>
     <string name="pet_master_header">%1$s - %2$s</string>
     <string name="pet_master_detail">%1$s - %2$s - %3$s - %4$s, %5$s</string>
@@ -35,6 +37,8 @@
 
     <string name="shelter_title">Nearby Shelters</string>
     <string name="shelter_container_location_message">Adoptable requires your location in order to find nearby shelters. If you don\'t want to reveal your location, please check out the search tab.</string>
+    <string name="shelter_container_location_progress_title">Finding your location</string>
+    <string name="shelter_container_location_progress_detail">@string/progress_detail_generic</string>
     <string name="shelter_container_location_button">Grant Permission</string>
     <string name="shelter_empty">No shelters found.</string>
     <string name="shelter_subtitle">%1$s, %2$s %3$s</string>
@@ -76,8 +80,10 @@
     <string name="search_radio_option_female">Female</string>
     <string name="search_breed_defaut">Any Breed</string>
     <string name="search_breed_progress_title">Finding breeds for selected animal</string>
-    <string name="search_breed_progress_detail">This will only take a moment.</string>
+    <string name="search_breed_progress_detail">@string/progress_detail_generic</string>
     <string name="search_breed_empty_animal_error">Please select an animal to search breeds</string>
     <string name="search_breed_dialog_title">Choose a breed</string>
+
+    <string name="progress_detail_generic">This will only take a moment.</string>
 
 </resources>

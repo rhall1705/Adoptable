@@ -24,6 +24,10 @@ open class BaseFragment : Fragment() {
         baseActivity.dismissProgressDialog()
     }
 
+    fun progressDialogShowing(): Boolean {
+        return baseActivity.progressDialogShowing()
+    }
+
     protected fun setToolbar(toolbar: Toolbar, title: String) {
         baseActivity.setToolbar(toolbar, title)
     }
