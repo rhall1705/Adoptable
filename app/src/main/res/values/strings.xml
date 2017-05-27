@@ -8,9 +8,11 @@
 
     <string name="pet_master_nearby_container_title">Nearby Animals</string>
     <string name="pet_master_container_location_message">Adoptable requires your location in order to find nearby pets. If you don\'t want to reveal your location, please check out the search tab.</string>
+    <string name="pet_master_container_location_failure_message">Something went wrong while finding your location. Try again or check out the search tab.</string>
     <string name="pet_master_container_location_progress_title">Finding your location</string>
     <string name="pet_master_container_location_progress_detail">@string/progress_detail_generic</string>
     <string name="pet_master_container_location_button">Grant Permission</string>
+    <string name="pet_master_container_location_failure_button">Try Again</string>
     <string name="pet_master_header">%1$s - %2$s</string>
     <string name="pet_master_detail">%1$s - %2$s - %3$s - %4$s, %5$s</string>
     <string name="pet_master_empty">No pets found.</string>
@@ -37,9 +39,11 @@
 
     <string name="shelter_title">Nearby Shelters</string>
     <string name="shelter_container_location_message">Adoptable requires your location in order to find nearby shelters. If you don\'t want to reveal your location, please check out the search tab.</string>
+    <string name="shelter_container_location_failure_message">Something went wrong while finding your location. Try again or check out the search tab.</string>
     <string name="shelter_container_location_progress_title">Finding your location</string>
     <string name="shelter_container_location_progress_detail">@string/progress_detail_generic</string>
     <string name="shelter_container_location_button">Grant Permission</string>
+    <string name="shelter_container_location_failure_button">Try Again</string>
     <string name="shelter_empty">No shelters found.</string>
     <string name="shelter_subtitle">%1$s, %2$s %3$s</string>
     <string name="shelter_phone">Phone: %1$s</string>

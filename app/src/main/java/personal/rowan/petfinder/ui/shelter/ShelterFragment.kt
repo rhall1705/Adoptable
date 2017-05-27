@@ -54,6 +54,8 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     private val emptyView: TextView by bindView(R.id.shelter_empty_message)
     private val locationRationale: LinearLayout by bindView(R.id.shelter_container_location_container)
     private val locationButton: Button by bindView(R.id.shelter_container_location_button)
+    private val locationError: LinearLayout by bindView(R.id.shelter_nearby_container_location_failure_container)
+    private val locationErrorButton: Button by bindView(R.id.shelter_nearby_container_location_failure_button)
 
     private lateinit var mPresenter: ShelterPresenter
     private val mAdapter = ShelterAdapter(ArrayList<ShelterViewModel>())
@@ -76,13 +78,14 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
         swipeRefresh.setOnRefreshListener { mPresenter.refreshData(context) }
         locationButton.setOnClickListener { handleLocationPermission() }
+        locationErrorButton.setOnClickListener { findZipcode() }
     }
 
     override fun onPresenterPrepared(presenter: ShelterPresenter) {
         mPresenter = presenter
 
         mCompositeSubscription.add(mUserLocationManager.permissionObservable()
-                .subscribe { enabled -> if(enabled) findZipcode() else locationRationale.visibility = View.VISIBLE })
+                .subscribe { enabled -> if(enabled) findZipcode() else showLocationRationale() })
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
@@ -100,9 +103,12 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
 
     private fun setupRecyclerWithZipcode(zipcode: String) {
         dismissProgressDialog()
-        swipeRefresh.visibility = View.VISIBLE
-        locationRationale.visibility = View.GONE
+        if (zipcode == UserLocationManager.ERROR) {
+            showLocationFailure()
+            return
+        }
 
+        showList()
         val context = context
         if (context != null) {
             mPresenter.loadData(context, zipcode)
@@ -112,9 +118,26 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         mCompositeSubscription.add(mAdapter.directionsButtonObservable().subscribe { address -> mPresenter.onDirectionsClicked(address) })
     }
 
-    private fun handleLocationPermission() {
-        swipeRefresh.visibility = View.GONE
+    private fun showLocationRationale() {
         locationRationale.visibility = View.VISIBLE
+        locationError.visibility = View.GONE
+        swipeRefresh.visibility = View.GONE
+    }
+
+    private fun showLocationFailure() {
+        locationRationale.visibility = View.GONE
+        locationError.visibility = View.VISIBLE
+        swipeRefresh.visibility = View.GONE
+    }
+
+    private fun showList() {
+        locationRationale.visibility = View.GONE
+        locationError.visibility = View.GONE
+        swipeRefresh.visibility = View.VISIBLE
+    }
+
+    private fun handleLocationPermission() {
+        showLocationRationale()
         requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PermissionUtils.PERMISSION_CODE_LOCATION)
     }
 

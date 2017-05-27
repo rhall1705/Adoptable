@@ -33,6 +33,8 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     private val viewPager: ViewPager by bindView(R.id.pet_master_nearby_container_pager)
     private val locationRationale: LinearLayout by bindView(R.id.pet_master_nearby_container_location_container)
     private val locationButton: Button by bindView(R.id.pet_master_nearby_container_location_button)
+    private val locationError: LinearLayout by bindView(R.id.pet_master_nearby_container_location_failure_container)
+    private val locationErrorButton: Button by bindView(R.id.pet_master_nearby_container_location_failure_button)
 
     private var mLocationCompositeSubscription = CompositeSubscription()
 
@@ -51,9 +53,10 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
         PetMasterNearbyContainerComponent.injector.call(this)
         setToolbar(toolbar, getString(R.string.pet_master_nearby_container_title))
         locationButton.setOnClickListener { handleLocationPermission() }
+        locationErrorButton.setOnClickListener { findZipcode() }
 
         mLocationCompositeSubscription.add(mUserLocationManager.permissionObservable()
-                .subscribe { enabled -> if(enabled) findZipcode() else locationRationale.visibility = View.VISIBLE })
+                .subscribe { enabled -> if(enabled) findZipcode() else showLocationRationale() })
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
@@ -89,13 +92,34 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
 
     private fun setupViewPagerWithZipcode(zipcode: String) {
         dismissProgressDialog()
+        if (zipcode == UserLocationManager.ERROR) {
+            showLocationFailure()
+            return
+        }
         if (viewPager.adapter == null) {
             viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, zipcode))
         }
         viewPager.offscreenPageLimit = PetMasterNearbyContainerAdapter.NUM_PAGES
-        locationRationale.visibility = View.GONE
-        tabLayout.visibility = View.VISIBLE
+        showTabs()
         tabLayout.setupWithViewPager(viewPager)
+    }
+
+    private fun showLocationRationale() {
+        locationRationale.visibility = View.VISIBLE
+        locationError.visibility = View.GONE
+        tabLayout.visibility = View.GONE
+    }
+
+    private fun showLocationFailure() {
+        locationRationale.visibility = View.GONE
+        locationError.visibility = View.VISIBLE
+        tabLayout.visibility = View.GONE
+    }
+
+    private fun showTabs() {
+        locationRationale.visibility = View.GONE
+        locationError.visibility = View.GONE
+        tabLayout.visibility = View.VISIBLE
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

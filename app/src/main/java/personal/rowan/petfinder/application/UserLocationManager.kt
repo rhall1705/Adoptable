@@ -3,7 +3,6 @@ package personal.rowan.petfinder.application
 import android.content.Context
 import android.location.*
 import rx.Observable
-import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
@@ -21,6 +20,7 @@ class UserLocationManager private constructor() {
 
     companion object {
         val INSTANCE: UserLocationManager by lazy { Holder.INSTANCE }
+        val ERROR = "ERROR"
     }
 
     private val mPermissionSubject: PublishSubject<Boolean> = PublishSubject.create()
@@ -44,8 +44,7 @@ class UserLocationManager private constructor() {
                 val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
                 zipcode = addresses.get(0).postalCode
             } catch (ignored: Exception) {
-                // todo: fallback to prefs
-                zipcode = "30308"
+                zipcode = ERROR
             }
             zipcode
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
