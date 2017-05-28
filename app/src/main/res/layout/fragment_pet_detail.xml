@@ -37,6 +37,12 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
+                    android:background="@drawable/gradient_black_top_down"
+                    android:layout_gravity="top"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
                     android:background="@drawable/gradient_black_bottom_up"
                     android:layout_gravity="bottom"
                     android:transitionName="@string/pet_master_detail_fade_transition"

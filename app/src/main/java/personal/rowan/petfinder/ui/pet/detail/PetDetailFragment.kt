@@ -6,9 +6,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.util.Pair
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.bindView
@@ -74,6 +72,20 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
         setDetails(arguments.getParcelable(ARG_PET_DETAIL_MODEL))
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater!!.inflate(R.menu.pet_detail_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId) {
+            R.id.action_photos -> {
+                photoView.callOnClick()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun setDetails(viewModel: PetDetailViewModel) {
         setToolbar(toolbar, viewModel.name(), true)
         handlePhotos(viewModel.photoUrl(), viewModel.photos())
@@ -85,6 +97,7 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
         handleEmail(viewModel.email())
         handleAddress(viewModel.address())
         handleFavoriteFab(viewModel)
+        setHasOptionsMenu(true)
     }
 
     private fun handlePhotos(photoUrl: String, allPhotos: List<String>) {
