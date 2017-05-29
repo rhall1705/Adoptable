@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1040538097863",
+    "firebase_url": "https://adoptable-4f400.firebaseio.com",
+    "project_id": "adoptable-4f400",
+    "storage_bucket": "adoptable-4f400.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040538097863:android:c760ea2feb6c5727",
+        "android_client_info": {
+          "package_name": "personal.rowan.petfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1040538097863-vkfnsssni2o7ph2qgsf678ska0quoea1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "personal.rowan.petfinder",
+            "certificate_hash": "5662fd47790dd4762d65366c6f1d3db27ee1e439"
+          }
+        },
+        {
+          "client_id": "1040538097863-lerjhgpf0mqk4vbnkmihu2i44rucdb6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcqFS3XTSQdMu064Ue7sqbxr5QDo1xsiM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1040538097863-lerjhgpf0mqk4vbnkmihu2i44rucdb6g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
