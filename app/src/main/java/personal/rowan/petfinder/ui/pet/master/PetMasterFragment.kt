@@ -148,9 +148,17 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val systemTransitionViews: Array<Pair<View, String>>
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val activity = activity
-            systemTransitionViews = arrayOf(
-                    Pair.create(activity.findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
-                    Pair.create(activity.findViewById(android.R.id.navigationBarBackground), Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME))
+            val navigationBar = activity.findViewById(android.R.id.navigationBarBackground)
+            // Devices with physical buttons (i.e. Samsung) will return a null navigation bar
+            if (navigationBar != null) {
+                systemTransitionViews = arrayOf(
+                        Pair.create(activity.findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
+                        Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME))
+            } else {
+                systemTransitionViews = arrayOf(
+                        Pair.create(activity.findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME)
+                )
+            }
         } else {
             systemTransitionViews = arrayOf()
         }
