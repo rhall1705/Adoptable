@@ -2,7 +2,6 @@ package personal.rowan.petfinder.application
 
 import android.content.Context
 import android.location.*
-import com.google.firebase.crash.FirebaseCrash
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -45,7 +44,6 @@ class UserLocationManager private constructor() {
                 val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
                 zipcode = addresses.get(0).postalCode
             } catch (e: Exception) {
-                FirebaseCrash.report(e)
                 zipcode = ERROR
             }
             zipcode

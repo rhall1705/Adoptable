@@ -7,14 +7,14 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import butterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import personal.rowan.petfinder.R
@@ -24,6 +24,7 @@ import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
 import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterContainerActivity
 import personal.rowan.petfinder.ui.shelter.dagger.ShelterComponent
 import personal.rowan.petfinder.ui.shelter.recycler.ShelterAdapter
+import personal.rowan.petfinder.util.AndroidUtils
 import personal.rowan.petfinder.util.IntentUtils
 import personal.rowan.petfinder.util.PermissionUtils
 import rx.subscriptions.CompositeSubscription
@@ -56,6 +57,8 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     private val locationButton: Button by bindView(R.id.shelter_container_location_button)
     private val locationError: LinearLayout by bindView(R.id.shelter_nearby_container_location_failure_container)
     private val locationErrorButton: Button by bindView(R.id.shelter_nearby_container_location_failure_button)
+    private val zipcodeEntry: EditText by bindView(R.id.shelter_container_zipcode_entry)
+    private val zipcodeEntryButton: Button by bindView(R.id.shelter_container_zipcode_entry_button)
 
     private lateinit var mPresenter: ShelterPresenter
     private val mAdapter = ShelterAdapter(ArrayList<ShelterViewModel>())
@@ -79,13 +82,32 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         swipeRefresh.setOnRefreshListener { mPresenter.refreshData(context) }
         locationButton.setOnClickListener { handleLocationPermission() }
         locationErrorButton.setOnClickListener { findZipcode() }
+        zipcodeEntry.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                zipcodeEntryButton.isEnabled = !TextUtils.isEmpty(p0)
+            }
+        })
+        zipcodeEntryButton.isEnabled = !TextUtils.isEmpty(zipcodeEntry.text)
+        zipcodeEntryButton.setOnClickListener {
+            setupRecyclerWithZipcode(zipcodeEntry.text.toString())
+            AndroidUtils.hideKeyboard(context, zipcodeEntry)
+        }
     }
 
     override fun onPresenterPrepared(presenter: ShelterPresenter) {
         mPresenter = presenter
 
         mCompositeSubscription.add(mUserLocationManager.permissionObservable()
-                .subscribe { enabled -> if(enabled) findZipcode() else showLocationRationale() })
+                .subscribe ({ enabled -> if(enabled) findZipcode() else showLocationRationale() },
+                { error -> showLocationFailure() }))
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()

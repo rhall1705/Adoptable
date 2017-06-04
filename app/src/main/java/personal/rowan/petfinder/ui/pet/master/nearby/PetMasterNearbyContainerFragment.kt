@@ -6,16 +6,21 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import butterknife.bindView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.application.UserLocationManager
 import personal.rowan.petfinder.ui.base.BaseFragment
 import personal.rowan.petfinder.ui.pet.master.nearby.dagger.PetMasterNearbyContainerComponent
+import personal.rowan.petfinder.util.AndroidUtils
 import personal.rowan.petfinder.util.PermissionUtils
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
@@ -35,6 +40,8 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     private val locationButton: Button by bindView(R.id.pet_master_nearby_container_location_button)
     private val locationError: LinearLayout by bindView(R.id.pet_master_nearby_container_location_failure_container)
     private val locationErrorButton: Button by bindView(R.id.pet_master_nearby_container_location_failure_button)
+    private val zipcodeEntry: EditText by bindView(R.id.pet_master_nearby_container_zipcode_entry)
+    private val zipcodeEntryButton: Button by bindView(R.id.pet_master_nearby_container_zipcode_entry_button)
 
     private var mLocationCompositeSubscription = CompositeSubscription()
 
@@ -54,9 +61,28 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
         setToolbar(toolbar, getString(R.string.pet_master_nearby_container_title))
         locationButton.setOnClickListener { handleLocationPermission() }
         locationErrorButton.setOnClickListener { findZipcode() }
+        zipcodeEntry.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                zipcodeEntryButton.isEnabled = !TextUtils.isEmpty(p0)
+            }
+        })
+        zipcodeEntryButton.isEnabled = !TextUtils.isEmpty(zipcodeEntry.text)
+        zipcodeEntryButton.setOnClickListener {
+            setupViewPagerWithZipcode(zipcodeEntry.text.toString())
+            AndroidUtils.hideKeyboard(context, zipcodeEntry)
+        }
 
         mLocationCompositeSubscription.add(mUserLocationManager.permissionObservable()
-                .subscribe { enabled -> if(enabled) findZipcode() else showLocationRationale() })
+                .subscribe ({ enabled -> if(enabled) findZipcode() else showLocationRationale() },
+                        { error -> showLocationFailure() }))
 
         if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
@@ -87,7 +113,8 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
     private fun findZipcode() {
         if (!progressDialogShowing()) showProgressDialog(getString(R.string.pet_master_container_location_progress_title), getString(R.string.pet_master_container_location_progress_detail))
         mLocationCompositeSubscription.add(mUserLocationManager.zipcodeObservable(context)
-                .subscribe { zipcode -> setupViewPagerWithZipcode(zipcode) })
+                .subscribe( { zipcode -> setupViewPagerWithZipcode(zipcode) },
+                        { error -> showLocationFailure() }))
     }
 
     private fun setupViewPagerWithZipcode(zipcode: String) {
