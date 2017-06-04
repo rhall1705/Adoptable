@@ -40,4 +40,8 @@ class PetDetailPhotosAdapter(private val mContext: Context, private val mPhotoUr
         return ""
     }
 
+    fun urlAtPosition(position: Int): String {
+        return mPhotoUrls.get(position)
+    }
+
 }

@@ -20,4 +20,8 @@ object IntentUtils {
         return Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto: " + email))
     }
 
+    fun shareTextIntent(text: String): Intent {
+        return Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT, text).setType("text/plain")
+    }
+
 }
