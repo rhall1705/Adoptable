@@ -110,6 +110,7 @@
                 android:layout_margin="16dp"
                 android:textColor="@color/textColorPrimaryLight"
                 android:textSize="14sp"
+                android:textIsSelectable="true"
                 tools:text="A very good dog yes she is"/>
 
             <View

@@ -75,8 +75,8 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
                 }
                 mResults!!.addAll(mRealmManager.loadFavorites())
                 publish()
-                mView.hideProgress()
-                mView.hidePagination()
+                mView?.hideProgress()
+                mView?.hidePagination()
                 return
             }
             else -> throw RuntimeException("invalid pet master type")
@@ -88,13 +88,13 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
                         override fun onError(e: Throwable?) {
                             mError = e
                             publish()
-                            mView.hideProgress()
-                            mView.hidePagination()
+                            mView?.hideProgress()
+                            mView?.hidePagination()
                         }
 
                         override fun onCompleted() {
-                            mView.hideProgress()
-                            mView.hidePagination()
+                            mView?.hideProgress()
+                            mView?.hidePagination()
                         }
 
                         override fun onNext(result: PetResult?) {
@@ -123,8 +123,8 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
             mCompositeSubscription.add(observable
                     .subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                        if (mView.shouldPaginate() && !isApiSubscriptionActive()) {
-                            mView.showPagination()
+                        if (mView != null && mView!!.shouldPaginate() && !isApiSubscriptionActive()) {
+                            mView!!.showPagination()
                             loadData(context, false)
                         }
                     })
@@ -132,7 +132,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
     }
 
     fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData) {
-        mView.onPetClicked(petMasterClickData)
+        mView?.onPetClicked(petMasterClickData)
     }
 
     fun onStart(context: Context) {
@@ -147,11 +147,11 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
 
     override fun publish() {
         if (mResults != null) {
-            mView.displayPets(mResults!!, mType != PetMasterFragment.TYPE_FAVORITE)
+            mView?.displayPets(mResults!!, mType != PetMasterFragment.TYPE_FAVORITE)
         } else if (mError != null) {
-            mView.showError(mError.toString())
+            mView?.showError(mError.toString())
         } else {
-            mView.showProgress()
+            mView?.showProgress()
         }
     }
 

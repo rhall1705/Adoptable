@@ -11,7 +11,7 @@ import personal.rowan.petfinder.util.NullObject
 
 abstract class BasePresenter<V: Any>(private val mViewClazz: Class<V>) {
 
-    protected lateinit var mView: V
+    protected var mView: V? = null
 
     @CallSuper
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)

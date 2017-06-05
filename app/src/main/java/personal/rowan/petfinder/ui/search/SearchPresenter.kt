@@ -23,20 +23,20 @@ class SearchPresenter(private var mPetfinderService: PetfinderService) : BasePre
 
     fun loadBreeds(animal: String?) {
         if (TextUtils.isEmpty(animal)) {
-            mView.displayBreedsEmptyAnimalError()
+            mView?.displayBreedsEmptyAnimalError()
             return
         }
 
         mAnimal = animal
         mResult = null
         mError = null
-        mView.displayBreedsProgress()
+        mView?.displayBreedsProgress()
         mCompositeSubscription.add(mPetfinderService.getBreedList(mAnimal!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object: Subscriber<BreedListResult>() {
                     override fun onCompleted() {
-                        mView.hideBreedsProgress()
+                        mView?.hideBreedsProgress()
                     }
 
                     override fun onError(e: Throwable?) {
@@ -54,13 +54,13 @@ class SearchPresenter(private var mPetfinderService: PetfinderService) : BasePre
 
     override fun publish() {
         if (mResult != null) {
-            mView.displayBreeds(mResult!!)
-            mView.hideBreedsProgress()
+            mView?.displayBreeds(mResult!!)
+            mView?.hideBreedsProgress()
         } else if (mError != null) {
-            mView.displayBreedsLoadingError(mError!!.toString())
-            mView.hideBreedsProgress()
+            mView?.displayBreedsLoadingError(mError!!.toString())
+            mView?.hideBreedsProgress()
         } else if (mAnimal != null) {
-            mView.displayBreedsProgress()
+            mView?.displayBreedsProgress()
         }
 
         mAnimal = null

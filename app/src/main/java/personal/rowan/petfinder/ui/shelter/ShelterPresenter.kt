@@ -53,13 +53,13 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
                     override fun onError(e: Throwable?) {
                         mError = e
                         publish()
-                        mView.hideProgress()
-                        mView.hidePagination()
+                        mView?.hideProgress()
+                        mView?.hidePagination()
                     }
 
                     override fun onCompleted() {
-                        mView.hideProgress()
-                        mView.hidePagination()
+                        mView?.hideProgress()
+                        mView?.hidePagination()
                     }
 
                     override fun onNext(result: ShelterResult?) {
@@ -91,19 +91,19 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
         mCompositeSubscription.add(observable
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    if (mView.shouldPaginate() && !isApiSubscriptionActive()) {
-                        mView.showPagination()
+                    if (mView != null && mView!!.shouldPaginate() && !isApiSubscriptionActive()) {
+                        mView?.showPagination()
                         loadData(context, false)
                     }
                 })
     }
 
     fun onPetsClicked(pair: Pair<String?, String?>) {
-        mView.onPetsButtonClicked(pair)
+        mView?.onPetsButtonClicked(pair)
     }
 
     fun onDirectionsClicked(address: String) {
-        mView.onDirectionsButtonClicked(address)
+        mView?.onDirectionsButtonClicked(address)
     }
 
     private fun isApiSubscriptionActive(): Boolean {
@@ -112,11 +112,11 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
 
     override fun publish() {
         if (mShelterList != null) {
-            mView.displayShelters(mShelterList!!)
+            mView?.displayShelters(mShelterList!!)
         } else if (mError != null) {
-            mView.showError(mError.toString())
+            mView?.showError(mError.toString())
         } else {
-            mView.showProgress()
+            mView?.showProgress()
         }
     }
 
