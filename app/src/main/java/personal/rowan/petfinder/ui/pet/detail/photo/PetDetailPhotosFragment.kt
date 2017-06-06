@@ -1,6 +1,8 @@
 package personal.rowan.petfinder.ui.pet.detail.photo
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.view.ViewPager
@@ -14,6 +16,8 @@ import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
 import personal.rowan.petfinder.util.IntentUtils
+import personal.rowan.petfinder.util.PermissionUtils
+import personal.rowan.petfinder.util.PhotoUtils
 import java.util.*
 
 /**
@@ -95,12 +99,33 @@ class PetDetailPhotosFragment : BaseFragment() {
             R.id.action_share_photo -> {
                 // Always show the chooser as user may wish to share via a different app
                 startActivity(Intent.createChooser(
-                        IntentUtils.shareTextIntent(mAdapter.urlAtPosition(photoPager.currentItem)),
+                        IntentUtils.shareTextIntent(getUrlAtCurrentPosition()),
                         getString(R.string.pet_detail_photo_share_menu)))
+                return true
+            }
+            R.id.action_download_photo -> {
+                if (PermissionUtils.hasPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    PhotoUtils.imageDownload(activity, getUrlAtCurrentPosition())
+                } else {
+                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), PermissionUtils.PERMISSION_CODE_STORAGE)
+                }
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode) {
+            PermissionUtils.PERMISSION_CODE_STORAGE ->
+                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PhotoUtils.imageDownload(activity, getUrlAtCurrentPosition())
+                }
+        }
+    }
+
+    private fun getUrlAtCurrentPosition(): String {
+        return mAdapter.urlAtPosition(photoPager.currentItem)
     }
 
     private fun getTitle(position: Int, maxSize: Int): String {

@@ -8,4 +8,10 @@
         android:title="@string/pet_detail_photo_share_menu"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_download_photo"
+        android:enabled="true"
+        android:title="@string/pet_detail_photo_download_menu"
+        app:showAsAction="never"/>
+
 </menu>
