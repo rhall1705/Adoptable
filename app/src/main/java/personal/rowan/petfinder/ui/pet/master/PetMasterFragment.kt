@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import butterknife.bindView
+import kotterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
@@ -98,27 +98,27 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         PetMasterComponent.injector.call(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_pet_master, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_pet_master, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         petList.layoutManager = mLayoutManager
         petList.adapter = mAdapter
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
-        swipeRefresh.setOnRefreshListener { mPresenter!!.refreshData(context) }
+        swipeRefresh.setOnRefreshListener { mPresenter!!.refreshData(context!!) }
     }
 
     override fun onStart() {
         super.onStart()
-        mPresenter?.onStart(context)
+        mPresenter?.onStart(context!!)
     }
 
     override fun onPresenterPrepared(presenter: PetMasterPresenter) {
         mPresenter = presenter
-        val context = context
-        val args = arguments
+        val context = context!!
+        val args = arguments!!
         mPresenter!!.loadData(context, args.getInt(ARG_PET_MASTER_TYPE), args.getParcelable(ARG_PET_MASTER_ARGUMENTS))
         mPresenter!!.bindRecyclerView(context, RxRecyclerView.scrollEvents(petList))
         mItemClickSubscription = mAdapter.itemClickObservable().subscribe { clickData -> mPresenter!!.onPetClicked(clickData) }
@@ -148,7 +148,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         val systemTransitionViews: Array<Pair<View, String>>
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val activity = activity
-            val navigationBar = activity.findViewById(android.R.id.navigationBarBackground)
+            val navigationBar = activity?.findViewById<View>(android.R.id.navigationBarBackground)
             // Devices with physical buttons (i.e. Samsung) will return a null navigation bar
             if (navigationBar != null) {
                 systemTransitionViews = arrayOf(
@@ -156,14 +156,14 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
                         Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME))
             } else {
                 systemTransitionViews = arrayOf(
-                        Pair.create(activity.findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME)
+                        Pair.create(activity?.findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME)
                 )
             }
         } else {
             systemTransitionViews = arrayOf()
         }
-        startActivity(PetDetailActivity.createIntent(context, petMasterClickData.viewModel()),
-                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, *petMasterClickData.transitionViews(), *systemTransitionViews).toBundle())
+        startActivity(PetDetailActivity.createIntent(context!!, petMasterClickData.viewModel()),
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, *petMasterClickData.transitionViews(), *systemTransitionViews).toBundle())
     }
 
     override fun shouldPaginate(): Boolean {

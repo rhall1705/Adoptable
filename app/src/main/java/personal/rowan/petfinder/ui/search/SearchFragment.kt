@@ -1,7 +1,7 @@
 package personal.rowan.petfinder.ui.search
 
 import android.os.Bundle
-import android.support.annotation.StringRes
+import android.support.annotation.ArrayRes
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TextInputEditText
 import android.support.v4.app.DialogFragment
@@ -16,7 +16,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.RadioButton
-import butterknife.bindView
+import kotterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxbinding.widget.RxTextView
 import personal.rowan.petfinder.R
@@ -63,11 +63,11 @@ class SearchFragment : BasePresenterFragment<SearchPresenter, SearchView>(), Sea
         SearchComponent.injector.call(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_search, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setToolbar(toolbar, getString(R.string.search_title))
@@ -126,7 +126,7 @@ class SearchFragment : BasePresenterFragment<SearchPresenter, SearchView>(), Sea
         val sex = if(maleSexView.isChecked) "M" else if(femaleSexView.isChecked) "F" else null
         val breedText = breedButton.text.toString()
         val breed = if(breedText == getString(R.string.search_breed_defaut)) null else breedText
-        startActivity(PetMasterSearchContainerActivity.getIntent(context, location, animal, size, age, sex, breed))
+        startActivity(PetMasterSearchContainerActivity.getIntent(context!!, location, animal, size, age, sex, breed))
     }
 
     private fun subscribeBreedsDialog() {
@@ -150,7 +150,7 @@ class SearchFragment : BasePresenterFragment<SearchPresenter, SearchView>(), Sea
         searchFab.setAlpha(if(enabled) 1f else .75f)
     }
 
-    private fun generateSpinnerAdapter(@StringRes options: Int): ArrayAdapter<String> {
+    private fun generateSpinnerAdapter(@ArrayRes options: Int): ArrayAdapter<String> {
         val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, resources.getStringArray(options))
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         return adapter

@@ -15,7 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import butterknife.bindView
+import kotterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.application.UserLocationManager
@@ -61,7 +61,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     private val zipcodeEntryButton: Button by bindView(R.id.shelter_container_zipcode_entry_button)
 
     private lateinit var mPresenter: ShelterPresenter
-    private val mAdapter = ShelterAdapter(ArrayList<ShelterViewModel>())
+    private val mAdapter = ShelterAdapter(ArrayList())
     private val mLayoutManager = LinearLayoutManager(context)
     private val mCompositeSubscription = CompositeSubscription()
 
@@ -69,17 +69,17 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         ShelterComponent.injector.call(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_shelter, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_shelter, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setToolbar(toolbar, getString(R.string.shelter_title))
-        shelterList.layoutManager = mLayoutManager as RecyclerView.LayoutManager?
+        shelterList.layoutManager = mLayoutManager
         shelterList.adapter = mAdapter
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
-        swipeRefresh.setOnRefreshListener { mPresenter.refreshData(context) }
+        swipeRefresh.setOnRefreshListener { mPresenter.refreshData(context!!) }
         locationButton.setOnClickListener { handleLocationPermission() }
         locationErrorButton.setOnClickListener { findZipcode() }
         zipcodeEntry.addTextChangedListener(object: TextWatcher {
@@ -98,7 +98,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         zipcodeEntryButton.isEnabled = !TextUtils.isEmpty(zipcodeEntry.text)
         zipcodeEntryButton.setOnClickListener {
             setupRecyclerWithZipcode(zipcodeEntry.text.toString())
-            AndroidUtils.hideKeyboard(context, zipcodeEntry)
+            AndroidUtils.hideKeyboard(context!!, zipcodeEntry)
         }
     }
 
@@ -107,9 +107,9 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
 
         mCompositeSubscription.add(mUserLocationManager.permissionObservable()
                 .subscribe ({ enabled -> if(enabled) findZipcode() else showLocationRationale() },
-                { error -> showLocationFailure() }))
+                { _ -> showLocationFailure() }))
 
-        if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if(!PermissionUtils.hasPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
             return
         }
@@ -119,7 +119,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
 
     private fun findZipcode() {
         if (!progressDialogShowing()) showProgressDialog(getString(R.string.pet_master_container_location_progress_title), getString(R.string.pet_master_container_location_progress_detail))
-        mCompositeSubscription.add(mUserLocationManager.zipcodeObservable(context)
+        mCompositeSubscription.add(mUserLocationManager.zipcodeObservable(context!!)
                 .subscribe { zipcode -> setupRecyclerWithZipcode(zipcode) })
     }
 
@@ -165,7 +165,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
 
     override fun onStart() {
         super.onStart()
-        if(PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) && shelterList.adapter == null) {
+        if(PermissionUtils.hasPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) && shelterList.adapter == null) {
             findZipcode()
         }
     }
@@ -197,7 +197,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     }
 
     override fun onPetsButtonClicked(pair: Pair<String?, String?>) {
-        startActivity(PetMasterShelterContainerActivity.getIntent(context, pair.first, pair.second))
+        startActivity(PetMasterShelterContainerActivity.getIntent(context!!, pair.first, pair.second))
     }
 
     override fun onDirectionsButtonClicked(address: String) {

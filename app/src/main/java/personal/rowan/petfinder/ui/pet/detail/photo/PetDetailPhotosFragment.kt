@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar
 import android.transition.Transition
 import android.view.*
 import android.widget.ImageView
-import butterknife.bindView
+import kotterknife.bindView
 import com.jakewharton.rxbinding.support.v4.view.RxViewPager
 import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R
@@ -44,15 +44,15 @@ class PetDetailPhotosFragment : BaseFragment() {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_pet_detail_photos, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val photoUrls = arguments.getStringArrayList(ARG_PET_DETAIL_PHOTO_URLS)
-        mAdapter = PetDetailPhotosAdapter(context, photoUrls)
+        val photoUrls = arguments!!.getStringArrayList(ARG_PET_DETAIL_PHOTO_URLS)
+        mAdapter = PetDetailPhotosAdapter(context!!, photoUrls)
         val maxCount = mAdapter.count
         RxViewPager.pageSelections(photoPager).subscribe { position -> toolbar.title = getTitle(position, maxCount) }
         photoPager.adapter = mAdapter
@@ -65,7 +65,7 @@ class PetDetailPhotosFragment : BaseFragment() {
                 .into(sharedElementImage)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             photoPager.visibility = View.INVISIBLE
-            val sharedElementEnterTransition = activity.window.sharedElementEnterTransition
+            val sharedElementEnterTransition = activity!!.window.sharedElementEnterTransition
             sharedElementEnterTransition.addListener(object: Transition.TransitionListener {
 
                 override fun onTransitionResume(transition: Transition) {
@@ -104,8 +104,8 @@ class PetDetailPhotosFragment : BaseFragment() {
                 return true
             }
             R.id.action_download_photo -> {
-                if (PermissionUtils.hasPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    PhotoUtils.imageDownload(activity, getUrlAtCurrentPosition())
+                if (PermissionUtils.hasPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    PhotoUtils.imageDownload(activity!!, getUrlAtCurrentPosition())
                 } else {
                     requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), PermissionUtils.PERMISSION_CODE_STORAGE)
                 }
@@ -119,7 +119,7 @@ class PetDetailPhotosFragment : BaseFragment() {
         when(requestCode) {
             PermissionUtils.PERMISSION_CODE_STORAGE ->
                 if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PhotoUtils.imageDownload(activity, getUrlAtCurrentPosition())
+                    PhotoUtils.imageDownload(activity!!, getUrlAtCurrentPosition())
                 }
         }
     }

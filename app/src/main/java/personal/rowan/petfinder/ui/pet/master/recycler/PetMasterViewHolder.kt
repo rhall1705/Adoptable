@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import butterknife.bindView
+import kotterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R

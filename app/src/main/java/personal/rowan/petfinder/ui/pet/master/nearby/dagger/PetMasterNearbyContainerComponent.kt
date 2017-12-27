@@ -19,7 +19,7 @@ interface PetMasterNearbyContainerComponent {
     companion object {
         val injector: Action1<PetMasterNearbyContainerFragment> = Action1 { petMasterNearbyContainerFragment ->
             DaggerPetMasterNearbyContainerComponent.builder()
-                    .appComponent(App.applicationComponent(petMasterNearbyContainerFragment.context))
+                    .appComponent(App.applicationComponent(petMasterNearbyContainerFragment.context!!))
                     .build()
                     .inject(petMasterNearbyContainerFragment)
         }

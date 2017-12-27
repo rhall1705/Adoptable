@@ -9,9 +9,9 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
-import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import com.squareup.picasso.Picasso
+import kotterknife.bindView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
@@ -63,13 +63,13 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
         PetDetailComponent.injector.call(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_pet_detail, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_pet_detail, container, false)
     }
 
     override fun onPresenterPrepared(presenter: PetDetailPresenter) {
         mPresenter = presenter
-        setDetails(arguments.getParcelable(ARG_PET_DETAIL_MODEL))
+        setDetails(arguments?.getParcelable(ARG_PET_DETAIL_MODEL))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -77,7 +77,7 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item!!.itemId) {
+        when (item!!.itemId) {
             R.id.action_photos -> {
                 photoView.callOnClick()
                 return true
@@ -86,7 +86,11 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
         }
     }
 
-    private fun setDetails(viewModel: PetDetailViewModel) {
+    private fun setDetails(viewModel: PetDetailViewModel?) {
+        if (viewModel == null) {
+            return
+        }
+
         setToolbar(toolbar, viewModel.name(), true)
         handlePhotos(viewModel.photoUrl(), viewModel.photos())
         headerView.setText(viewModel.header())
@@ -113,8 +117,10 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
 
             val allPhotosArrayList = ArrayList<String>()
             allPhotosArrayList.addAll(allPhotos)
-            RxView.clicks(photoView).subscribe { startActivity(PetDetailPhotosActivity.createIntent(context, allPhotosArrayList),
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair.create(photoView, transition)).toBundle()) }
+            RxView.clicks(photoView).subscribe {
+                startActivity(PetDetailPhotosActivity.createIntent(context!!, allPhotosArrayList),
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, Pair.create(photoView, transition)).toBundle())
+            }
         }
     }
 
@@ -158,9 +164,9 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
     }
 
     private fun handleFavoriteFab(viewModel: PetDetailViewModel) {
-        favoriteFab.setImageResource(if(mPresenter.isFavorite(viewModel.id())) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
+        favoriteFab.setImageResource(if (mPresenter.isFavorite(viewModel.id())) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
         RxView.clicks(favoriteFab).subscribe {
-            favoriteFab.setImageResource(if(mPresenter.toggleFavorite(viewModel)) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
+            favoriteFab.setImageResource(if (mPresenter.toggleFavorite(viewModel)) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
         }
     }
 

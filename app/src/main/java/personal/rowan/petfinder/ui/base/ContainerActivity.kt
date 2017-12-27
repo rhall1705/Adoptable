@@ -2,7 +2,7 @@ package personal.rowan.petfinder.ui.base
 
 import android.os.Bundle
 import android.widget.FrameLayout
-import butterknife.bindView
+import kotterknife.bindView
 import personal.rowan.petfinder.R
 
 /**

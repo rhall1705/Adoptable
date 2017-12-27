@@ -20,7 +20,7 @@ abstract class BasePresenterFragment<P : BasePresenter<V>, V: Any> : BaseFragmen
         beforePresenterPrepared()
         loaderManager.initLoader(loaderId(), null, object : LoaderManager.LoaderCallbacks<P> {
             override fun onCreateLoader(id: Int, args: Bundle?): Loader<P> {
-                return PresenterLoader(context, presenterFactory())
+                return PresenterLoader(context!!, presenterFactory())
             }
 
             override fun onLoadFinished(loader: Loader<P>, presenter: P) {

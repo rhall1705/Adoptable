@@ -40,14 +40,14 @@ class SearchBreedsDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBreeds = arguments.getStringArrayList(ARG_BREED_LIST)
+        mBreeds = arguments!!.getStringArrayList(ARG_BREED_LIST)
     }
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val activity = activity
+        val activity = activity!!
         val view = activity.layoutInflater.inflate(R.layout.dialog_fragment_search_breeds, null)
-        val recycler = view.findViewById(R.id.search_breed_recycler) as RecyclerView
+        val recycler = view.findViewById<RecyclerView>(R.id.search_breed_recycler)
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.adapter = SearchBreedsAdapter(mBreedsSubject, mBreeds)
         return AlertDialog.Builder(activity)

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import butterknife.bindView
+import kotterknife.bindView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseFragment
 import personal.rowan.petfinder.ui.pet.master.PetMasterFragment
@@ -25,11 +25,11 @@ class PetMasterFavoritesContainerFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_pet_master_favorites_container, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_pet_master_favorites_container, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setToolbar(toolbar, getString(R.string.pet_master_favorites_title))

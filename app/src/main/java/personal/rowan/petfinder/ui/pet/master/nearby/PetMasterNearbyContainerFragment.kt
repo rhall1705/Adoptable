@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
-import butterknife.bindView
+import kotterknife.bindView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.application.UserLocationManager
 import personal.rowan.petfinder.ui.base.BaseFragment
@@ -51,11 +51,11 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_pet_master_nearby_container, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_pet_master_nearby_container, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         PetMasterNearbyContainerComponent.injector.call(this)
         setToolbar(toolbar, getString(R.string.pet_master_nearby_container_title))
@@ -77,14 +77,14 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
         zipcodeEntryButton.isEnabled = !TextUtils.isEmpty(zipcodeEntry.text)
         zipcodeEntryButton.setOnClickListener {
             setupViewPagerWithZipcode(zipcodeEntry.text.toString())
-            AndroidUtils.hideKeyboard(context, zipcodeEntry)
+            AndroidUtils.hideKeyboard(context!!, zipcodeEntry)
         }
 
         mLocationCompositeSubscription.add(mUserLocationManager.permissionObservable()
                 .subscribe ({ enabled -> if(enabled) findZipcode() else showLocationRationale() },
-                        { error -> showLocationFailure() }))
+                        { _ -> showLocationFailure() }))
 
-        if(!PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if(!PermissionUtils.hasPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)) {
             handleLocationPermission()
             return
         }
@@ -101,7 +101,7 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        if(PermissionUtils.hasPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) && viewPager.adapter == null) {
+        if(PermissionUtils.hasPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) && viewPager.adapter == null) {
             findZipcode()
         }
     }
@@ -112,9 +112,9 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
 
     private fun findZipcode() {
         if (!progressDialogShowing()) showProgressDialog(getString(R.string.pet_master_container_location_progress_title), getString(R.string.pet_master_container_location_progress_detail))
-        mLocationCompositeSubscription.add(mUserLocationManager.zipcodeObservable(context)
+        mLocationCompositeSubscription.add(mUserLocationManager.zipcodeObservable(context!!)
                 .subscribe( { zipcode -> setupViewPagerWithZipcode(zipcode) },
-                        { error -> showLocationFailure() }))
+                        { _ -> showLocationFailure() }))
     }
 
     private fun setupViewPagerWithZipcode(zipcode: String) {
@@ -124,7 +124,7 @@ class PetMasterNearbyContainerFragment : BaseFragment() {
             return
         }
         if (viewPager.adapter == null) {
-            viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context, zipcode))
+            viewPager.setAdapter(PetMasterNearbyContainerAdapter(childFragmentManager, context!!, zipcode))
         }
         viewPager.offscreenPageLimit = PetMasterNearbyContainerAdapter.NUM_PAGES
         showTabs()

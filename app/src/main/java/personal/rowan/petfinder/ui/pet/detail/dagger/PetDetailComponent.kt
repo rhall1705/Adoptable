@@ -20,7 +20,7 @@ interface PetDetailComponent {
     companion object {
         val injector: Action1<PetDetailFragment> = Action1 { petDetailFragment ->
             DaggerPetDetailComponent.builder()
-                    .appComponent(App.applicationComponent(petDetailFragment.context))
+                    .appComponent(App.applicationComponent(petDetailFragment.context!!))
                     .build()
                     .inject(petDetailFragment)
         }

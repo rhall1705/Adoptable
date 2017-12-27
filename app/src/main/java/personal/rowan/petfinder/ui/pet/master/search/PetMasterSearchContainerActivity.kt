@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.widget.FrameLayout
-import butterknife.bindView
+import kotterknife.bindView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseActivity
 import personal.rowan.petfinder.ui.pet.master.PetMasterFragment

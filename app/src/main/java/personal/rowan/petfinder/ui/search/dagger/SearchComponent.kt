@@ -19,7 +19,7 @@ interface SearchComponent {
     companion object {
         val injector: Action1<SearchFragment> = Action1 { searchFragment ->
             DaggerSearchComponent.builder()
-                    .appComponent(App.applicationComponent(searchFragment.context))
+                    .appComponent(App.applicationComponent(searchFragment.context!!))
                     .build()
                     .inject(searchFragment)
         }

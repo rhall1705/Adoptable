@@ -20,7 +20,7 @@ interface ShelterComponent {
     companion object {
         val injector: Action1<ShelterFragment> = Action1 { shelterFragment ->
             DaggerShelterComponent.builder()
-                    .appComponent(App.Companion.applicationComponent(shelterFragment.context))
+                    .appComponent(App.Companion.applicationComponent(shelterFragment.context!!))
                     .build()
                     .inject(shelterFragment)
         }

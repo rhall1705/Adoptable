@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
-import butterknife.bindView
+import kotterknife.bindView
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.base.BaseActivity
 
