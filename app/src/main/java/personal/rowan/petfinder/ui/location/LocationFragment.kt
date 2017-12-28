@@ -125,7 +125,8 @@ class LocationFragment : BaseFragment() {
         }
         showToastMessage(getString(R.string.location_toast_message, zipcode))
         mUserLocationManager.saveZipcode(context!!, zipcode)
-        startActivity(MainActivity.createIntent(context!!).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        startActivity(MainActivity.createIntent(context!!).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        activity?.finish()
     }
 
 }
