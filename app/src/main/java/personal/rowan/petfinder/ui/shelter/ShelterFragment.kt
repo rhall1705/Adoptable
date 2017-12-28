@@ -1,15 +1,12 @@
 package personal.rowan.petfinder.ui.shelter
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,12 +18,11 @@ import personal.rowan.petfinder.R
 import personal.rowan.petfinder.application.UserLocationManager
 import personal.rowan.petfinder.ui.base.presenter.BasePresenterFragment
 import personal.rowan.petfinder.ui.base.presenter.PresenterFactory
+import personal.rowan.petfinder.ui.location.LocationActivity
 import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterContainerActivity
 import personal.rowan.petfinder.ui.shelter.dagger.ShelterComponent
 import personal.rowan.petfinder.ui.shelter.recycler.ShelterAdapter
-import personal.rowan.petfinder.util.AndroidUtils
 import personal.rowan.petfinder.util.IntentUtils
-import personal.rowan.petfinder.util.PermissionUtils
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 import javax.inject.Inject
@@ -53,12 +49,6 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     private val shelterList: RecyclerView by bindView(R.id.shelter_recycler)
     private val pagination: ProgressBar by bindView(R.id.shelter_pagination)
     private val emptyView: TextView by bindView(R.id.shelter_empty_message)
-    private val locationRationale: LinearLayout by bindView(R.id.shelter_container_location_container)
-    private val locationButton: Button by bindView(R.id.shelter_container_location_button)
-    private val locationError: LinearLayout by bindView(R.id.shelter_nearby_container_location_failure_container)
-    private val locationErrorButton: Button by bindView(R.id.shelter_nearby_container_location_failure_button)
-    private val zipcodeEntry: EditText by bindView(R.id.shelter_container_zipcode_entry)
-    private val zipcodeEntryButton: Button by bindView(R.id.shelter_container_zipcode_entry_button)
 
     private lateinit var mPresenter: ShelterPresenter
     private val mAdapter = ShelterAdapter(ArrayList())
@@ -80,57 +70,20 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         shelterList.adapter = mAdapter
         swipeRefresh.setColorSchemeResources(R.color.colorSwipeRefresh)
         swipeRefresh.setOnRefreshListener { mPresenter.refreshData(context!!) }
-        locationButton.setOnClickListener { handleLocationPermission() }
-        locationErrorButton.setOnClickListener { findZipcode() }
-        zipcodeEntry.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                zipcodeEntryButton.isEnabled = !TextUtils.isEmpty(p0)
-            }
-        })
-        zipcodeEntryButton.isEnabled = !TextUtils.isEmpty(zipcodeEntry.text)
-        zipcodeEntryButton.setOnClickListener {
-            setupRecyclerWithZipcode(zipcodeEntry.text.toString())
-            AndroidUtils.hideKeyboard(context!!, zipcodeEntry)
-        }
     }
 
     override fun onPresenterPrepared(presenter: ShelterPresenter) {
         mPresenter = presenter
-
-        mCompositeSubscription.add(mUserLocationManager.permissionObservable()
-                .subscribe ({ enabled -> if(enabled) findZipcode() else showLocationRationale() },
-                { _ -> showLocationFailure() }))
-
-        if(!PermissionUtils.hasPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            handleLocationPermission()
-            return
-        }
-
-        findZipcode()
-    }
-
-    private fun findZipcode() {
-        if (!progressDialogShowing()) showProgressDialog(getString(R.string.pet_master_container_location_progress_title), getString(R.string.pet_master_container_location_progress_detail))
-        mCompositeSubscription.add(mUserLocationManager.zipcodeObservable(context!!)
-                .subscribe { zipcode -> setupRecyclerWithZipcode(zipcode) })
+        setupRecyclerWithZipcode(mUserLocationManager.loadZipcode(context!!))
     }
 
     private fun setupRecyclerWithZipcode(zipcode: String) {
         dismissProgressDialog()
-        if (zipcode == UserLocationManager.ERROR) {
-            showLocationFailure()
+        if (TextUtils.isEmpty(zipcode) || zipcode == UserLocationManager.ERROR) {
+            startActivity(LocationActivity.createIntent(context!!).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
             return
         }
 
-        showList()
         val context = context
         if (context != null) {
             mPresenter.loadData(context, zipcode)
@@ -138,43 +91,6 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         }
         mCompositeSubscription.add(mAdapter.petsButtonObservable().subscribe { pair -> mPresenter.onPetsClicked(pair) })
         mCompositeSubscription.add(mAdapter.directionsButtonObservable().subscribe { address -> mPresenter.onDirectionsClicked(address) })
-    }
-
-    private fun showLocationRationale() {
-        locationRationale.visibility = View.VISIBLE
-        locationError.visibility = View.GONE
-        swipeRefresh.visibility = View.GONE
-    }
-
-    private fun showLocationFailure() {
-        locationRationale.visibility = View.GONE
-        locationError.visibility = View.VISIBLE
-        swipeRefresh.visibility = View.GONE
-    }
-
-    private fun showList() {
-        locationRationale.visibility = View.GONE
-        locationError.visibility = View.GONE
-        swipeRefresh.visibility = View.VISIBLE
-    }
-
-    private fun handleLocationPermission() {
-        showLocationRationale()
-        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PermissionUtils.PERMISSION_CODE_LOCATION)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if(PermissionUtils.hasPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) && shelterList.adapter == null) {
-            findZipcode()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when(requestCode) {
-            PermissionUtils.PERMISSION_CODE_LOCATION ->
-                mUserLocationManager.permissionEvent(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-        }
     }
 
     override fun onPresenterDestroyed() {

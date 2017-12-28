@@ -1,5 +1,7 @@
 package personal.rowan.petfinder.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -16,6 +18,13 @@ import personal.rowan.petfinder.ui.search.SearchFragment
 import personal.rowan.petfinder.ui.shelter.ShelterFragment
 
 class MainActivity : BaseActivity() {
+
+    companion object {
+
+        fun createIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
+        }
+    }
 
     val pager: ViewPager by bindView(R.id.main_pager)
     val bottomNavigation: BottomNavigationView by bindView(R.id.main_bottom_navigation)
