@@ -187,7 +187,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
         return mPresenterFactory
     }
 
-    override fun displayShelters(shelters: List<ShelterViewModel>) {
+    override fun displayShelters(shelters: List<ShelterListViewState>) {
         if(shelters.isEmpty()) {
             emptyView.visibility = View.VISIBLE
         } else {

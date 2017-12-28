@@ -7,7 +7,7 @@ import android.widget.TextView
 import kotterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.ui.shelter.ShelterViewModel
+import personal.rowan.petfinder.ui.shelter.ShelterListViewState
 import rx.Subscription
 import rx.subjects.PublishSubject
 
@@ -25,20 +25,20 @@ class ShelterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)  {
     private var mPetsButtonSubscription: Subscription? = null
     private var mDirectionsButtonSubscription: Subscription? = null
 
-    fun bind(viewModel: ShelterViewModel, petsButtonSubject: PublishSubject<Pair<String?, String?>>, directionsButtonSubject: PublishSubject<String>) {
-        titleView.text = viewModel.title()
-        subtitleView.text = viewModel.subtitle()
-        subtextView.setText(viewModel.subtext())
+    fun bind(listViewState: ShelterListViewState, petsButtonSubject: PublishSubject<Pair<String?, String?>>, directionsButtonSubject: PublishSubject<String>) {
+        titleView.text = listViewState.title()
+        subtitleView.text = listViewState.subtitle()
+        subtextView.setText(listViewState.subtext())
 
         if (mPetsButtonSubscription != null && !mPetsButtonSubscription!!.isUnsubscribed) {
             mPetsButtonSubscription!!.unsubscribe()
         }
-        mPetsButtonSubscription = RxView.clicks(petsButton).subscribe { petsButtonSubject.onNext(Pair(viewModel.id(), viewModel.title())) }
+        mPetsButtonSubscription = RxView.clicks(petsButton).subscribe { petsButtonSubject.onNext(Pair(listViewState.id(), listViewState.title())) }
 
         if (mDirectionsButtonSubscription != null && !mDirectionsButtonSubscription!!.isUnsubscribed) {
             mDirectionsButtonSubscription!!.unsubscribe()
         }
-        mDirectionsButtonSubscription = RxView.clicks(directionsButton).subscribe { directionsButtonSubject.onNext(viewModel.address()) }
+        mDirectionsButtonSubscription = RxView.clicks(directionsButton).subscribe { directionsButtonSubject.onNext(listViewState.address()) }
     }
 
 }

@@ -5,7 +5,7 @@ package personal.rowan.petfinder.ui.shelter
  */
 interface ShelterView {
 
-    fun displayShelters(shelters: List<ShelterViewModel>)
+    fun displayShelters(shelters: List<ShelterListViewState>)
 
     fun onPetsButtonClicked(pair: Pair<String?, String?>)
 

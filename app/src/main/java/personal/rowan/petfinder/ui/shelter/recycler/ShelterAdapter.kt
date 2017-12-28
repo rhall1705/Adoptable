@@ -4,19 +4,19 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.ui.shelter.ShelterViewModel
+import personal.rowan.petfinder.ui.shelter.ShelterListViewState
 import rx.Observable
 import rx.subjects.PublishSubject
 
 /**
  * Created by Rowan Hall
  */
-class ShelterAdapter(private var mData: List<ShelterViewModel>?) : RecyclerView.Adapter<ShelterViewHolder>() {
+class ShelterAdapter(private var mData: List<ShelterListViewState>?) : RecyclerView.Adapter<ShelterViewHolder>() {
 
     private val mPetsButtonSubject: PublishSubject<Pair<String?, String?>> = PublishSubject.create()
     private val mDirectionsButtonSubject: PublishSubject<String> = PublishSubject.create()
 
-    fun paginateData(data: List<ShelterViewModel>) {
+    fun paginateData(data: List<ShelterListViewState>) {
         if(mData == null || mData!!.isEmpty()) {
             mData = data
             notifyDataSetChanged()

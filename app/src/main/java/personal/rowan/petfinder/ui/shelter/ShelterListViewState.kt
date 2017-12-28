@@ -10,7 +10,7 @@ import java.util.*
 /**
  * Created by Rowan Hall
  */
-class ShelterViewModel(context: Context, shelter: Shelter) {
+class ShelterListViewState(context: Context, shelter: Shelter) {
 
     private val mTitle: String?
     private val mSubtitle: String

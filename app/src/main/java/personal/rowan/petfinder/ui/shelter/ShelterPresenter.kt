@@ -4,13 +4,11 @@ import android.content.Context
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent
 import personal.rowan.petfinder.application.Resource
 import personal.rowan.petfinder.model.shelter.Shelter
-import personal.rowan.petfinder.model.shelter.ShelterResult
 import personal.rowan.petfinder.network.PetfinderService
 import personal.rowan.petfinder.ui.base.presenter.BasePresenter
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
-import rx.functions.Func1
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import kotlin.collections.ArrayList
@@ -23,8 +21,7 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
     private val mCompositeSubscription: CompositeSubscription = CompositeSubscription()
 
     private lateinit var mLocation: String
-    private var mOffset = "0"
-    private var shelterResource: Resource<MutableList<ShelterViewModel>> = Resource.starting()
+    private var shelterResource: Resource<ShelterViewState> = Resource.starting()
 
     fun loadData(context: Context, location: String) {
         mLocation = location
@@ -40,36 +37,28 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
     private fun loadData(context: Context, clear: Boolean) {
         if (shelterResource.progress) return
 
-        if (clear) {
-            shelterResource = Resource.starting()
-            mOffset = "0"
-        }
-
         mCompositeSubscription.add(
-                mPetfinderService.getNearbyShelters(mLocation, mOffset)
-                        .map(object : Func1<ShelterResult, Resource<MutableList<ShelterViewModel>>> {
-                            override fun call(result: ShelterResult?): Resource<MutableList<ShelterViewModel>> {
-                                val shelterData: MutableList<ShelterViewModel> = ArrayList()
-                                val shelters: List<Shelter>? = result?.petfinder?.shelters?.shelter
+                mPetfinderService.getNearbyShelters(mLocation, offset())
+                        .map({
+                                val shelterData: MutableList<ShelterListViewState> = if (clear && shelterResource.hasData()) shelterResource.data().shelterData else ArrayList()
+                                val shelters: List<Shelter>? = it?.petfinder?.shelters?.shelter
                                 if (shelters != null) {
-                                    val viewModels: MutableList<ShelterViewModel> = ArrayList()
+                                    val listViewStates: MutableList<ShelterListViewState> = ArrayList()
                                     for (shelter in shelters) {
-                                        viewModels.add(ShelterViewModel(context, shelter))
+                                        listViewStates.add(ShelterListViewState(context, shelter))
                                     }
-                                    shelterData.addAll(viewModels)
+                                    shelterData.addAll(listViewStates)
                                 }
-                                val offset = result?.petfinder!!.lastOffset?.`$t`
-                                if (offset != null) {
-                                    mOffset = offset
-                                }
-                                return Resource.success(shelterData)
+                                var offset = it?.petfinder?.lastOffset?.`$t`
+                                offset = if (offset == null) "0" else offset
+                                Resource.success(ShelterViewState(shelterData, offset))
                             }
-                        })
-                        .startWith(Resource.progress(shelterResource))
+                        )
+                        .startWith(Resource.progress(shelterResource, !clear))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(object : Action1<Resource<MutableList<ShelterViewModel>>> {
-                            override fun call(result: Resource<MutableList<ShelterViewModel>>?) {
+                        .subscribe(object : Action1<Resource<ShelterViewState>> {
+                            override fun call(result: Resource<ShelterViewState>?) {
                                 shelterResource = result!!
                                 publish()
                             }
@@ -99,19 +88,27 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
         mView?.onDirectionsButtonClicked(address)
     }
 
+    private fun offset(): String {
+        return if (shelterResource.hasData()) shelterResource.data().offset else "0"
+    }
+
     override fun publish() {
         if (mView == null) {
             return
         }
         val view = mView!!
         if (shelterResource.progress) {
-            view.showProgress()
+            if (shelterResource.paginate) {
+                view.showPagination()
+            } else {
+                view.showProgress()
+            }
         } else {
             view.hideProgress()
             view.hidePagination()
         }
         if (shelterResource.hasData()) {
-            view.displayShelters(shelterResource.data())
+            view.displayShelters(shelterResource.data().shelterData)
         } else if (shelterResource.hasError()) {
             view.showError(shelterResource.error().toString())
         }
