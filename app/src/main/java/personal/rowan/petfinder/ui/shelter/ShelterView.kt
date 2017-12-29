@@ -19,8 +19,4 @@ interface ShelterView {
 
     fun hideProgress()
 
-    fun showPagination()
-
-    fun hidePagination()
-
 }

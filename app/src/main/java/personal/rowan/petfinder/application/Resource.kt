@@ -3,7 +3,7 @@ package personal.rowan.petfinder.application
 /**
  * Created by Rowan Hall
  */
-class Resource<T>(val progress: Boolean = false, val paginate: Boolean = false, private val resourceData: T? = null, private val error: Throwable? = null) {
+class Resource<T>(val progress: Boolean = false, private val resourceData: T? = null, private val error: Throwable? = null) {
 
     fun hasData(): Boolean {
         return resourceData != null
@@ -23,19 +23,19 @@ class Resource<T>(val progress: Boolean = false, val paginate: Boolean = false, 
 
     companion object {
         fun <T> starting(): Resource<T> {
-            return Resource(false, false, null, null)
+            return Resource(false, null, null)
         }
 
-        fun <T> progress(resource: Resource<T>, paginate: Boolean): Resource<T> {
-            return Resource(true, paginate, resource.resourceData, resource.error)
+        fun <T> progress(resource: Resource<T>): Resource<T> {
+            return Resource(true, resource.resourceData, resource.error)
         }
 
         fun <T> success(resourceData: T): Resource<T> {
-            return Resource(false, false, resourceData, null)
+            return Resource(false, resourceData, null)
         }
 
         fun <T> failure(resource: Resource<T>, e: Throwable): Resource<T> {
-            return Resource(false, false, resource.resourceData, e)
+            return Resource(false, resource.resourceData, e)
         }
     }
 

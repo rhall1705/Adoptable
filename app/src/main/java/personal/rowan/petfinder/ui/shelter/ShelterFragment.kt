@@ -47,7 +47,6 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
     private val toolbar: Toolbar by bindView(R.id.shelter_toolbar)
     private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.shelter_swipe_refresh)
     private val shelterList: RecyclerView by bindView(R.id.shelter_recycler)
-    private val pagination: ProgressBar by bindView(R.id.shelter_pagination)
     private val emptyView: TextView by bindView(R.id.shelter_empty_message)
 
     private lateinit var mPresenter: ShelterPresenter
@@ -86,7 +85,7 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
 
         val context = context
         if (context != null) {
-            mPresenter.loadData(context, zipcode)
+            mPresenter.initialLoad(context, zipcode)
             mPresenter.bindRecyclerView(context, RxRecyclerView.scrollEvents(shelterList))
         }
         mCompositeSubscription.add(mAdapter.petsButtonObservable().subscribe { pair -> mPresenter.onPetsClicked(pair) })
@@ -135,14 +134,6 @@ class ShelterFragment : BasePresenterFragment<ShelterPresenter, ShelterView>(), 
 
     override fun hideProgress() {
         swipeRefresh.isRefreshing = false
-    }
-
-    override fun showPagination() {
-        pagination.visibility = View.VISIBLE
-    }
-
-    override fun hidePagination() {
-        pagination.visibility = View.GONE
     }
 
 }
