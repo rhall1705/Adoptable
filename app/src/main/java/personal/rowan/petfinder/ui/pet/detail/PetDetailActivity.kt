@@ -13,9 +13,9 @@ class PetDetailActivity : ContainerActivity() {
     companion object {
         private val ARG_PET_DETAIL_MODEL = "PetDetailActivity.Extra.Model"
 
-        fun createIntent(context: Context, viewModel: PetDetailViewModel): Intent {
+        fun createIntent(context: Context, viewState: PetDetailViewState): Intent {
             val intent = Intent(context, PetDetailActivity::class.java)
-            intent.putExtra(ARG_PET_DETAIL_MODEL, viewModel)
+            intent.putExtra(ARG_PET_DETAIL_MODEL, viewState)
             return intent
         }
     }

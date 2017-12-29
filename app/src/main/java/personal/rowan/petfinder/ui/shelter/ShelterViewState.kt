@@ -11,7 +11,7 @@ class ShelterViewState(val shelterData: MutableList<ShelterListViewState>, val o
 
     companion object {
         fun fromShelterResult(initialState: ShelterViewState?, shelterResult: ShelterResult?, clear: Boolean, context: Context): ShelterViewState {
-            val shelterData: MutableList<ShelterListViewState> = if (!clear && initialState?.shelterData != null) initialState.shelterData else ArrayList()
+            val shelterData = if (!clear && initialState?.shelterData != null) initialState.shelterData else ArrayList()
             val shelters: List<Shelter>? = shelterResult?.petfinder?.shelters?.shelter
             if (shelters != null) {
                 val listViewStates: MutableList<ShelterListViewState> = ArrayList()

@@ -3,7 +3,7 @@ package personal.rowan.petfinder.ui.pet.master.favorite
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import personal.rowan.petfinder.ui.pet.detail.PetDetailViewModel
+import personal.rowan.petfinder.ui.pet.detail.PetDetailViewState
 import personal.rowan.petfinder.util.StringUtils
 import java.util.*
 
@@ -26,24 +26,24 @@ open class RealmFavorite(@PrimaryKey private var mId: String,
 
     companion object {
 
-        fun toRealm(viewModel: PetDetailViewModel): RealmFavorite {
-            return RealmFavorite(viewModel.id(),
-                    viewModel.photoUrl(),
-                    viewModel.name(),
-                    viewModel.header(),
-                    viewModel.detail(),
-                    viewModel.favorite(),
-                    viewModel.description(),
-                    viewModel.phone(),
-                    viewModel.email(),
-                    viewModel.address(),
-                    RealmString.toRealmStringList(viewModel.photos()))
+        fun toRealm(viewState: PetDetailViewState): RealmFavorite {
+            return RealmFavorite(viewState.id(),
+                    viewState.photoUrl(),
+                    viewState.name(),
+                    viewState.header(),
+                    viewState.detail(),
+                    viewState.favorite(),
+                    viewState.description(),
+                    viewState.phone(),
+                    viewState.email(),
+                    viewState.address(),
+                    RealmString.toRealmStringList(viewState.photos()))
         }
 
-        fun toViewModel(favorites: List<RealmFavorite>): List<PetDetailViewModel> {
-            val viewModels: MutableList<PetDetailViewModel> = ArrayList()
+        fun toViewModel(favorites: List<RealmFavorite>): MutableList<PetDetailViewState> {
+            val viewModels: MutableList<PetDetailViewState> = ArrayList()
             for(favorite in favorites) {
-                viewModels.add(PetDetailViewModel(favorite.id(),
+                viewModels.add(PetDetailViewState(favorite.id(),
                         favorite.photoUrl(),
                         favorite.name(),
                         favorite.header(),

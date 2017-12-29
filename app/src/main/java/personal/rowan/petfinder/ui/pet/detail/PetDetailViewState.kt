@@ -6,7 +6,7 @@ import android.os.Parcelable
 import personal.rowan.petfinder.R
 import personal.rowan.petfinder.ui.pet.master.favorite.RealmFavoritesManager
 import personal.rowan.petfinder.model.pet.Pet
-import personal.rowan.petfinder.ui.pet.master.PetMasterViewModel
+import personal.rowan.petfinder.ui.pet.master.PetMasterListViewState
 import personal.rowan.petfinder.util.PetUtils
 import personal.rowan.petfinder.util.StringUtils
 import java.util.*
@@ -14,7 +14,7 @@ import java.util.*
 /**
  * Created by Rowan Hall
  */
-class PetDetailViewModel: PetMasterViewModel, Parcelable {
+class PetDetailViewState : PetMasterListViewState, Parcelable {
 
     constructor(context: Context, pet: Pet, favorite: Boolean): super(context, pet, favorite) {
         mDescription = pet.description?.`$t`
@@ -76,19 +76,19 @@ class PetDetailViewModel: PetMasterViewModel, Parcelable {
     }
 
     companion object {
-        @JvmField val CREATOR: Parcelable.Creator<PetDetailViewModel> = object : Parcelable.Creator<PetDetailViewModel> {
-            override fun createFromParcel(source: Parcel): PetDetailViewModel = PetDetailViewModel(source)
-            override fun newArray(size: Int): Array<PetDetailViewModel?> = arrayOfNulls(size)
+        @JvmField val CREATOR: Parcelable.Creator<PetDetailViewState> = object : Parcelable.Creator<PetDetailViewState> {
+            override fun createFromParcel(source: Parcel): PetDetailViewState = PetDetailViewState(source)
+            override fun newArray(size: Int): Array<PetDetailViewState?> = arrayOfNulls(size)
         }
 
-        fun fromPetList(context: Context, pets: List<Pet>?, favoritesManager: RealmFavoritesManager): List<PetDetailViewModel> {
-            val viewModels: MutableList<PetDetailViewModel> = ArrayList()
+        fun fromPetList(context: Context, pets: List<Pet>?, favoritesManager: RealmFavoritesManager): List<PetDetailViewState> {
+            val viewStates: MutableList<PetDetailViewState> = ArrayList()
             if (pets != null) {
                 for (pet in pets) {
-                    viewModels.add(PetDetailViewModel(context, pet, favoritesManager.isFavorite(pet.id?.`$t`)))
+                    viewStates.add(PetDetailViewState(context, pet, favoritesManager.isFavorite(pet.id?.`$t`)))
                 }
             }
-            return viewModels
+            return viewStates
         }
     }
 

@@ -7,7 +7,7 @@ import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
  */
 interface PetMasterView {
 
-    fun displayPets(viewModels: List<PetMasterViewModel>, paginate: Boolean)
+    fun displayPets(listViewStates: List<PetMasterListViewState>, paginate: Boolean)
 
     fun onPetClicked(petMasterClickData: PetMasterViewHolder.PetMasterClickData)
 
@@ -18,9 +18,5 @@ interface PetMasterView {
     fun showProgress()
 
     fun hideProgress()
-
-    fun showPagination()
-
-    fun hidePagination()
 
 }

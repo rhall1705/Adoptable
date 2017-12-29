@@ -15,13 +15,13 @@ class PetDetailPresenter(private var mRealmManager: RealmFavoritesManager) : Bas
         return mRealmManager.isFavorite(petId)
     }
 
-    fun toggleFavorite(viewModel: PetDetailViewModel): Boolean {
-        if (isFavorite(viewModel.id())) {
-            mRealmManager.removeFromFavorites(viewModel)
+    fun toggleFavorite(viewState: PetDetailViewState): Boolean {
+        if (isFavorite(viewState.id())) {
+            mRealmManager.removeFromFavorites(viewState)
         } else {
-            mRealmManager.addToFavorites(viewModel)
+            mRealmManager.addToFavorites(viewState)
         }
-        return isFavorite(viewModel.id())
+        return isFavorite(viewState.id())
     }
 
     override fun onDestroyed() {

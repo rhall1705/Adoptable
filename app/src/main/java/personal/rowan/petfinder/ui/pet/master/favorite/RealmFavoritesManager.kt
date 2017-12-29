@@ -2,7 +2,7 @@ package personal.rowan.petfinder.ui.pet.master.favorite
 
 import io.realm.Case
 import io.realm.Realm
-import personal.rowan.petfinder.ui.pet.detail.PetDetailViewModel
+import personal.rowan.petfinder.ui.pet.detail.PetDetailViewState
 import javax.inject.Inject
 
 /**
@@ -21,21 +21,21 @@ class RealmFavoritesManager @Inject constructor(realm: Realm) {
         return results != null && results.size > 0
     }
 
-    fun loadFavorites(): List<PetDetailViewModel> {
+    fun loadFavorites(): MutableList<PetDetailViewState> {
         return RealmFavorite.toViewModel(mRealm.where(RealmFavorite::class.java).findAll().asReversed())
     }
 
-    fun addToFavorites(viewModel: PetDetailViewModel) {
-        viewModel.toggleFavorite(true)
+    fun addToFavorites(viewState: PetDetailViewState) {
+        viewState.toggleFavorite(true)
         mRealm.beginTransaction()
-        mRealm.copyToRealmOrUpdate(RealmFavorite.toRealm(viewModel))
+        mRealm.copyToRealmOrUpdate(RealmFavorite.toRealm(viewState))
         mRealm.commitTransaction()
     }
 
-    fun removeFromFavorites(viewModel: PetDetailViewModel) {
-        viewModel.toggleFavorite(false)
+    fun removeFromFavorites(viewState: PetDetailViewState) {
+        viewState.toggleFavorite(false)
         mRealm.beginTransaction()
-        mRealm.where(RealmFavorite::class.java).beginsWith("mId", viewModel.id(), Case.INSENSITIVE).findAll().deleteAllFromRealm()
+        mRealm.where(RealmFavorite::class.java).beginsWith("mId", viewState.id(), Case.INSENSITIVE).findAll().deleteAllFromRealm()
         mRealm.commitTransaction()
     }
 

@@ -11,8 +11,8 @@ import kotterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import com.squareup.picasso.Picasso
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.ui.pet.detail.PetDetailViewModel
-import personal.rowan.petfinder.ui.pet.master.PetMasterViewModel
+import personal.rowan.petfinder.ui.pet.detail.PetDetailViewState
+import personal.rowan.petfinder.ui.pet.master.PetMasterListViewState
 import rx.Subscription
 import rx.subjects.PublishSubject
 
@@ -31,11 +31,11 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
 
     private var mClickSubscription: Subscription? = null
 
-    fun bind(viewModel: PetMasterViewModel, clickSubject: PublishSubject<PetMasterClickData>) {
-        val photoUrl = viewModel.photoUrl()
+    fun bind(listViewState: PetMasterListViewState, clickSubject: PublishSubject<PetMasterClickData>) {
+        val photoUrl = listViewState.photoUrl()
         if (!photoUrl.isBlank()) {
             Picasso.with(photoView.context)
-                    .load(viewModel.photoUrl())
+                    .load(listViewState.photoUrl())
                     .into(photoView)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -43,9 +43,9 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
             }
         }
 
-        nameView.setText(viewModel.name())
-        headerView.setText(viewModel.header())
-        detailView.setText(viewModel.detail())
+        nameView.setText(listViewState.name())
+        headerView.setText(listViewState.header())
+        detailView.setText(listViewState.detail())
 
         if(mClickSubscription != null && !mClickSubscription!!.isUnsubscribed) {
             mClickSubscription!!.unsubscribe()
@@ -56,13 +56,13 @@ class PetMasterViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
                 Pair.create(fadeView, fadeView.context.getString(R.string.pet_master_detail_fade_transition)),
                 Pair.create(textContainer as View, textContainer.context.getString(R.string.pet_master_detail_text_transition)))
 
-        mClickSubscription = RxView.clicks(clickContainer).subscribe { v -> clickSubject.onNext(PetMasterClickData(viewModel as PetDetailViewModel, transitionViews)) }
+        mClickSubscription = RxView.clicks(clickContainer).subscribe { v -> clickSubject.onNext(PetMasterClickData(listViewState as PetDetailViewState, transitionViews)) }
     }
 
-    class PetMasterClickData(private val mViewModel: PetDetailViewModel, private val mTransitionViews: Array<Pair<View, String>>){
+    class PetMasterClickData(private val mViewState: PetDetailViewState, private val mTransitionViews: Array<Pair<View, String>>){
 
-        fun viewModel(): PetDetailViewModel {
-            return mViewModel
+        fun viewModel(): PetDetailViewState {
+            return mViewState
         }
 
         fun transitionViews(): Array<Pair<View, String>> {

@@ -49,10 +49,10 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
 
         private val ARG_PET_DETAIL_MODEL = "PetDetailFragment.Arg.Model"
 
-        fun getInstance(petDetailViewModel: PetDetailViewModel): PetDetailFragment {
+        fun getInstance(petDetailViewState: PetDetailViewState): PetDetailFragment {
             val fragment = PetDetailFragment()
             val args = Bundle()
-            args.putParcelable(ARG_PET_DETAIL_MODEL, petDetailViewModel)
+            args.putParcelable(ARG_PET_DETAIL_MODEL, petDetailViewState)
             fragment.arguments = args
             return fragment
         }
@@ -86,21 +86,21 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
         }
     }
 
-    private fun setDetails(viewModel: PetDetailViewModel?) {
-        if (viewModel == null) {
+    private fun setDetails(viewState: PetDetailViewState?) {
+        if (viewState == null) {
             return
         }
 
-        setToolbar(toolbar, viewModel.name(), true)
-        handlePhotos(viewModel.photoUrl(), viewModel.photos())
-        headerView.setText(viewModel.header())
-        detailView.setText(viewModel.detail())
+        setToolbar(toolbar, viewState.name(), true)
+        handlePhotos(viewState.photoUrl(), viewState.photos())
+        headerView.setText(viewState.header())
+        detailView.setText(viewState.detail())
 
-        handleDescription(viewModel.description())
-        handlePhone(viewModel.phone())
-        handleEmail(viewModel.email())
-        handleAddress(viewModel.address())
-        handleFavoriteFab(viewModel)
+        handleDescription(viewState.description())
+        handlePhone(viewState.phone())
+        handleEmail(viewState.email())
+        handleAddress(viewState.address())
+        handleFavoriteFab(viewState)
         setHasOptionsMenu(true)
     }
 
@@ -163,10 +163,10 @@ class PetDetailFragment : BasePresenterFragment<PetDetailPresenter, PetDetailVie
         }
     }
 
-    private fun handleFavoriteFab(viewModel: PetDetailViewModel) {
-        favoriteFab.setImageResource(if (mPresenter.isFavorite(viewModel.id())) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
+    private fun handleFavoriteFab(viewState: PetDetailViewState) {
+        favoriteFab.setImageResource(if (mPresenter.isFavorite(viewState.id())) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
         RxView.clicks(favoriteFab).subscribe {
-            favoriteFab.setImageResource(if (mPresenter.toggleFavorite(viewModel)) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
+            favoriteFab.setImageResource(if (mPresenter.toggleFavorite(viewState)) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
         }
     }
 

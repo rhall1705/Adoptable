@@ -4,14 +4,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import personal.rowan.petfinder.R
-import personal.rowan.petfinder.ui.pet.master.PetMasterViewModel
+import personal.rowan.petfinder.ui.pet.master.PetMasterListViewState
 import rx.Observable
 import rx.subjects.PublishSubject
 
 /**
  * Created by Rowan Hall
  */
-class PetMasterAdapter(private var mData: List<PetMasterViewModel>?) : RecyclerView.Adapter<PetMasterViewHolder>() {
+class PetMasterAdapter(private var mData: List<PetMasterListViewState>?) : RecyclerView.Adapter<PetMasterViewHolder>() {
 
     private var mPetClickSubject: PublishSubject<PetMasterViewHolder.PetMasterClickData>
 
@@ -19,7 +19,7 @@ class PetMasterAdapter(private var mData: List<PetMasterViewModel>?) : RecyclerV
         mPetClickSubject = PublishSubject.create()
     }
 
-    fun setData(data: List<PetMasterViewModel>, paginate: Boolean) {
+    fun setData(data: List<PetMasterListViewState>, paginate: Boolean) {
         mData = data
         if(!paginate || mData == null || mData!!.isEmpty()) {
             notifyDataSetChanged()

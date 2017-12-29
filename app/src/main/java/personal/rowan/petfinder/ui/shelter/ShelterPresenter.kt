@@ -23,7 +23,7 @@ class ShelterPresenter(private var mPetfinderService: PetfinderService) : BasePr
     fun initialLoad(context: Context, location: String) {
         mLocation = location
         if (!shelterResource.hasData()) {
-            loadData(context, false)
+            loadData(context, true)
         }
     }
 

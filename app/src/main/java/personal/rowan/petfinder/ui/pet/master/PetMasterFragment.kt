@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.TextView
 import kotterknife.bindView
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
@@ -31,7 +30,6 @@ import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
 import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchArguments
 import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterArguments
 
-
 /**
  * Created by Rowan Hall
  */
@@ -44,7 +42,6 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
 
     private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.pet_master_swipe_refresh)
     private val petList: RecyclerView by bindView(R.id.pet_master_recycler)
-    private val pagination: ProgressBar by bindView(R.id.pet_master_pagination)
     private val emptyView: TextView by bindView(R.id.pet_master_empty_message)
 
     private var mPresenter: PetMasterPresenter? = null
@@ -119,7 +116,7 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         mPresenter = presenter
         val context = context!!
         val args = arguments!!
-        mPresenter!!.loadData(context, args.getInt(ARG_PET_MASTER_TYPE), args.getParcelable(ARG_PET_MASTER_ARGUMENTS))
+        mPresenter!!.initialLoad(context, args.getInt(ARG_PET_MASTER_TYPE), args.getParcelable(ARG_PET_MASTER_ARGUMENTS))
         mPresenter!!.bindRecyclerView(context, RxRecyclerView.scrollEvents(petList))
         mItemClickSubscription = mAdapter.itemClickObservable().subscribe { clickData -> mPresenter!!.onPetClicked(clickData) }
     }
@@ -134,12 +131,12 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
         return mPresenterFactory
     }
 
-    override fun displayPets(viewModels: List<PetMasterViewModel>, paginate: Boolean) {
-        if(viewModels.isEmpty()) {
+    override fun displayPets(listViewStates: List<PetMasterListViewState>, paginate: Boolean) {
+        if(listViewStates.isEmpty()) {
             emptyView.visibility = View.VISIBLE
         } else {
             emptyView.visibility = View.GONE
-            mAdapter.setData(viewModels, paginate)
+            mAdapter.setData(listViewStates, paginate)
         }
     }
 
@@ -181,14 +178,6 @@ class PetMasterFragment : BasePresenterFragment<PetMasterPresenter, PetMasterVie
 
     override fun hideProgress() {
         swipeRefresh.isRefreshing = false
-    }
-
-    override fun showPagination() {
-        pagination.visibility = View.VISIBLE
-    }
-
-    override fun hidePagination() {
-        pagination.visibility = View.GONE
     }
 
 }

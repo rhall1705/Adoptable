@@ -11,7 +11,7 @@ import personal.rowan.petfinder.util.StringUtils
 /**
  * Created by Rowan Hall
  */
-open class PetMasterViewModel : Parcelable {
+open class PetMasterListViewState : Parcelable {
 
     constructor(context: Context, pet: Pet, favorite: Boolean) {
         mId = pet.id?.`$t`
@@ -76,9 +76,9 @@ open class PetMasterViewModel : Parcelable {
     }
 
     companion object {
-        @JvmField val CREATOR: Parcelable.Creator<PetMasterViewModel> = object : Parcelable.Creator<PetMasterViewModel> {
-            override fun createFromParcel(source: Parcel): PetMasterViewModel = PetMasterViewModel(source)
-            override fun newArray(size: Int): Array<PetMasterViewModel?> = arrayOfNulls(size)
+        @JvmField val CREATOR: Parcelable.Creator<PetMasterListViewState> = object : Parcelable.Creator<PetMasterListViewState> {
+            override fun createFromParcel(source: Parcel): PetMasterListViewState = PetMasterListViewState(source)
+            override fun newArray(size: Int): Array<PetMasterListViewState?> = arrayOfNulls(size)
         }
     }
 

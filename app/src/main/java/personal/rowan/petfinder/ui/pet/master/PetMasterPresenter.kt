@@ -2,23 +2,19 @@ package personal.rowan.petfinder.ui.pet.master
 
 import android.content.Context
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent
+import personal.rowan.petfinder.application.Resource
 import personal.rowan.petfinder.ui.pet.master.favorite.RealmFavoritesManager
-import personal.rowan.petfinder.model.pet.Pet
 import personal.rowan.petfinder.model.pet.PetResult
 import personal.rowan.petfinder.network.PetfinderService
 import personal.rowan.petfinder.ui.base.presenter.BasePresenter
-import personal.rowan.petfinder.ui.pet.detail.PetDetailViewModel
 import personal.rowan.petfinder.ui.pet.master.dagger.PetMasterScope
 import personal.rowan.petfinder.ui.pet.master.recycler.PetMasterViewHolder
 import personal.rowan.petfinder.ui.pet.master.search.PetMasterSearchArguments
 import personal.rowan.petfinder.ui.pet.master.shelter.PetMasterShelterArguments
 import rx.Observable
-import rx.Subscriber
-import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
-import java.util.*
 
 /**
  * Created by Rowan Hall
@@ -28,20 +24,17 @@ import java.util.*
 class PetMasterPresenter(private var mPetfinderService: PetfinderService, private var mRealmManager: RealmFavoritesManager) : BasePresenter<PetMasterView>(PetMasterView::class.java) {
 
     private val mCompositeSubscription = CompositeSubscription()
-    private var mApiSubscription: Subscription? = null
 
     private var mType: Int? = null
     private lateinit var mArguments: PetMasterArguments
 
-    private var mResults: MutableList<PetDetailViewModel>? = null
-    private var mOffset = "0"
-    private var mError: Throwable? = null
+    private var petResource: Resource<PetMasterViewState> = Resource.starting()
 
-    fun loadData(context: Context, type: Int?, arguments: PetMasterArguments) {
+    fun initialLoad(context: Context, type: Int?, arguments: PetMasterArguments) {
         mType = type
         mArguments = arguments
-        if (mResults == null) {
-            loadData(context, false)
+        if (!petResource.hasData()) {
+            loadData(context, true)
         }
     }
 
@@ -50,72 +43,38 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
     }
 
     private fun loadData(context: Context, clear: Boolean) {
-        if(isApiSubscriptionActive()) return
-
-        if(clear) {
-            mResults?.clear()
-            mOffset = "0"
-        }
+        if(petResource.progress) return
 
         val petObservable: Observable<PetResult>
         when (mType) {
             PetMasterFragment.TYPE_FIND -> {
                 val searchArgs: PetMasterSearchArguments = mArguments as PetMasterSearchArguments
-                petObservable = mPetfinderService.getNearbyPets(searchArgs.location(), searchArgs.animal(), searchArgs.size(), searchArgs.age(), searchArgs.size(), searchArgs.breed(), mOffset)
+                petObservable = mPetfinderService.getNearbyPets(searchArgs.location(), searchArgs.animal(), searchArgs.size(), searchArgs.age(), searchArgs.size(), searchArgs.breed(), offset())
             }
             PetMasterFragment.TYPE_SHELTER -> {
                 val shelterArgs: PetMasterShelterArguments = mArguments as PetMasterShelterArguments
-                petObservable = mPetfinderService.getPetsForShelter(shelterArgs.shelterId(), shelterArgs.status(), mOffset)
+                petObservable = mPetfinderService.getPetsForShelter(shelterArgs.shelterId(), shelterArgs.status(), offset())
             }
             PetMasterFragment.TYPE_FAVORITE -> {
-                if (mResults == null) {
-                    mResults = ArrayList()
-                } else {
-                    mResults!!.clear()
-                }
-                mResults!!.addAll(mRealmManager.loadFavorites())
+                petResource = Resource.success(PetMasterViewState(mRealmManager.loadFavorites(), "0"))
                 publish()
-                mView?.hideProgress()
-                mView?.hidePagination()
                 return
             }
             else -> throw RuntimeException("invalid pet master type")
         }
-        mApiSubscription = petObservable
+        mCompositeSubscription.add(petObservable
+                .map { Resource.success(PetMasterViewState.fromPetResult(if (petResource.hasData()) petResource.data() else null, it, clear, context)) }
+                .startWith(Resource.progress(petResource))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object: Subscriber<PetResult>() {
-                        override fun onError(e: Throwable?) {
-                            mError = e
-                            publish()
-                            mView?.hideProgress()
-                            mView?.hidePagination()
-                        }
-
-                        override fun onCompleted() {
-                            mView?.hideProgress()
-                            mView?.hidePagination()
-                        }
-
-                        override fun onNext(result: PetResult?) {
-                            if(mResults == null) {
-                                mResults = ArrayList()
-                            }
-
-                            val pets: List<Pet>? = result?.petfinder?.pets?.pet
-                            if(pets != null) {
-                                mResults!!.addAll(PetDetailViewModel.fromPetList(context, pets, mRealmManager))
-                            }
-                            val offset = result?.petfinder?.lastOffset?.`$t`
-                            if(offset != null) {
-                                mOffset = offset
-                            }
-                            publish()
-                        }
-                    }
-                )
-
-        mCompositeSubscription.add(mApiSubscription)
+                .subscribe({
+                    petResource = it
+                    publish()
+                }, {
+                    petResource = Resource.failure(petResource, it)
+                    publish()
+                })
+        )
     }
 
     fun bindRecyclerView(context: Context, observable: Observable<RecyclerViewScrollEvent>) {
@@ -123,8 +82,7 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
             mCompositeSubscription.add(observable
                     .subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                        if (mView != null && mView!!.shouldPaginate() && !isApiSubscriptionActive()) {
-                            mView!!.showPagination()
+                        if (mView != null && mView!!.shouldPaginate() && !petResource.progress) {
                             loadData(context, false)
                         }
                     })
@@ -141,17 +99,26 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
         }
     }
 
-    private fun isApiSubscriptionActive(): Boolean {
-        return mApiSubscription != null && !mApiSubscription!!.isUnsubscribed
+    private fun offset(): String {
+        return if (petResource.hasData()) petResource.data().offset else "0"
     }
 
     override fun publish() {
-        if (mResults != null) {
-            mView?.displayPets(mResults!!, mType != PetMasterFragment.TYPE_FAVORITE)
-        } else if (mError != null) {
-            mView?.showError(mError.toString())
+        if (mView == null) {
+            return
+        }
+
+        val view = mView!!
+        if (petResource.progress) {
+            view.showProgress()
         } else {
-            mView?.showProgress()
+            view.hideProgress()
+        }
+        if (petResource.hasData()) {
+            view.displayPets(petResource.data().petData, mType != PetMasterFragment.TYPE_FAVORITE)
+        }
+        if (petResource.hasError()) {
+            view.showError(petResource.error().toString())
         }
     }
 
@@ -160,9 +127,6 @@ class PetMasterPresenter(private var mPetfinderService: PetfinderService, privat
             mCompositeSubscription.unsubscribe()
         }
         mRealmManager.close()
-        mApiSubscription = null
-        mResults = null
-        mError = null
     }
 
 }
