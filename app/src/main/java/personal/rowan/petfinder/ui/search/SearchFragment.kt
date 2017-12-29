@@ -114,8 +114,8 @@ class SearchFragment : BasePresenterFragment<SearchPresenter, SearchView>(), Sea
         mDialogSubscription = breedsDialog.breedsObservable().subscribe { s -> onBreedSelected(s) }
     }
 
-    override fun displayBreedsLoadingError(error: String) {
-        showToastMessage(error)
+    override fun displayBreedsLoadingError() {
+        showToastMessage(getString(R.string.search_breed_error))
     }
 
     private fun performSearch() {

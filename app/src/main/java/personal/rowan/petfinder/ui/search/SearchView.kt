@@ -13,7 +13,7 @@ interface SearchView {
 
     fun displayBreedsEmptyAnimalError()
 
-    fun displayBreedsLoadingError(error: String)
+    fun displayBreedsLoadingError()
 
     fun displayBreeds(breeds: Breeds)
 

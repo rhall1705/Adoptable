@@ -89,8 +89,8 @@
     <string name="search_breed_progress_detail">@string/progress_detail_generic</string>
     <string name="search_breed_empty_animal_error">Please select an animal to search breeds</string>
     <string name="search_breed_dialog_title">Choose a breed</string>
+    <string name="search_breed_error">Something went wrong trying to find breeds for this animal</string>
 
     <string name="progress_detail_generic">This will only take a moment.</string>
-    <string name="zipcode_error_generic">Failed to find zip code</string>
 
 </resources>
